@@ -319,11 +319,11 @@ button:focus-visible {
 }
 
 .hero-intro {
-  max-width: 860px;
-  margin: 24px auto 0;
-  color: rgba(244, 242, 237, 0.56);
-  font-size: 15px;
-  line-height: 1.72;
+  max-width: 780px;
+  margin: 28px auto 0;
+  color: rgba(244, 242, 237, 0.62);
+  font-size: 16px;
+  line-height: 1.78;
   text-align: center;
 }
 
@@ -331,7 +331,7 @@ button:focus-visible {
   width: 100%;
   margin: 0;
   text-align: center;
-  transform: translateY(-22px);
+  transform: translateY(-8px);
 }
 
 .hero-copy .eyebrow {
@@ -344,68 +344,6 @@ button:focus-visible {
   background: transparent;
   color: rgba(244, 242, 237, 0.62);
   backdrop-filter: none;
-}
-
-.hero-pills {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 26px;
-}
-
-.hero-pill-glass {
-  flex: 0 0 auto;
-}
-
-.hero-pills button {
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  min-height: 42px;
-  padding: 0 18px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: rgba(244, 242, 237, 0.72);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: default;
-  outline: none;
-  pointer-events: none;
-  transition: color 160ms ease;
-}
-
-.hero-pill-glass:hover button {
-  color: #ffffff;
-}
-
-.hero-bottom {
-  position: absolute;
-  left: 50%;
-  bottom: 72px;
-  transform: translateX(-50%);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: center;
-  gap: 24px;
-  width: min(1700px, calc(100vw - 72px));
-  margin: 0;
-  padding-top: 24px;
-  border-top: 1px solid rgba(244, 242, 237, 0.1);
-  color: rgba(244, 242, 237, 0.42);
-  font-size: 12px;
-  font-weight: 650;
-  letter-spacing: 0.12em;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-.hero-bottom span:nth-child(2) {
-  text-align: center;
-}
-
-.hero-bottom span:nth-child(3) {
-  text-align: right;
 }
 
 .text-link {
@@ -431,7 +369,7 @@ button:focus-visible {
 
 .hero-main-cta {
   width: fit-content;
-  margin: 78px auto 0;
+  margin: 44px auto 0;
 }
 
 .cta-glow .border-glow-inner {

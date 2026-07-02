@@ -3,7 +3,6 @@ import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import Aurora from './components/Aurora';
 import BorderGlow from './components/BorderGlow';
-import GlassSurface from './components/GlassSurface';
 
 const navItems = [
   { label: '经历', href: '#about' },
@@ -167,7 +166,7 @@ const projects = [
     title: 'UI 动效设计规范与参数提炼',
     tag: 'UI动效',
     category: 'UI Motion',
-    year: '2026',
+    year: '2024',
     image: '/portfolio/project2-cover.png',
     desc: '提炼弹窗、toast、退场、活动按钮等可复用动效参数，建立面向落地和性能的 UI 动效规范。',
     video: '/portfolio/project2-detail/ui-motion.mp4',
@@ -251,8 +250,6 @@ const experience = [
   { company: '喜马拉雅', role: '高级 3D 动效设计师', time: '2020.08-2021.04' },
   { company: '白兔网络', role: '3D 动效设计师', time: '2018.11-2020.08' },
 ];
-
-const skillFilters = ['UI Motion', 'AI Design', 'Brand Visual', '3D Motion'];
 
 const workCategories = [
   { id: 'All', label: '全部', icon: LayoutGrid },
@@ -388,37 +385,6 @@ export default function App() {
             <p className="hero-intro">
               资深动效设计师，具备 UI、动效、3D、视觉与 AI 辅助设计能力。长期参与增长活动、直播礼物、跨境业务和运营视觉。
             </p>
-            <div className="hero-pills" aria-label="核心能力">
-              {skillFilters.map((skill) => (
-                <GlassSurface
-                  key={skill}
-                  width="auto"
-                  height={42}
-                  borderRadius={999}
-                  borderWidth={0.08}
-                  brightness={58}
-                  opacity={0.88}
-                  blur={9}
-                  displace={0.25}
-                  backgroundOpacity={0.06}
-                  saturation={1.55}
-                  distortionScale={-95}
-                  redOffset={4}
-                  greenOffset={12}
-                  blueOffset={20}
-                  mixBlendMode="screen"
-                  className="hero-pill-glass"
-                >
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    aria-disabled="true"
-                  >
-                    {skill}
-                  </button>
-                </GlassSurface>
-              ))}
-            </div>
             <BorderGlow
               className="cta-glow hero-main-cta"
               edgeSensitivity={18}
@@ -438,11 +404,6 @@ export default function App() {
               </a>
             </BorderGlow>
           </motion.div>
-          <div className="hero-bottom" aria-label="作品集信息">
-            <span>VISUAL / MOTION / AI DESIGNER</span>
-            <span>SHANGHAI · 2017-2026</span>
-            <span>PORTFOLIO 2026</span>
-          </div>
         </div>
       </section>
 
