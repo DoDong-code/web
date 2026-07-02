@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowUpRight, Mail, MapPin, Phone, Sparkles, Wand2, Layers3,
 import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import Aurora from './components/Aurora';
+import BorderGlow from './components/BorderGlow';
 import GlassSurface from './components/GlassSurface';
 
 const navItems = [
@@ -415,29 +416,24 @@ export default function App() {
                 </GlassSurface>
               ))}
             </div>
-            <GlassSurface
-              width={188}
-              height={50}
+            <BorderGlow
+              className="cta-glow hero-main-cta"
+              edgeSensitivity={18}
+              glowColor="16 96 62"
+              backgroundColor="rgba(18, 19, 22, 0.72)"
               borderRadius={999}
-              borderWidth={0.08}
-              brightness={58}
-              opacity={0.9}
-              blur={9}
-              displace={0.3}
-              backgroundOpacity={0.08}
-              saturation={1.65}
-              distortionScale={-105}
-              redOffset={4}
-              greenOffset={12}
-              blueOffset={20}
-              mixBlendMode="screen"
-              className="hero-cta-glass"
+              glowRadius={28}
+              glowIntensity={1.25}
+              coneSpread={22}
+              animated
+              colors={['#ff501d', '#B497CF', '#2076ff']}
+              fillOpacity={0.42}
             >
               <a className="text-link" href="#work">
                 查看精选项目
                 <ArrowUpRight size={18} />
               </a>
-            </GlassSurface>
+            </BorderGlow>
           </motion.div>
           <div className="hero-bottom">
             <p>

@@ -412,20 +412,27 @@ button:focus-visible {
   backdrop-filter: blur(16px);
 }
 
-.hero-cta-glass {
-  display: inline-flex;
-  flex: 0 0 auto;
-  min-width: 188px;
+.cta-glow {
+  border-radius: 999px;
+  background: rgba(18, 19, 22, 0.72);
+}
+
+.hero-main-cta {
+  width: fit-content;
   margin: 78px auto 0;
 }
 
-.hero-cta-glass .text-link {
+.cta-glow .border-glow-inner {
+  border-radius: inherit;
+}
+
+.cta-glow .text-link {
   border: 0;
   background: transparent;
   min-height: 50px;
 }
 
-.hero-cta-glass:active .text-link {
+.cta-glow:active .text-link {
   color: #fff;
   transform: scale(0.98);
 }
