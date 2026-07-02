@@ -385,6 +385,9 @@ export default function App() {
               <span>把视觉、动效与 AI</span>
               <span>转化为可增长的设计系统</span>
             </div>
+            <p className="hero-intro">
+              资深动效设计师，具备 UI、动效、3D、视觉与 AI 辅助设计能力。长期参与增长活动、直播礼物、跨境业务和运营视觉。
+            </p>
             <div className="hero-pills" aria-label="核心能力">
               {skillFilters.map((skill) => (
                 <GlassSurface
@@ -435,11 +438,10 @@ export default function App() {
               </a>
             </BorderGlow>
           </motion.div>
-          <div className="hero-bottom">
-            <p>
-              <span>资深动效设计师，具备 UI、动效、3D、视觉与 AI 辅助设计能力。</span>
-              <span>长期参与增长活动、直播礼物、跨境业务和运营视觉，从创意到上线持续优化业务表现。</span>
-            </p>
+          <div className="hero-bottom" aria-label="作品集信息">
+            <span>VISUAL / MOTION / AI DESIGNER</span>
+            <span>SHANGHAI · 2017-2026</span>
+            <span>PORTFOLIO 2026</span>
           </div>
         </div>
       </section>

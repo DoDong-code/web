@@ -318,11 +318,20 @@ button:focus-visible {
   text-align: center;
 }
 
+.hero-intro {
+  max-width: 860px;
+  margin: 24px auto 0;
+  color: rgba(244, 242, 237, 0.56);
+  font-size: 15px;
+  line-height: 1.72;
+  text-align: center;
+}
+
 .hero-copy {
   width: 100%;
   margin: 0;
   text-align: center;
-  transform: translateY(-16px);
+  transform: translateY(-22px);
 }
 
 .hero-copy .eyebrow {
@@ -341,7 +350,7 @@ button:focus-visible {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 28px;
+  margin-top: 26px;
 }
 
 .hero-pill-glass {
@@ -375,25 +384,28 @@ button:focus-visible {
   left: 50%;
   bottom: 72px;
   transform: translateX(-50%);
-  display: block;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  gap: 24px;
   width: min(1700px, calc(100vw - 72px));
   margin: 0;
-  padding-top: 26px;
+  padding-top: 24px;
   border-top: 1px solid rgba(244, 242, 237, 0.1);
-  text-align: left;
+  color: rgba(244, 242, 237, 0.42);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
-.hero-bottom p {
-  max-width: 1120px;
-  margin: 0;
-  color: rgba(244, 242, 237, 0.58);
-  font-size: 13px;
-  line-height: 1.75;
-  text-align: left;
+.hero-bottom span:nth-child(2) {
+  text-align: center;
 }
 
-.hero-bottom p span {
-  display: block;
+.hero-bottom span:nth-child(3) {
+  text-align: right;
 }
 
 .text-link {
