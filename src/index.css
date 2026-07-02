@@ -388,27 +388,19 @@ button:focus-visible {
 }
 
 .section {
-  padding: 130px 0;
-}
-
-.about-section {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  padding: 96px 0 76px;
+  padding: 150px 0;
 }
 
 .section-grid {
   display: grid;
-  grid-template-columns: 0.72fr 1.28fr;
-  gap: 64px;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: 76px;
   align-items: stretch;
-  width: 100%;
 }
 
 .portrait-panel {
-  min-height: min(680px, calc(100vh - 180px));
-  padding: 24px;
+  min-height: 760px;
+  padding: 28px;
   border: 1px solid rgba(244, 242, 237, 0.12);
   border-radius: 20px;
   background:
@@ -436,7 +428,7 @@ button:focus-visible {
 
 .portrait-card strong {
   display: block;
-  font-size: clamp(32px, 2.8vw, 46px);
+  font-size: clamp(38px, 3.2vw, 54px);
   line-height: 1;
   letter-spacing: 0;
 }
@@ -445,17 +437,10 @@ button:focus-visible {
   display: block;
   margin-top: 14px;
   color: rgba(244, 242, 237, 0.56);
-  font-size: 15px;
+  font-size: 17px;
 }
 
-.about-content h2 {
-  margin: 0;
-  max-width: 1160px;
-  font-size: clamp(38px, 3.55vw, 64px);
-  line-height: 1.08;
-  font-weight: 600;
-}
-
+.about-content h2,
 .section-head h2,
 .finale-inner h2 {
   margin: 0;
@@ -465,14 +450,7 @@ button:focus-visible {
   font-weight: 600;
 }
 
-.lead {
-  margin: 24px 0 0;
-  max-width: 960px;
-  color: rgba(244, 242, 237, 0.62);
-  font-size: 16px;
-  line-height: 1.8;
-}
-
+.lead,
 .section-head p {
   margin: 34px 0 0;
   max-width: 960px;
@@ -482,7 +460,7 @@ button:focus-visible {
 }
 
 .contact-strip {
-  margin: 28px 0;
+  margin: 44px 0;
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
@@ -494,12 +472,12 @@ button:focus-visible {
   align-items: center;
   gap: 9px;
   min-height: 42px;
-  padding: 0 14px;
+  padding: 0 16px;
   border: 1px solid rgba(244, 242, 237, 0.13);
   border-radius: 10px;
   background: rgba(244, 242, 237, 0.04);
   color: rgba(244, 242, 237, 0.74);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .stats-grid {
@@ -517,30 +495,30 @@ button:focus-visible {
 }
 
 .stat-card {
-  min-height: 104px;
-  padding: 18px;
+  min-height: 132px;
+  padding: 22px;
 }
 
 .stat-card strong {
   display: block;
-  font-size: 30px;
+  font-size: 34px;
   line-height: 1;
 }
 
 .stat-card span {
   display: block;
-  margin-top: 12px;
+  margin-top: 18px;
   color: rgba(244, 242, 237, 0.54);
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .timeline {
   position: relative;
-  margin-top: 30px;
-  padding: 4px 0 4px 28px;
+  margin-top: 46px;
+  padding: 8px 0 8px 28px;
   display: grid;
-  gap: 12px;
+  gap: 18px;
 }
 
 .timeline::before {
@@ -559,7 +537,7 @@ button:focus-visible {
   grid-template-columns: 20px 1fr;
   gap: 16px;
   color: rgba(244, 242, 237, 0.68);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .timeline-marker {
@@ -577,10 +555,10 @@ button:focus-visible {
 .timeline-copy {
   display: grid;
   grid-template-columns: 128px 148px 1fr;
-  gap: 16px;
+  gap: 18px;
   align-items: baseline;
-  min-height: 24px;
-  padding: 0 0 12px;
+  min-height: 28px;
+  padding: 0 0 18px;
   border-bottom: 1px solid rgba(244, 242, 237, 0.08);
 }
 
@@ -591,13 +569,13 @@ button:focus-visible {
 
 .timeline-copy time {
   color: rgba(244, 242, 237, 0.42);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.04em;
 }
 
 .timeline-copy strong {
   color: rgba(244, 242, 237, 0.9);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 650;
 }
 
