@@ -416,7 +416,7 @@ export default function App() {
               ))}
             </div>
             <GlassSurface
-              width="auto"
+              width={188}
               height={50}
               borderRadius={999}
               borderWidth={0.08}

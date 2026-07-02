@@ -413,7 +413,8 @@ button:focus-visible {
 }
 
 .hero-cta-glass {
-  width: fit-content;
+  display: inline-flex;
+  flex: 0 0 auto;
   min-width: 188px;
   margin: 78px auto 0;
 }
