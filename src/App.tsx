@@ -1,14 +1,12 @@
-import { ArrowLeft, ArrowUpRight, Mail, MapPin, Phone, Sparkles, Wand2, Layers3, Workflow, BadgeCheck, CircleDot, LayoutGrid, Monitor, Box, Cpu } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, Phone, Sparkles, Wand2, Layers3, Workflow, BadgeCheck, CircleDot, LayoutGrid, Monitor, Box, Cpu, X } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
-import Aurora from './components/Aurora';
-import BorderGlow from './components/BorderGlow';
+import { useEffect, useState } from 'react';
 
 const navItems = [
-  { label: '经历', href: '#about' },
-  { label: '项目', href: '#work' },
-  { label: '优势', href: '#strengths' },
-  { label: '联系', href: '#contact' },
+  { label: 'Home', href: '#top' },
+  { label: 'Projects', href: '#work' },
+  { label: 'Studio', href: '#about' },
+  { label: 'Reach Us', href: '#contact' },
 ];
 
 const stats = [
@@ -263,17 +261,10 @@ const workCategories = [
 export default function App() {
   const [activeWorkCategory, setActiveWorkCategory] = useState<(typeof workCategories)[number]['id']>('All');
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
-  const contactRef = useRef<HTMLDivElement>(null);
-  const contactButtonRef = useRef<HTMLButtonElement>(null);
-  const contactBubbleRef = useRef<HTMLDivElement>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const filteredProjects = activeWorkCategory === 'All'
     ? projects
     : projects.filter((project) => project.category === activeWorkCategory);
-
-  useEffect(() => {
-    const contactImage = new Image();
-    contactImage.src = '/contact-wechat.jpg';
-  }, []);
 
   useEffect(() => {
     document.body.style.overflow = selectedProject ? 'hidden' : '';
@@ -283,127 +274,85 @@ export default function App() {
   }, [selectedProject]);
 
   useEffect(() => {
-    const contactButton = contactButtonRef.current;
-    const contactBubble = contactBubbleRef.current;
-
-    const openContactBubble = () => {
-      contactButton?.setAttribute('aria-expanded', 'true');
-      contactBubble?.setAttribute('aria-hidden', 'false');
-      contactBubble?.classList.add('is-open');
-    };
-
-    const closeContactBubble = () => {
-      contactButton?.setAttribute('aria-expanded', 'false');
-      contactBubble?.setAttribute('aria-hidden', 'true');
-      contactBubble?.classList.remove('is-open');
-    };
-
-    const handleDocumentPointerDown = (event: PointerEvent) => {
-      if (!contactRef.current?.contains(event.target as Node)) {
-        closeContactBubble();
-      }
-    };
-
-    contactButton?.addEventListener('click', openContactBubble);
-    document.addEventListener('pointerdown', handleDocumentPointerDown);
-
+    document.body.classList.toggle('menu-open', mobileMenuOpen);
     return () => {
-      contactButton?.removeEventListener('click', openContactBubble);
-      document.removeEventListener('pointerdown', handleDocumentPointerDown);
+      document.body.classList.remove('menu-open');
     };
-  }, []);
+  }, [mobileMenuOpen]);
 
   return (
-    <main className="site-shell">
+    <main className="site-shell font-geist">
       <nav className="nav">
-        <a className="brand" href="#top" aria-label="返回首页">
-          DO STUDIO
+        <div className="nav-left">
+          <a className="brand" href="#top" aria-label="Foldcraft home">
+            Foldcraft
+          </a>
+          <div className="nav-links">
+            {navItems.map((item) => (
+              <a key={item.href} href={item.href}>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+        <a className="nav-contact desktop-talk" href="#contact">
+          Let's Talk
         </a>
-        <div className="nav-links">
+        <button
+          className="mobile-menu-toggle"
+          type="button"
+          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileMenuOpen((open) => !open)}
+        >
+          <Menu className="menu-icon" size={22} aria-hidden="true" />
+          <X className="close-icon" size={22} aria-hidden="true" />
+        </button>
+      </nav>
+
+      <div className={`mobile-menu${mobileMenuOpen ? ' is-open' : ''}`} aria-hidden={!mobileMenuOpen}>
+        <div className="mobile-menu-inner">
           {navItems.map((item) => (
-            <a key={item.href} href={item.href}>
+            <a key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)}>
               {item.label}
             </a>
           ))}
+          <a className="mobile-talk" href="#contact" onClick={() => setMobileMenuOpen(false)}>
+            Let's Talk
+          </a>
         </div>
-        <div className="nav-contact-wrap" ref={contactRef}>
-          <button
-            ref={contactButtonRef}
-            className="nav-contact"
-            type="button"
-            aria-expanded="false"
-            aria-label="显示微信二维码"
-          >
-            联系我
-            <ArrowUpRight size={16} />
-          </button>
-          <div
-            ref={contactBubbleRef}
-            className="contact-bubble"
-            role="dialog"
-            aria-label="微信二维码"
-            aria-hidden="true"
-          >
-            <img src="/contact-wechat.jpg" alt="微信二维码" decoding="async" />
-          </div>
-        </div>
-      </nav>
+      </div>
 
       <section className="hero" id="top">
         <video
           className="hero-video"
-          src="https://assets.mixkit.co/videos/preview/mixkit-curvy-lines-of-light-on-a-black-background-3446-large.mp4"
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_204221_5339e40b-e73d-4ab0-9c65-79c18c66fd50.mp4"
           autoPlay
           muted
           loop
           playsInline
           aria-hidden="true"
         />
-        <div className="aurora-layer" aria-hidden="true">
-          <Aurora
-            colorStops={['#2076ff', '#B497CF', '#ff501d']}
-            blend={0.42}
-            amplitude={0.72}
-            speed={0.32}
-          />
-        </div>
         <div className="hero-scrim" />
 
         <div className="hero-inner">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="hero-copy"
-          >
-            <p className="eyebrow">CREATIVE PORTFOLIO</p>
-            <h1>ZWDONG</h1>
-            <div className="hero-title">
-              <span>把视觉、动效与 AI</span>
-              <span>转化为可增长的设计系统</span>
+          <div className="hero-copy">
+            <div className="hero-top">
+              <p className="hero-badge">Brand &amp; Visual Storytelling</p>
+              <h1>
+                Shaping visual<br />
+                narratives,<br />
+                one pixel at a time.
+              </h1>
             </div>
-            <p className="hero-intro">
-              资深动效设计师，具备 UI、动效、3D、视觉与 AI 辅助设计能力。长期参与增长活动、直播礼物、跨境业务和运营视觉。
-            </p>
-            <BorderGlow
-              className="cta-glow hero-main-cta"
-              edgeSensitivity={18}
-              glowColor="16 96 62"
-              backgroundColor="rgba(18, 19, 22, 0.72)"
-              borderRadius={999}
-              glowRadius={28}
-              glowIntensity={1.25}
-              coneSpread={22}
-              animated
-              colors={['#ff501d', '#B497CF', '#2076ff']}
-              fillOpacity={0.42}
-            >
-              <a className="text-link" href="#work">
-                查看精选项目
-                <ArrowUpRight size={18} />
+            <div className="hero-bottom-copy">
+              <p>Turning vision into reality through craft, motion, and an endless pursuit of beauty.</p>
+              <a className="hero-explore" href="#work">
+                Explore Work
+                <ArrowRight size={16} />
               </a>
-            </BorderGlow>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
