@@ -157,7 +157,7 @@ const projects = [
     year: '2026',
     image: '/portfolio/reference-project1.png',
     desc: '春节直播礼物 3D 动态设计，围绕开播引导、付费人数和 ARPPU 指标建立高冲击视觉表达。',
-    video: '/portfolio/gift-compilation.mp4',
+    video: '/portfolio/project1-detail/gift-collection.mp4',
     detailImages: project1DetailImages,
   },
   {
