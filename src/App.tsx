@@ -264,6 +264,12 @@ const workCategories = [
   { id: 'AI', label: 'AI辅助', icon: Sparkles },
 ] as const;
 
+const HERO_GALLERY_BEND = 1;
+const HERO_GALLERY_BORDER_RADIUS = 0.05;
+const HERO_GALLERY_SCROLL_SPEED = 2.6;
+const HERO_GALLERY_SCROLL_EASE = 0.04;
+const HERO_GALLERY_AUTO_SPEED = 0.018;
+
 export default function App() {
   const [activeWorkCategory, setActiveWorkCategory] = useState<(typeof workCategories)[number]['id']>('All');
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
@@ -271,6 +277,10 @@ export default function App() {
   const [wechatOpen, setWechatOpen] = useState(false);
   const [activeContact, setActiveContact] = useState<'email' | 'phone' | 'zcool' | 'wechat' | null>(null);
   const footerWechatRef = useRef<HTMLDivElement>(null);
+  const heroGalleryRef = useRef<HTMLDivElement>(null);
+  const heroGalleryCardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const heroGalleryMotionRef = useRef({ current: 0, target: 0, raf: 0, lastTime: 0 });
+  const heroGalleryDragRef = useRef({ isDown: false, startX: 0, scrollLeft: 0, didDrag: false });
   const filteredProjects = activeWorkCategory === 'All'
     ? projects
     : projects.filter((project) => project.category === activeWorkCategory);
@@ -306,6 +316,143 @@ export default function App() {
     document.addEventListener('pointerdown', handlePointerDown);
     return () => document.removeEventListener('pointerdown', handlePointerDown);
   }, []);
+
+  useEffect(() => {
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        '.section, .contact-finale, .section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-card, .project-card, .strength-card, .finale-actions > *, .footer-line',
+      ),
+    );
+
+    elements.forEach((element, index) => {
+      element.classList.add('scroll-reveal');
+      element.style.setProperty('--reveal-index', `${Math.min(index % 8, 7)}`);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.12 },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, [activeWorkCategory]);
+
+  useEffect(() => {
+    const track = heroGalleryRef.current;
+    if (!track) return;
+
+    const motionState = heroGalleryMotionRef.current;
+    motionState.current = 0;
+    motionState.target = 0;
+
+    const updateCards = () => {
+      const gallery = heroGalleryRef.current;
+      if (!gallery) return;
+      const rect = gallery.getBoundingClientRect();
+      const centerX = rect.width / 2;
+      const firstCard = heroGalleryCardRefs.current.find(Boolean);
+      const cardWidth = firstCard?.offsetWidth ?? 360;
+      const styles = window.getComputedStyle(gallery);
+      const gap = Number.parseFloat(styles.getPropertyValue('--gallery-gap')) || 44;
+      const step = cardWidth + gap;
+      const totalWidth = step * heroGalleryItems.length;
+      const cardRadius = Math.round(rect.width * HERO_GALLERY_BORDER_RADIUS);
+
+      heroGalleryCardRefs.current.forEach((card, index) => {
+        if (!card) return;
+        let x = index * step - motionState.current;
+        x = ((x + totalWidth / 2) % totalWidth + totalWidth) % totalWidth - totalWidth / 2;
+        const distance = (x / rect.width) * 2.15;
+        const clamped = Math.max(-1.15, Math.min(1.15, distance));
+        const abs = Math.abs(clamped);
+        const rotation = clamped * -7 * HERO_GALLERY_BEND;
+        const y = abs * 24 * HERO_GALLERY_BEND;
+        const scale = 1 - Math.min(0.055, abs * 0.035);
+        const fadeStart = 0.62;
+        const fadeEnd = 1.18;
+        const fadeProgress = Math.max(0, Math.min(1, (abs - fadeStart) / (fadeEnd - fadeStart)));
+        const opacity = 1 - fadeProgress * 0.72;
+        card.style.setProperty('--gallery-x', `${centerX + x - cardWidth / 2}px`);
+        card.style.setProperty('--gallery-rotate', `${rotation}deg`);
+        card.style.setProperty('--gallery-y', `${y}px`);
+        card.style.setProperty('--gallery-scale', `${scale}`);
+        card.style.setProperty('--gallery-radius', `${Math.max(16, Math.min(28, cardRadius))}px`);
+        card.style.setProperty('--gallery-opacity', `${opacity}`);
+        card.style.zIndex = `${Math.round((1.25 - abs) * 100)}`;
+      });
+    };
+
+    const tick = (time: number) => {
+      const gallery = heroGalleryRef.current;
+      if (!gallery) return;
+      const state = heroGalleryMotionRef.current;
+      const delta = state.lastTime ? Math.min(time - state.lastTime, 48) : 16;
+      state.lastTime = time;
+      if (!heroGalleryDragRef.current.isDown) {
+        state.target += delta * HERO_GALLERY_AUTO_SPEED;
+      }
+      state.current += (state.target - state.current) * HERO_GALLERY_SCROLL_EASE;
+      if (Math.abs(state.target - state.current) < 0.1) {
+        state.current = state.target;
+      }
+      updateCards();
+      state.raf = window.requestAnimationFrame(tick);
+    };
+
+    updateCards();
+    motionState.raf = window.requestAnimationFrame(tick);
+
+    return () => {
+      window.cancelAnimationFrame(heroGalleryMotionRef.current.raf);
+    };
+  }, []);
+
+  const handleHeroGalleryPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    const track = heroGalleryRef.current;
+    if (!track || event.button !== 0) return;
+    heroGalleryDragRef.current = {
+      isDown: true,
+      startX: event.clientX,
+      scrollLeft: heroGalleryMotionRef.current.target,
+      didDrag: false,
+    };
+    track.setPointerCapture(event.pointerId);
+  };
+
+  const handleHeroGalleryPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const track = heroGalleryRef.current;
+    const drag = heroGalleryDragRef.current;
+    if (!track || !drag.isDown) return;
+    const distance = event.clientX - drag.startX;
+    if (Math.abs(distance) > 4) drag.didDrag = true;
+    heroGalleryMotionRef.current.target = drag.scrollLeft - distance * HERO_GALLERY_SCROLL_SPEED;
+  };
+
+  const handleHeroGalleryPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    const track = heroGalleryRef.current;
+    heroGalleryDragRef.current.isDown = false;
+    if (track?.hasPointerCapture(event.pointerId)) {
+      track.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  const handleHeroGalleryWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    event.preventDefault();
+    const track = heroGalleryRef.current;
+    if (!track) return;
+    const nextTarget = heroGalleryMotionRef.current.target + event.deltaY * HERO_GALLERY_SCROLL_SPEED * 0.45;
+    heroGalleryMotionRef.current.target = nextTarget;
+  };
 
   return (
     <main className="site-shell font-geist">
@@ -365,26 +512,44 @@ export default function App() {
         <div className="hero-inner">
           <div className="hero-copy">
             <div className="hero-top">
-              <p className="hero-badge">This website was built with Codex assistance</p>
               <h1>
                 ZHAO<br />
                 WEIDONG<br />
                 PORTFOLIO
               </h1>
               <div className="hero-gallery">
-                <div className="hero-gallery-track" aria-label="精选项目预览">
-                  {heroGalleryItems.map((item) => {
+                <div
+                  className="hero-gallery-track"
+                  ref={heroGalleryRef}
+                  aria-label="精选项目预览"
+                  onPointerDown={handleHeroGalleryPointerDown}
+                  onPointerMove={handleHeroGalleryPointerMove}
+                  onPointerUp={handleHeroGalleryPointerUp}
+                  onPointerCancel={handleHeroGalleryPointerUp}
+                  onPointerLeave={handleHeroGalleryPointerUp}
+                  onWheel={handleHeroGalleryWheel}
+                >
+                  {heroGalleryItems.map((item, galleryIndex) => {
                     const index = Number(item.projectIndex);
                     return (
                       <button
                         className="hero-gallery-card"
                         key={`${item.text}-${index}`}
+                        ref={(node) => {
+                          heroGalleryCardRefs.current[galleryIndex] = node;
+                        }}
                         type="button"
                         onClick={() => {
+                          if (heroGalleryDragRef.current.didDrag) {
+                            window.setTimeout(() => {
+                              heroGalleryDragRef.current.didDrag = false;
+                            }, 0);
+                            return;
+                          }
                           if (Number.isInteger(index) && projects[index]) setSelectedProject(projects[index]);
                         }}
                       >
-                        <img src={item.image} alt={item.text} />
+                        <img src={item.image} alt={item.text} draggable={false} />
                         <span>{item.text}</span>
                       </button>
                     );

@@ -475,81 +475,70 @@ button:focus-visible {
   max-width: none;
 }
 
-.hero-badge {
-  margin: 0 0 24px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 14px;
-  animation: fadeSlideUp 0.8s ease 0.2s both;
-}
-
 .hero-gallery {
   position: relative;
   width: min(1700px, calc(100vw - 72px));
   height: clamp(210px, 28vh, 330px);
-  margin: clamp(24px, 3.4vh, 40px) 0 0 0;
+  margin: clamp(28px, 4vh, 48px) 0 0 0;
   animation: fadeSlideUp 0.8s ease 0.62s both;
   opacity: 0.94;
-  overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
-}
-
-.hero-gallery::before,
-.hero-gallery::after {
-  content: "";
-  position: absolute;
-  top: 8%;
-  bottom: 8%;
-  z-index: 2;
-  width: 18%;
-  pointer-events: none;
-}
-
-.hero-gallery::before {
-  left: 0;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.55), transparent);
-}
-
-.hero-gallery::after {
-  right: 0;
-  background: linear-gradient(270deg, rgba(0, 0, 0, 0.48), transparent);
+  overflow: visible;
+  perspective: 1200px;
 }
 
 .hero-gallery-track {
-  display: grid;
-  grid-auto-columns: clamp(300px, 24vw, 470px);
-  grid-auto-flow: column;
-  gap: 22px;
+  --gallery-card-width: clamp(300px, 24vw, 470px);
+  --gallery-gap: clamp(40px, 3.8vw, 72px);
+  position: relative;
   height: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 4px 12vw 18px 0;
+  overflow: visible;
+  padding: 4px 0 14px;
+  cursor: grab;
   scrollbar-width: none;
-  scroll-snap-type: x proximity;
+  scroll-snap-type: none;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  overscroll-behavior: contain;
 }
 
 .hero-gallery-track::-webkit-scrollbar {
   display: none;
 }
 
+.hero-gallery-track:active {
+  cursor: grabbing;
+}
+
 .hero-gallery-card {
   appearance: none;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--gallery-card-width);
   height: 100%;
-  overflow: hidden;
-  border: 1px solid rgba(244, 242, 237, 0.14);
-  border-radius: 18px;
-  background: rgba(244, 242, 237, 0.045);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: #fff;
   cursor: pointer;
-  scroll-snap-align: start;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
-  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: none;
+  opacity: var(--gallery-opacity, 1);
+  transform: translate3d(var(--gallery-x, 0px), var(--gallery-y, 0px), 0) rotateZ(var(--gallery-rotate, 0deg)) scale(var(--gallery-scale, 1));
+  transform-origin: center bottom;
+  transition: filter 220ms ease, opacity 220ms ease;
+  will-change: transform, opacity;
 }
 
 .hero-gallery-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(244, 242, 237, 0.38);
-  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.38);
+  filter: brightness(1.08);
 }
 
 .hero-gallery-card img {
@@ -557,37 +546,46 @@ button:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.03);
-  transition: transform 360ms ease;
-}
-
-.hero-gallery-card:hover img {
-  transform: scale(1.08);
+  pointer-events: none;
+  border: 1px solid rgba(244, 242, 237, 0.16);
+  border-radius: var(--gallery-radius, 24px);
+  box-shadow: 0 26px 74px rgba(0, 0, 0, 0.32);
+  transform: none;
+  transition: filter 360ms ease;
 }
 
 .hero-gallery-card::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 42%, rgba(0, 0, 0, 0.72));
+  border-radius: var(--gallery-radius, 24px);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.22) 46%, rgba(0, 0, 0, 0.62) 100%);
   pointer-events: none;
+}
+
+.hero-gallery-card:hover img {
+  filter: saturate(1.08) contrast(1.04);
 }
 
 .hero-gallery-card span {
   position: absolute;
-  right: 18px;
+  right: 20px;
   bottom: 18px;
-  left: 18px;
-  z-index: 1;
+  left: 20px;
+  z-index: 2;
+  display: block;
+  min-height: auto;
   color: #fff;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   line-height: 1.28;
-  text-align: left;
+  text-align: center;
+  text-shadow: 0 8px 26px rgba(0, 0, 0, 0.55);
 }
 
 .hero-bottom-copy {
   max-width: 680px;
+  transform: translateY(22px);
 }
 
 .hero-bottom-copy p {
@@ -667,6 +665,73 @@ button:focus-visible {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.scroll-reveal {
+  --reveal-distance: 58px;
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-distance), 0) scale(0.985);
+  transition:
+    opacity 1100ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--reveal-index, 0) * 72ms);
+  will-change: opacity, transform;
+}
+
+.section.scroll-reveal,
+.contact-finale.scroll-reveal {
+  --reveal-distance: 86px;
+}
+
+.section-head.scroll-reveal,
+.about-content.scroll-reveal {
+  --reveal-distance: 110px;
+  transform: translate3d(0, var(--reveal-distance), 0) scaleY(0.94);
+  transform-origin: top left;
+}
+
+.project-card.scroll-reveal,
+.strength-card.scroll-reveal,
+.work-filter-card.scroll-reveal,
+.stat-card.scroll-reveal {
+  --reveal-distance: 72px;
+  transform: translate3d(0, var(--reveal-distance), 0) scale(0.94);
+}
+
+.timeline-item.scroll-reveal {
+  --reveal-distance: 0;
+  transform: translate3d(-42px, 0, 0);
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.section-head.scroll-reveal.is-visible,
+.about-content.scroll-reveal.is-visible {
+  transform: translate3d(0, 0, 0) scaleY(1);
+}
+
+.project-card.scroll-reveal .project-image,
+.portrait-panel.scroll-reveal,
+.strength-card.scroll-reveal {
+  clip-path: inset(14% 0 0 0 round 16px);
+  transition-property: opacity, transform, filter, clip-path;
+}
+
+.project-card.scroll-reveal.is-visible .project-image,
+.portrait-panel.scroll-reveal.is-visible,
+.strength-card.scroll-reveal.is-visible {
+  clip-path: inset(0 0 0 0 round 16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
@@ -1019,8 +1084,8 @@ button:focus-visible {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.44);
-  opacity: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.42));
+  opacity: 1;
   transition: opacity 300ms ease;
 }
 
@@ -1056,7 +1121,7 @@ button:focus-visible {
 }
 
 .project-card:hover .project-image::after {
-  opacity: 1;
+  opacity: 0.72;
 }
 
 .project-card:hover .project-hover-label {
