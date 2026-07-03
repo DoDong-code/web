@@ -157,7 +157,7 @@ const projects = [
     year: '2026',
     image: '/portfolio/reference-project1.png',
     desc: '春节直播礼物 3D 动态设计，围绕开播引导、付费人数和 ARPPU 指标建立高冲击视觉表达。',
-    video: '/portfolio/project1-detail/gift-collection.mp4',
+    video: '/portfolio/gift-compilation.mp4',
     detailImages: project1DetailImages,
   },
   {
@@ -280,7 +280,13 @@ export default function App() {
   const heroGalleryRef = useRef<HTMLDivElement>(null);
   const heroGalleryCardRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const heroGalleryMotionRef = useRef({ current: 0, target: 0, raf: 0, lastTime: 0 });
-  const heroGalleryDragRef = useRef({ isDown: false, startX: 0, scrollLeft: 0, didDrag: false });
+  const heroGalleryDragRef = useRef({
+    isDown: false,
+    startX: 0,
+    scrollLeft: 0,
+    didDrag: false,
+    startProjectIndex: -1,
+  });
   const filteredProjects = activeWorkCategory === 'All'
     ? projects
     : projects.filter((project) => project.category === activeWorkCategory);
@@ -419,11 +425,14 @@ export default function App() {
   const handleHeroGalleryPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     const track = heroGalleryRef.current;
     if (!track || event.button !== 0) return;
+    const card = (event.target as Element | null)?.closest<HTMLButtonElement>('.hero-gallery-card');
+    const projectIndex = Number(card?.dataset.projectIndex);
     heroGalleryDragRef.current = {
       isDown: true,
       startX: event.clientX,
       scrollLeft: heroGalleryMotionRef.current.target,
       didDrag: false,
+      startProjectIndex: Number.isInteger(projectIndex) ? projectIndex : -1,
     };
     track.setPointerCapture(event.pointerId);
   };
@@ -432,6 +441,7 @@ export default function App() {
     const track = heroGalleryRef.current;
     const drag = heroGalleryDragRef.current;
     if (!track || !drag.isDown) return;
+    event.preventDefault();
     const distance = event.clientX - drag.startX;
     if (Math.abs(distance) > 4) drag.didDrag = true;
     heroGalleryMotionRef.current.target = drag.scrollLeft - distance * HERO_GALLERY_SCROLL_SPEED;
@@ -439,6 +449,14 @@ export default function App() {
 
   const handleHeroGalleryPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
     const track = heroGalleryRef.current;
+    const drag = heroGalleryDragRef.current;
+    if (!drag.isDown) return;
+    if (!drag.didDrag) {
+      const projectIndex = drag.startProjectIndex;
+      if (projectIndex >= 0 && projects[projectIndex]) {
+        setSelectedProject(projects[projectIndex]);
+      }
+    }
     heroGalleryDragRef.current.isDown = false;
     if (track?.hasPointerCapture(event.pointerId)) {
       track.releasePointerCapture(event.pointerId);
@@ -452,6 +470,18 @@ export default function App() {
     if (!track) return;
     const nextTarget = heroGalleryMotionRef.current.target + event.deltaY * HERO_GALLERY_SCROLL_SPEED * 0.45;
     heroGalleryMotionRef.current.target = nextTarget;
+  };
+
+  const handleBorderGlowMove = (event: React.PointerEvent<HTMLElement>) => {
+    const card = event.currentTarget;
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty('--glow-x', `${event.clientX - rect.left}px`);
+    card.style.setProperty('--glow-y', `${event.clientY - rect.top}px`);
+    card.style.setProperty('--glow-opacity', '1');
+  };
+
+  const handleBorderGlowLeave = (event: React.PointerEvent<HTMLElement>) => {
+    event.currentTarget.style.setProperty('--glow-opacity', '0');
   };
 
   return (
@@ -538,14 +568,11 @@ export default function App() {
                         ref={(node) => {
                           heroGalleryCardRefs.current[galleryIndex] = node;
                         }}
+                        data-project-index={index}
                         type="button"
-                        onClick={() => {
-                          if (heroGalleryDragRef.current.didDrag) {
-                            window.setTimeout(() => {
-                              heroGalleryDragRef.current.didDrag = false;
-                            }, 0);
-                            return;
-                          }
+                        onKeyDown={(event) => {
+                          if (event.key !== 'Enter' && event.key !== ' ') return;
+                          event.preventDefault();
                           if (Number.isInteger(index) && projects[index]) setSelectedProject(projects[index]);
                         }}
                       >
@@ -749,7 +776,12 @@ export default function App() {
         </div>
         <div className="strength-grid">
           {strengths.map((item) => (
-            <article className="strength-card" key={item.title}>
+            <article
+              className="strength-card border-glow"
+              key={item.title}
+              onPointerMove={handleBorderGlowMove}
+              onPointerLeave={handleBorderGlowLeave}
+            >
               <item.icon size={24} />
               <h3>{item.title}</h3>
               <p>{item.body}</p>

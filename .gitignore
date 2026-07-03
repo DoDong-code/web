@@ -6,5 +6,3 @@ coverage/
 *.log
 .env*
 !.env.example
-public/portfolio/project1-detail/gift-collection.mp4
-public/portfolio/project7-detail/live-gift-2020.mp4
