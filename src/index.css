@@ -191,6 +191,7 @@ button:focus-visible {
 .nav-links a,
 .text-link,
 .nav-contact,
+.finale-wechat-button,
 .finale-actions a {
   transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
 }
@@ -233,7 +234,8 @@ button:focus-visible {
   transform: scale(1.05);
 }
 
-.finale-actions a:hover {
+.finale-actions a:hover,
+.finale-wechat-button:hover {
   color: #ffffff;
   background: linear-gradient(180deg, #ff6b34, #f04a18);
   transform: translateY(-1px);
@@ -1125,7 +1127,9 @@ button:focus-visible {
   margin-top: 62px;
 }
 
-.finale-actions a {
+.finale-actions a,
+.finale-wechat-button {
+  appearance: none;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -1135,6 +1139,31 @@ button:focus-visible {
   border-radius: 16px;
   background: rgba(244, 242, 237, 0.035);
   color: rgba(244, 242, 237, 0.84);
+  font: inherit;
+  cursor: pointer;
+}
+
+.finale-wechat-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.finale-wechat-bubble {
+  top: auto;
+  right: auto;
+  bottom: calc(100% + 14px);
+  left: 0;
+  transform-origin: bottom left;
+}
+
+.finale-wechat-bubble::before {
+  top: auto;
+  right: auto;
+  bottom: -5px;
+  left: 22px;
+  border: 0;
+  border-right: 1px solid rgba(244, 242, 237, 0.16);
+  border-bottom: 1px solid rgba(244, 242, 237, 0.16);
 }
 
 .footer-line {

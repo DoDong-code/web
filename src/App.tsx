@@ -1,12 +1,11 @@
-import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, Phone, Sparkles, Wand2, Layers3, Workflow, BadgeCheck, CircleDot, LayoutGrid, Monitor, Box, Cpu, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, MessageCircle, Phone, Sparkles, Wand2, Layers3, Workflow, BadgeCheck, CircleDot, LayoutGrid, Monitor, Box, Cpu, X } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const navItems = [
   { label: '首页', href: '#top' },
-  { label: '项目', href: '#work' },
   { label: '经历', href: '#about' },
-  { label: '联系', href: '#contact' },
+  { label: '项目', href: '#work' },
 ];
 
 const stats = [
@@ -262,9 +261,17 @@ export default function App() {
   const [activeWorkCategory, setActiveWorkCategory] = useState<(typeof workCategories)[number]['id']>('All');
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [wechatOpen, setWechatOpen] = useState(false);
+  const navWechatRef = useRef<HTMLDivElement>(null);
+  const footerWechatRef = useRef<HTMLDivElement>(null);
   const filteredProjects = activeWorkCategory === 'All'
     ? projects
     : projects.filter((project) => project.category === activeWorkCategory);
+
+  useEffect(() => {
+    const contactImage = new Image();
+    contactImage.src = '/contact-wechat.jpg';
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = selectedProject ? 'hidden' : '';
@@ -279,6 +286,18 @@ export default function App() {
       document.body.classList.remove('menu-open');
     };
   }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!navWechatRef.current?.contains(target) && !footerWechatRef.current?.contains(target)) {
+        setWechatOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
+  }, []);
 
   return (
     <main className="site-shell font-geist">
@@ -295,9 +314,19 @@ export default function App() {
             ))}
           </div>
         </div>
-        <a className="nav-contact desktop-talk" href="#contact">
-          联系我
-        </a>
+        <div className="nav-contact-wrap desktop-talk" ref={navWechatRef}>
+          <button
+            className="nav-contact"
+            type="button"
+            aria-expanded={wechatOpen}
+            onClick={() => setWechatOpen((open) => !open)}
+          >
+            微信
+          </button>
+          <div className={`contact-bubble${wechatOpen ? ' is-open' : ''}`} role="dialog" aria-hidden={!wechatOpen}>
+            <img src="/contact-wechat.jpg" alt="微信二维码" decoding="async" />
+          </div>
+        </div>
         <button
           className="mobile-menu-toggle"
           type="button"
@@ -318,7 +347,7 @@ export default function App() {
             </a>
           ))}
           <a className="mobile-talk" href="#contact" onClick={() => setMobileMenuOpen(false)}>
-            联系我
+            联系方式
           </a>
         </div>
       </div>
@@ -563,6 +592,20 @@ export default function App() {
               <BadgeCheck size={18} />
               站酷主页
             </a>
+            <div className="finale-wechat-wrap" ref={footerWechatRef}>
+              <button
+                type="button"
+                className="finale-wechat-button"
+                aria-expanded={wechatOpen}
+                onClick={() => setWechatOpen((open) => !open)}
+              >
+                <MessageCircle size={18} />
+                微信
+              </button>
+              <div className={`contact-bubble finale-wechat-bubble${wechatOpen ? ' is-open' : ''}`} role="dialog" aria-hidden={!wechatOpen}>
+                <img src="/contact-wechat.jpg" alt="微信二维码" decoding="async" />
+              </div>
+            </div>
           </div>
           <div className="footer-line">
             <span>Portfolio 2026</span>
