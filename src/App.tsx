@@ -262,7 +262,7 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [wechatOpen, setWechatOpen] = useState(false);
-  const navWechatRef = useRef<HTMLDivElement>(null);
+  const [activeContact, setActiveContact] = useState<'email' | 'phone' | 'zcool' | 'wechat' | null>(null);
   const footerWechatRef = useRef<HTMLDivElement>(null);
   const filteredProjects = activeWorkCategory === 'All'
     ? projects
@@ -290,8 +290,9 @@ export default function App() {
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as Node;
-      if (!navWechatRef.current?.contains(target) && !footerWechatRef.current?.contains(target)) {
+      if (!footerWechatRef.current?.contains(target)) {
         setWechatOpen(false);
+        setActiveContact(null);
       }
     };
 
@@ -314,19 +315,9 @@ export default function App() {
             ))}
           </div>
         </div>
-        <div className="nav-contact-wrap desktop-talk" ref={navWechatRef}>
-          <button
-            className="nav-contact"
-            type="button"
-            aria-expanded={wechatOpen}
-            onClick={() => setWechatOpen((open) => !open)}
-          >
-            微信
-          </button>
-          <div className={`contact-bubble${wechatOpen ? ' is-open' : ''}`} role="dialog" aria-hidden={!wechatOpen}>
-            <img src="/contact-wechat.jpg" alt="微信二维码" decoding="async" />
-          </div>
-        </div>
+        <a className="nav-contact desktop-talk" href="#contact">
+          联系我
+        </a>
         <button
           className="mobile-menu-toggle"
           type="button"
@@ -580,24 +571,41 @@ export default function App() {
           <p className="eyebrow">Contact</p>
           <h2>期待与你一起，把下一个项目做得更锋利、更清晰。</h2>
           <div className="finale-actions">
-            <a href="mailto:825324414@qq.com">
+            <a
+              className={activeContact === 'email' ? 'is-active' : ''}
+              href="mailto:825324414@qq.com"
+              onClick={() => setActiveContact('email')}
+            >
               <Mail size={18} />
               825324414@qq.com
             </a>
-            <a href="tel:17766053112">
+            <a
+              className={activeContact === 'phone' ? 'is-active' : ''}
+              href="tel:17766053112"
+              onClick={() => setActiveContact('phone')}
+            >
               <Phone size={18} />
               17766053112
             </a>
-            <a href="https://www.zcool.com.cn/u/16926202" target="_blank" rel="noreferrer">
+            <a
+              className={activeContact === 'zcool' ? 'is-active' : ''}
+              href="https://www.zcool.com.cn/u/16926202"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => setActiveContact('zcool')}
+            >
               <BadgeCheck size={18} />
               站酷主页
             </a>
             <div className="finale-wechat-wrap" ref={footerWechatRef}>
               <button
                 type="button"
-                className="finale-wechat-button"
+                className={`finale-wechat-button${activeContact === 'wechat' ? ' is-active' : ''}`}
                 aria-expanded={wechatOpen}
-                onClick={() => setWechatOpen((open) => !open)}
+                onClick={() => {
+                  setWechatOpen((open) => !open);
+                  setActiveContact('wechat');
+                }}
               >
                 <MessageCircle size={18} />
                 微信
