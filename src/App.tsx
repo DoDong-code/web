@@ -3,10 +3,10 @@ import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 
 const navItems = [
-  { label: 'Home', href: '#top' },
-  { label: 'Projects', href: '#work' },
-  { label: 'Studio', href: '#about' },
-  { label: 'Reach Us', href: '#contact' },
+  { label: '首页', href: '#top' },
+  { label: '项目', href: '#work' },
+  { label: '经历', href: '#about' },
+  { label: '联系', href: '#contact' },
 ];
 
 const stats = [
@@ -284,8 +284,8 @@ export default function App() {
     <main className="site-shell font-geist">
       <nav className="nav">
         <div className="nav-left">
-          <a className="brand" href="#top" aria-label="Foldcraft home">
-            Foldcraft
+          <a className="brand" href="#top" aria-label="返回首页">
+            DO STUDIO
           </a>
           <div className="nav-links">
             {navItems.map((item) => (
@@ -296,7 +296,7 @@ export default function App() {
           </div>
         </div>
         <a className="nav-contact desktop-talk" href="#contact">
-          Let's Talk
+          联系我
         </a>
         <button
           className="mobile-menu-toggle"
@@ -318,7 +318,7 @@ export default function App() {
             </a>
           ))}
           <a className="mobile-talk" href="#contact" onClick={() => setMobileMenuOpen(false)}>
-            Let's Talk
+            联系我
           </a>
         </div>
       </div>
@@ -338,17 +338,17 @@ export default function App() {
         <div className="hero-inner">
           <div className="hero-copy">
             <div className="hero-top">
-              <p className="hero-badge">Brand &amp; Visual Storytelling</p>
+              <p className="hero-badge">Visual Designer / AI Designer / Brand Designer</p>
               <h1>
-                Shaping visual<br />
-                narratives,<br />
-                one pixel at a time.
+                ZHAO<br />
+                WEIDONG<br />
+                PORTFOLIO
               </h1>
             </div>
             <div className="hero-bottom-copy">
-              <p>Turning vision into reality through craft, motion, and an endless pursuit of beauty.</p>
+              <p>资深动效设计师，具备 UI、动效、3D、视觉与 AI 辅助设计能力。把视觉、动效与 AI 转化为可增长的设计系统。</p>
               <a className="hero-explore" href="#work">
-                Explore Work
+                查看精选项目
                 <ArrowRight size={16} />
               </a>
             </div>
