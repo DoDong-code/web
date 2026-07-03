@@ -6,6 +6,7 @@ const navItems = [
   { label: '首页', href: '#top' },
   { label: '经历', href: '#about' },
   { label: '项目', href: '#work' },
+  { label: '优势', href: '#strengths' },
 ];
 
 const stats = [
@@ -218,6 +219,12 @@ const projects = [
   },
 ];
 
+const heroGalleryItems = projects.map((project, projectIndex) => ({
+  image: project.image,
+  text: project.title,
+  projectIndex,
+}));
+
 const strengths = [
   {
     icon: Sparkles,
@@ -358,12 +365,32 @@ export default function App() {
         <div className="hero-inner">
           <div className="hero-copy">
             <div className="hero-top">
-              <p className="hero-badge">Visual Designer / AI Designer / Brand Designer</p>
+              <p className="hero-badge">This website was built with Codex assistance</p>
               <h1>
                 ZHAO<br />
                 WEIDONG<br />
                 PORTFOLIO
               </h1>
+              <div className="hero-gallery">
+                <div className="hero-gallery-track" aria-label="精选项目预览">
+                  {heroGalleryItems.map((item) => {
+                    const index = Number(item.projectIndex);
+                    return (
+                      <button
+                        className="hero-gallery-card"
+                        key={`${item.text}-${index}`}
+                        type="button"
+                        onClick={() => {
+                          if (Number.isInteger(index) && projects[index]) setSelectedProject(projects[index]);
+                        }}
+                      >
+                        <img src={item.image} alt={item.text} />
+                        <span>{item.text}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
             <div className="hero-bottom-copy">
               <p>资深动效设计师，具备 UI、动效、3D、视觉与 AI 辅助设计能力。把视觉、动效与 AI 转化为可增长的设计系统。</p>

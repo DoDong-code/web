@@ -73,11 +73,11 @@ button:focus-visible {
   min-height: 100vh;
   overflow: hidden;
   background:
-    radial-gradient(circle at 18% 8%, rgba(255, 80, 29, 0.12), transparent 32vw),
-    radial-gradient(circle at 84% 24%, rgba(32, 118, 255, 0.14), transparent 36vw),
-    radial-gradient(circle at 18% 58%, rgba(26, 83, 88, 0.16), transparent 34vw),
-    radial-gradient(circle at 80% 78%, rgba(180, 151, 207, 0.1), transparent 36vw),
-    linear-gradient(180deg, #050607 0%, #07090b 34%, #060708 68%, #050607 100%);
+    radial-gradient(circle at 14% 20%, rgba(26, 83, 88, 0.22), transparent 34vw),
+    radial-gradient(circle at 82% 42%, rgba(255, 80, 29, 0.13), transparent 36vw),
+    radial-gradient(circle at 50% 82%, rgba(32, 118, 255, 0.12), transparent 42vw),
+    linear-gradient(180deg, #050607 0%, #07090b 100%);
+  background-attachment: fixed;
 }
 
 .site-shell::before {
@@ -86,12 +86,26 @@ button:focus-visible {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.28;
+  opacity: 0.2;
   background:
     linear-gradient(rgba(244, 242, 237, 0.045) 1px, transparent 1px),
     linear-gradient(90deg, rgba(244, 242, 237, 0.035) 1px, transparent 1px);
   background-size: 84px 84px;
   mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+}
+
+.site-shell::after {
+  content: "";
+  position: fixed;
+  inset: -5vh -5vw;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background:
+    linear-gradient(180deg, rgba(5, 6, 7, 0.72), rgba(5, 6, 7, 0.9)),
+    url("/portfolio/live-header-31.png") center 18% / cover no-repeat;
+  filter: blur(18px) saturate(1.2);
+  transform: scale(1.04);
 }
 
 .site-shell > * {
@@ -135,8 +149,19 @@ button:focus-visible {
   pointer-events: none;
 }
 
-.hero::after,
-.contact-finale::before {
+.hero::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  z-index: 3;
+  height: 30vh;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 6, 7, 0.62) 56%, #050607 100%);
+}
+
+.hero::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -147,6 +172,7 @@ button:focus-visible {
     linear-gradient(90deg, rgba(244, 242, 237, 0.07) 1px, transparent 1px);
   background-size: 84px 84px;
   mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
+  pointer-events: none;
 }
 
 .nav {
@@ -168,13 +194,13 @@ button:focus-visible {
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  padding: 20px 0;
+  padding: 0;
 }
 
 .nav-left {
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 0;
 }
 
 .brand {
@@ -193,13 +219,16 @@ button:focus-visible {
 }
 
 .nav-links {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   display: flex;
   align-items: center;
-  gap: 28px;
+  justify-content: center;
+  gap: 46px;
   color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
-  position: static;
-  transform: none;
+  transform: translate(-50%, -50%);
 }
 
 .nav-links a {
@@ -442,7 +471,8 @@ button:focus-visible {
 }
 
 .hero-top {
-  max-width: 920px;
+  width: min(1180px, 100%);
+  max-width: none;
 }
 
 .hero-badge {
@@ -450,6 +480,110 @@ button:focus-visible {
   color: rgba(255, 255, 255, 0.9);
   font-size: 14px;
   animation: fadeSlideUp 0.8s ease 0.2s both;
+}
+
+.hero-gallery {
+  position: relative;
+  width: min(1700px, calc(100vw - 72px));
+  height: clamp(210px, 28vh, 330px);
+  margin: clamp(24px, 3.4vh, 40px) 0 0 0;
+  animation: fadeSlideUp 0.8s ease 0.62s both;
+  opacity: 0.94;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
+}
+
+.hero-gallery::before,
+.hero-gallery::after {
+  content: "";
+  position: absolute;
+  top: 8%;
+  bottom: 8%;
+  z-index: 2;
+  width: 18%;
+  pointer-events: none;
+}
+
+.hero-gallery::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.55), transparent);
+}
+
+.hero-gallery::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(0, 0, 0, 0.48), transparent);
+}
+
+.hero-gallery-track {
+  display: grid;
+  grid-auto-columns: clamp(300px, 24vw, 470px);
+  grid-auto-flow: column;
+  gap: 22px;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 12vw 18px 0;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+}
+
+.hero-gallery-track::-webkit-scrollbar {
+  display: none;
+}
+
+.hero-gallery-card {
+  appearance: none;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(244, 242, 237, 0.14);
+  border-radius: 18px;
+  background: rgba(244, 242, 237, 0.045);
+  color: #fff;
+  cursor: pointer;
+  scroll-snap-align: start;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.hero-gallery-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(244, 242, 237, 0.38);
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.38);
+}
+
+.hero-gallery-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.03);
+  transition: transform 360ms ease;
+}
+
+.hero-gallery-card:hover img {
+  transform: scale(1.08);
+}
+
+.hero-gallery-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 42%, rgba(0, 0, 0, 0.72));
+  pointer-events: none;
+}
+
+.hero-gallery-card span {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  left: 18px;
+  z-index: 1;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.28;
+  text-align: left;
 }
 
 .hero-bottom-copy {
@@ -539,6 +673,28 @@ button:focus-visible {
 .section {
   position: relative;
   padding: 150px 0;
+  isolation: isolate;
+}
+
+.about-section::before,
+.work-showcase::after,
+.strengths-section::before,
+.contact-finale::after {
+  content: "";
+  position: absolute;
+  top: -220px;
+  left: 50%;
+  z-index: 0;
+  width: 100vw;
+  height: 420px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  display: none;
+}
+
+.section > * {
+  position: relative;
+  z-index: 1;
 }
 
 .section-grid {
@@ -763,12 +919,9 @@ button:focus-visible {
   position: absolute;
   inset: 0 auto auto 50%;
   width: 100vw;
-  height: 460px;
+  height: 560px;
   transform: translateX(-50%);
-  background:
-    radial-gradient(circle at 18% 6%, rgba(32, 118, 255, 0.1), transparent 30vw),
-    radial-gradient(circle at 62% 0%, rgba(180, 151, 207, 0.08), transparent 34vw),
-    linear-gradient(180deg, rgba(244, 242, 237, 0.025), transparent);
+  display: none;
   pointer-events: none;
 }
 
@@ -1133,13 +1286,27 @@ button:focus-visible {
   display: flex;
   align-items: stretch;
   overflow: hidden;
-  background:
-    linear-gradient(120deg, rgba(26, 83, 88, 0.16), transparent 42%),
-    radial-gradient(circle at 78% 54%, rgba(205, 187, 137, 0.1), transparent 30vw),
-    transparent;
+  isolation: isolate;
+  background: transparent;
+}
+
+.contact-finale::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.08;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(244, 242, 237, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244, 242, 237, 0.07) 1px, transparent 1px);
+  background-size: 84px 84px;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
 }
 
 .finale-inner {
+  position: relative;
+  z-index: 2;
   min-height: 100vh;
   padding: 30vh 0 48px;
   display: flex;
@@ -1152,6 +1319,8 @@ button:focus-visible {
 }
 
 .finale-actions {
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
@@ -1220,20 +1389,6 @@ button:focus-visible {
 
   .project-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 768px) {
-  .nav {
-    padding-right: 48px;
-    padding-left: 48px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .nav {
-    padding-right: 64px;
-    padding-left: 64px;
   }
 }
 
