@@ -1,5 +1,6 @@
 {
-  "name": "Do Studio Portfolio",
-  "description": "A high-end, minimalist design portfolio with a dark luxury aesthetic.",
-  "requestFramePermissions": []
+  "name": "Zhao Weidong Portfolio",
+  "description": "Zhao Weidong's designer portfolio, showcasing senior 3D motion design, growth UI, and AI-assisted design systems.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

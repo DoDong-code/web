@@ -1,6 +1,7 @@
-import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, MessageCircle, Phone, Sparkles, Wand2, Layers3, Workflow, BadgeCheck, CircleDot, LayoutGrid, Monitor, Box, Cpu, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, MessageCircle, Phone, Sparkles, Wand2, Layers3, Workflow, BadgeCheck, CircleDot, LayoutGrid, Monitor, Box, Cpu, X, QrCode, Smartphone, Copy, Check } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import BorderGlow from './components/BorderGlow';
 
 const navItems = [
   { label: '首页', href: '#top' },
@@ -276,17 +277,26 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [wechatOpen, setWechatOpen] = useState(false);
   const [activeContact, setActiveContact] = useState<'email' | 'phone' | 'zcool' | 'wechat' | null>(null);
+  const [qrOpen, setQrOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [qrUrl, setQrUrl] = useState('');
+
   const footerWechatRef = useRef<HTMLDivElement>(null);
   const heroGalleryRef = useRef<HTMLDivElement>(null);
-  const heroGalleryCardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const heroGalleryCardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const heroGalleryMotionRef = useRef({ current: 0, target: 0, raf: 0, lastTime: 0 });
   const heroGalleryDragRef = useRef({
     isDown: false,
     startX: 0,
+    startY: 0,
     scrollLeft: 0,
     didDrag: false,
     startProjectIndex: -1,
+    isScrolling: undefined as boolean | undefined,
   });
+  const qrModalRef = useRef<HTMLDivElement>(null);
+  const qrTriggerRef = useRef<HTMLButtonElement>(null);
+
   const filteredProjects = activeWorkCategory === 'All'
     ? projects
     : projects.filter((project) => project.category === activeWorkCategory);
@@ -297,11 +307,97 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    setQrUrl(window.location.href);
+    const handleUrlChange = () => {
+      setQrUrl(window.location.href);
+    };
+    window.addEventListener('hashchange', handleUrlChange);
+    window.addEventListener('popstate', handleUrlChange);
+    return () => {
+      window.removeEventListener('hashchange', handleUrlChange);
+      window.removeEventListener('popstate', handleUrlChange);
+    };
+  }, []);
+
+  useEffect(() => {
     document.body.style.overflow = selectedProject ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
   }, [selectedProject]);
+
+  useEffect(() => {
+    const track = heroGalleryRef.current;
+    if (!track) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      const card = (e.target as Element | null)?.closest<HTMLDivElement>('.hero-gallery-card');
+      const projectIndex = Number(card?.dataset.projectIndex);
+
+      heroGalleryDragRef.current = {
+        isDown: true,
+        startX: touch.clientX,
+        startY: touch.clientY,
+        scrollLeft: heroGalleryMotionRef.current.target,
+        didDrag: false,
+        startProjectIndex: Number.isInteger(projectIndex) ? projectIndex : -1,
+        isScrolling: undefined,
+      };
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const drag = heroGalleryDragRef.current;
+      if (!drag.isDown) return;
+
+      const touch = e.touches[0];
+      const diffX = touch.clientX - drag.startX;
+      const diffY = touch.clientY - drag.startY;
+
+      if (drag.isScrolling === undefined) {
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+          drag.isScrolling = false;
+        } else {
+          drag.isScrolling = true;
+        }
+      }
+
+      if (drag.isScrolling === false) {
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+        if (Math.abs(diffX) > 4) {
+          drag.didDrag = true;
+        }
+        heroGalleryMotionRef.current.target = drag.scrollLeft - diffX * HERO_GALLERY_SCROLL_SPEED;
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const drag = heroGalleryDragRef.current;
+      if (!drag.isDown) return;
+
+      if (!drag.didDrag && drag.isScrolling !== true) {
+        const projectIndex = drag.startProjectIndex;
+        if (projectIndex >= 0 && projects[projectIndex]) {
+          setSelectedProject(projects[projectIndex]);
+        }
+      }
+      drag.isDown = false;
+    };
+
+    track.addEventListener('touchstart', handleTouchStart, { passive: true });
+    track.addEventListener('touchmove', handleTouchMove, { passive: false });
+    track.addEventListener('touchend', handleTouchEnd, { passive: true });
+    track.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+
+    return () => {
+      track.removeEventListener('touchstart', handleTouchStart);
+      track.removeEventListener('touchmove', handleTouchMove);
+      track.removeEventListener('touchend', handleTouchEnd);
+      track.removeEventListener('touchcancel', handleTouchEnd);
+    };
+  }, []);
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', mobileMenuOpen);
@@ -316,6 +412,14 @@ export default function App() {
       if (!footerWechatRef.current?.contains(target)) {
         setWechatOpen(false);
         setActiveContact(null);
+      }
+      if (
+        qrModalRef.current &&
+        !qrModalRef.current.contains(target) &&
+        qrTriggerRef.current &&
+        !qrTriggerRef.current.contains(target)
+      ) {
+        setQrOpen(false);
       }
     };
 
@@ -423,31 +527,36 @@ export default function App() {
   }, []);
 
   const handleHeroGalleryPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'touch') return;
     const track = heroGalleryRef.current;
     if (!track || event.button !== 0) return;
-    const card = (event.target as Element | null)?.closest<HTMLButtonElement>('.hero-gallery-card');
+    const card = (event.target as Element | null)?.closest<HTMLDivElement>('.hero-gallery-card');
     const projectIndex = Number(card?.dataset.projectIndex);
     heroGalleryDragRef.current = {
       isDown: true,
       startX: event.clientX,
+      startY: event.clientY,
       scrollLeft: heroGalleryMotionRef.current.target,
       didDrag: false,
       startProjectIndex: Number.isInteger(projectIndex) ? projectIndex : -1,
+      isScrolling: undefined,
     };
     track.setPointerCapture(event.pointerId);
   };
 
   const handleHeroGalleryPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'touch') return;
     const track = heroGalleryRef.current;
     const drag = heroGalleryDragRef.current;
     if (!track || !drag.isDown) return;
     event.preventDefault();
     const distance = event.clientX - drag.startX;
-    if (Math.abs(distance) > 4) drag.didDrag = true;
+    if (Math.abs(distance) > 6) drag.didDrag = true;
     heroGalleryMotionRef.current.target = drag.scrollLeft - distance * HERO_GALLERY_SCROLL_SPEED;
   };
 
   const handleHeroGalleryPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'touch') return;
     const track = heroGalleryRef.current;
     const drag = heroGalleryDragRef.current;
     if (!drag.isDown) return;
@@ -457,6 +566,15 @@ export default function App() {
         setSelectedProject(projects[projectIndex]);
       }
     }
+    heroGalleryDragRef.current.isDown = false;
+    if (track?.hasPointerCapture(event.pointerId)) {
+      track.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  const handleHeroGalleryPointerCancel = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'touch') return;
+    const track = heroGalleryRef.current;
     heroGalleryDragRef.current.isDown = false;
     if (track?.hasPointerCapture(event.pointerId)) {
       track.releasePointerCapture(event.pointerId);
@@ -555,21 +673,22 @@ export default function App() {
                   onPointerDown={handleHeroGalleryPointerDown}
                   onPointerMove={handleHeroGalleryPointerMove}
                   onPointerUp={handleHeroGalleryPointerUp}
-                  onPointerCancel={handleHeroGalleryPointerUp}
-                  onPointerLeave={handleHeroGalleryPointerUp}
+                  onPointerCancel={handleHeroGalleryPointerCancel}
+                  onPointerLeave={handleHeroGalleryPointerCancel}
                   onWheel={handleHeroGalleryWheel}
                 >
                   {heroGalleryItems.map((item, galleryIndex) => {
                     const index = Number(item.projectIndex);
                     return (
-                      <button
+                      <div
                         className="hero-gallery-card"
                         key={`${item.text}-${index}`}
                         ref={(node) => {
                           heroGalleryCardRefs.current[galleryIndex] = node;
                         }}
                         data-project-index={index}
-                        type="button"
+                        role="button"
+                        tabIndex={0}
                         onKeyDown={(event) => {
                           if (event.key !== 'Enter' && event.key !== ' ') return;
                           event.preventDefault();
@@ -578,7 +697,7 @@ export default function App() {
                       >
                         <img src={item.image} alt={item.text} draggable={false} />
                         <span>{item.text}</span>
-                      </button>
+                      </div>
                     );
                   })}
                 </div>
@@ -586,10 +705,23 @@ export default function App() {
             </div>
             <div className="hero-bottom-copy">
               <p>资深动效设计师，具备 UI、动效、3D、视觉与 AI 辅助设计能力。把视觉、动效与 AI 转化为可增长的设计系统。</p>
-              <a className="hero-explore" href="#work">
-                查看精选项目
-                <ArrowRight size={16} />
-              </a>
+              <BorderGlow
+                className="hero-explore-glow"
+                edgeSensitivity={30}
+                glowColor="250 80 80"
+                backgroundColor="#0d0e11"
+                borderRadius={8}
+                glowRadius={40}
+                glowIntensity={1.8}
+                coneSpread={25}
+                animated={true}
+                colors={['#c084fc', '#f472b6', '#38bdf8']}
+              >
+                <a className="hero-explore" href="#work">
+                  查看精选项目
+                  <ArrowRight size={16} />
+                </a>
+              </BorderGlow>
             </div>
           </div>
         </div>
@@ -845,6 +977,93 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      {/* 手机预览 / QR Code Widget */}
+      <button
+        ref={qrTriggerRef}
+        type="button"
+        className="qr-trigger-float"
+        onClick={() => setQrOpen(!qrOpen)}
+        title="手机扫码预览"
+      >
+        <QrCode size={16} />
+        <span>手机预览</span>
+      </button>
+
+      <div
+        ref={qrModalRef}
+        className={`qr-modal-container${qrOpen ? ' is-open' : ''}`}
+        role="dialog"
+        aria-label="手机扫码预览弹窗"
+      >
+        <div className="qr-header">
+          <div className="qr-header-title">
+            <Smartphone size={16} />
+            <span>手机扫码预览</span>
+          </div>
+          <button
+            type="button"
+            className="qr-close-btn"
+            onClick={() => setQrOpen(false)}
+            aria-label="关闭"
+          >
+            <X size={14} />
+          </button>
+        </div>
+
+        <div className="qr-body">
+          <p className="qr-desc">
+            用手机相机、微信或浏览器扫描下方二维码，即可在手机端实时预览该作品集。
+          </p>
+          
+          <div className="qr-image-wrapper">
+            {qrUrl ? (
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=180&color=ffffff&bgcolor=0a0a0c&data=${encodeURIComponent(qrUrl)}`}
+                alt="手机预览二维码"
+                decoding="async"
+              />
+            ) : (
+              <div className="text-xs text-white/40">加载中...</div>
+            )}
+            <div className="qr-scanner-line" />
+          </div>
+
+          <div className="qr-link-copy-section">
+            <span className="qr-link-display" title={qrUrl}>
+              {qrUrl || '正在获取链接...'}
+            </span>
+            <button
+              type="button"
+              className={`qr-copy-btn${copied ? ' is-copied' : ''}`}
+              onClick={() => {
+                if (!qrUrl) return;
+                navigator.clipboard.writeText(qrUrl).then(() => {
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                });
+              }}
+            >
+              {copied ? (
+                <>
+                  <Check size={12} />
+                  <span>已复制</span>
+                </>
+              ) : (
+                <>
+                  <Copy size={12} />
+                  <span>复制链接</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        <div className="qr-footer-tip">
+          <Sparkles size={11} />
+          <span>支持多端流畅同步与手势交互预览</span>
+        </div>
+      </div>
     </main>
   );
 }
