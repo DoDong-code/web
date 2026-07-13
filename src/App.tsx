@@ -155,7 +155,7 @@ const projects = [
     title: '多多视频-直播礼物',
     tag: '3D动效',
     category: '3D Motion',
-    year: '2026',
+    year: '2024',
     image: '/portfolio/reference-project1.png',
     desc: '春节直播礼物 3D 动态设计，围绕开播引导、付费人数和 ARPPU 指标建立高冲击视觉表达。',
     video: '/portfolio/project1-detail/gift-collection.mp4',
@@ -307,6 +307,27 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const media = window.matchMedia('(hover: hover) and (pointer: fine)');
+    if (!media.matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let frame = 0;
+    const movePointerLight = (event: PointerEvent) => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        document.documentElement.style.setProperty('--pointer-x', `${event.clientX}px`);
+        document.documentElement.style.setProperty('--pointer-y', `${event.clientY}px`);
+        frame = 0;
+      });
+    };
+
+    window.addEventListener('pointermove', movePointerLight, { passive: true });
+    return () => {
+      window.removeEventListener('pointermove', movePointerLight);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  useEffect(() => {
     setQrUrl(window.location.href);
     const handleUrlChange = () => {
       setQrUrl(window.location.href);
@@ -430,7 +451,7 @@ export default function App() {
   useEffect(() => {
     const elements = Array.from(
       document.querySelectorAll<HTMLElement>(
-        '.section, .contact-finale, .section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-card, .project-card, .strength-card, .finale-actions > *, .footer-line',
+      '.section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-card, .project-card, .strength-card, .finale-actions > *, .footer-line',
       ),
     );
 
@@ -484,9 +505,10 @@ export default function App() {
         const distance = (x / rect.width) * 2.15;
         const clamped = Math.max(-1.15, Math.min(1.15, distance));
         const abs = Math.abs(clamped);
-        const rotation = clamped * -7 * HERO_GALLERY_BEND;
-        const y = abs * 24 * HERO_GALLERY_BEND;
-        const scale = 1 - Math.min(0.055, abs * 0.035);
+        const rotation = 0;
+        const arcDepth = rect.width < 700 ? 74 : 160;
+        const y = Math.pow(clamped, 2) * arcDepth * HERO_GALLERY_BEND;
+        const scale = 1 - Math.min(0.065, abs * 0.045);
         const fadeStart = 0.62;
         const fadeEnd = 1.18;
         const fadeProgress = Math.max(0, Math.min(1, (abs - fadeStart) / (fadeEnd - fadeStart)));
@@ -660,48 +682,11 @@ export default function App() {
         <div className="hero-inner">
           <div className="hero-copy">
             <div className="hero-top">
-              <h1>
-                ZHAO<br />
-                WEIDONG<br />
-                PORTFOLIO
+              <h1 aria-label="ZHAO WEIDONG PORTFOLIO">
+                <span>ZHAO</span>
+                <span>WEIDONG</span>
+                <span>PORTFOLIO</span>
               </h1>
-              <div className="hero-gallery">
-                <div
-                  className="hero-gallery-track"
-                  ref={heroGalleryRef}
-                  aria-label="精选项目预览"
-                  onPointerDown={handleHeroGalleryPointerDown}
-                  onPointerMove={handleHeroGalleryPointerMove}
-                  onPointerUp={handleHeroGalleryPointerUp}
-                  onPointerCancel={handleHeroGalleryPointerCancel}
-                  onPointerLeave={handleHeroGalleryPointerCancel}
-                  onWheel={handleHeroGalleryWheel}
-                >
-                  {heroGalleryItems.map((item, galleryIndex) => {
-                    const index = Number(item.projectIndex);
-                    return (
-                      <div
-                        className="hero-gallery-card"
-                        key={`${item.text}-${index}`}
-                        ref={(node) => {
-                          heroGalleryCardRefs.current[galleryIndex] = node;
-                        }}
-                        data-project-index={index}
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(event) => {
-                          if (event.key !== 'Enter' && event.key !== ' ') return;
-                          event.preventDefault();
-                          if (Number.isInteger(index) && projects[index]) setSelectedProject(projects[index]);
-                        }}
-                      >
-                        <img src={item.image} alt={item.text} draggable={false} />
-                        <span>{item.text}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
             </div>
             <div className="hero-bottom-copy">
               <p>资深动效设计师，具备 UI、动效、3D、视觉与 AI 辅助设计能力。把视觉、动效与 AI 转化为可增长的设计系统。</p>
@@ -722,6 +707,49 @@ export default function App() {
                   <ArrowRight size={16} />
                 </a>
               </BorderGlow>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="gallery-showcase" aria-label="精选项目画廊">
+        <div className="gallery-showcase-inner">
+          <div className="gallery-showcase-head">
+            <p className="eyebrow">艺术画廊 / Art Gallery</p>
+          </div>
+          <div className="hero-gallery">
+            <div
+              className="hero-gallery-track"
+              ref={heroGalleryRef}
+              aria-label="精选项目预览"
+              onPointerDown={handleHeroGalleryPointerDown}
+              onPointerMove={handleHeroGalleryPointerMove}
+              onPointerUp={handleHeroGalleryPointerUp}
+              onPointerCancel={handleHeroGalleryPointerCancel}
+              onPointerLeave={handleHeroGalleryPointerCancel}
+              onWheel={handleHeroGalleryWheel}
+            >
+              {heroGalleryItems.map((item, galleryIndex) => {
+                const index = Number(item.projectIndex);
+                return (
+                  <div
+                    className="hero-gallery-card"
+                    key={`${item.text}-${index}`}
+                    ref={(node) => { heroGalleryCardRefs.current[galleryIndex] = node; }}
+                    data-project-index={index}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key !== 'Enter' && event.key !== ' ') return;
+                      event.preventDefault();
+                      if (Number.isInteger(index) && projects[index]) setSelectedProject(projects[index]);
+                    }}
+                  >
+                    <img src={item.image} alt={item.text} draggable={false} decoding="async" />
+                    <span>{item.text}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -820,7 +848,7 @@ export default function App() {
               }}
             >
               <div className="project-image">
-                <img src={project.image} alt={project.title} />
+                <img src={project.image} alt={project.title} loading="lazy" decoding="async" />
                 <span className="project-hover-label">查看作品详情</span>
               </div>
               <div className="project-meta">
@@ -877,7 +905,7 @@ export default function App() {
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5 }}
                 >
-                  <video src={selectedProject.video} controls autoPlay muted loop playsInline />
+                  <video src={selectedProject.video} controls autoPlay muted loop playsInline preload="metadata" />
                 </motion.figure>
               )}
               {selectedProject.detailImages.map((image, index) => (
@@ -888,7 +916,7 @@ export default function App() {
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5, delay: index * 0.04 }}
                 >
-                  <img src={image} alt={`${selectedProject.title} 详情 ${index + 1}`} />
+                  <img src={image} alt={`${selectedProject.title} 详情 ${index + 1}`} loading="lazy" decoding="async" />
                 </motion.figure>
               ))}
             </div>
