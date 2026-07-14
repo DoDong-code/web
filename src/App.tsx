@@ -272,6 +272,7 @@ const HERO_GALLERY_SCROLL_EASE = 0.04;
 const HERO_GALLERY_AUTO_SPEED = 0.018;
 
 export default function App() {
+  const [activeNavHref, setActiveNavHref] = useState('#top');
   const [activeWorkCategory, setActiveWorkCategory] = useState<(typeof workCategories)[number]['id']>('All');
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -281,10 +282,20 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [qrUrl, setQrUrl] = useState('');
 
+  const activeNavHrefRef = useRef('#top');
   const footerWechatRef = useRef<HTMLDivElement>(null);
   const heroGalleryRef = useRef<HTMLDivElement>(null);
   const heroGalleryCardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const heroGalleryMotionRef = useRef({ current: 0, target: 0, raf: 0, lastTime: 0 });
+  const heroGalleryVisibleRef = useRef(false);
+  const heroGalleryMetricsRef = useRef({
+    centerX: 0,
+    cardWidth: 360,
+    step: 404,
+    totalWidth: 404 * heroGalleryItems.length,
+    cardRadius: 24,
+    arcDepth: 160,
+  });
   const heroGalleryDragRef = useRef({
     isDown: false,
     startX: 0,
@@ -307,27 +318,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const media = window.matchMedia('(hover: hover) and (pointer: fine)');
-    if (!media.matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    let frame = 0;
-    const movePointerLight = (event: PointerEvent) => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => {
-        document.documentElement.style.setProperty('--pointer-x', `${event.clientX}px`);
-        document.documentElement.style.setProperty('--pointer-y', `${event.clientY}px`);
-        frame = 0;
-      });
-    };
-
-    window.addEventListener('pointermove', movePointerLight, { passive: true });
-    return () => {
-      window.removeEventListener('pointermove', movePointerLight);
-      if (frame) window.cancelAnimationFrame(frame);
-    };
-  }, []);
-
-  useEffect(() => {
     setQrUrl(window.location.href);
     const handleUrlChange = () => {
       setQrUrl(window.location.href);
@@ -337,6 +327,51 @@ export default function App() {
     return () => {
       window.removeEventListener('hashchange', handleUrlChange);
       window.removeEventListener('popstate', handleUrlChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    let frame = 0;
+    let sections: { item: (typeof navItems)[number]; element: HTMLElement }[] = [];
+
+    const refreshSections = () => {
+      sections = navItems
+        .map((item) => ({ item, element: document.querySelector<HTMLElement>(item.href) }))
+        .filter((entry): entry is { item: (typeof navItems)[number]; element: HTMLElement } => Boolean(entry.element));
+    };
+
+    const updateActiveSection = () => {
+      frame = 0;
+      const marker = window.innerHeight * 0.34;
+
+      const current = sections.find(({ element }) => {
+        const rect = element.getBoundingClientRect();
+        return rect.top <= marker && rect.bottom > marker;
+      });
+
+      if (current && activeNavHrefRef.current !== current.item.href) {
+        activeNavHrefRef.current = current.item.href;
+        setActiveNavHref(current.item.href);
+      }
+    };
+
+    const requestUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateActiveSection);
+    };
+
+    const handleResize = () => {
+      refreshSections();
+      requestUpdate();
+    };
+
+    refreshSections();
+    updateActiveSection();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('scroll', requestUpdate);
+      window.removeEventListener('resize', handleResize);
+      if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -451,13 +486,24 @@ export default function App() {
   useEffect(() => {
     const elements = Array.from(
       document.querySelectorAll<HTMLElement>(
-      '.section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-card, .project-card, .strength-card, .finale-actions > *, .footer-line',
+        '.gallery-showcase-head, .hero-gallery, .section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-card, .project-card, .strength-card, .finale-actions > *, .footer-line',
       ),
     );
 
     elements.forEach((element, index) => {
       element.classList.add('scroll-reveal');
       element.style.setProperty('--reveal-index', `${Math.min(index % 8, 7)}`);
+    });
+
+    const revealGroups = ['.stats-grid', '.timeline', '.work-filter-grid', '.project-grid', '.strength-grid', '.finale-actions'];
+    revealGroups.forEach((selector) => {
+      document.querySelectorAll<HTMLElement>(selector).forEach((group) => {
+        Array.from(group.children).forEach((child, childIndex) => {
+          if (child instanceof HTMLElement && child.classList.contains('scroll-reveal')) {
+            child.style.setProperty('--reveal-index', `${Math.min(childIndex, 7)}`);
+          }
+        });
+      });
     });
 
     const observer = new IntersectionObserver(
@@ -485,50 +531,58 @@ export default function App() {
     motionState.current = 0;
     motionState.target = 0;
 
-    const updateCards = () => {
-      const gallery = heroGalleryRef.current;
-      if (!gallery) return;
-      const rect = gallery.getBoundingClientRect();
-      const centerX = rect.width / 2;
+    const measureGallery = () => {
+      const rect = track.getBoundingClientRect();
       const firstCard = heroGalleryCardRefs.current.find(Boolean);
       const cardWidth = firstCard?.offsetWidth ?? 360;
-      const styles = window.getComputedStyle(gallery);
+      const styles = window.getComputedStyle(track);
       const gap = Number.parseFloat(styles.getPropertyValue('--gallery-gap')) || 44;
       const step = cardWidth + gap;
-      const totalWidth = step * heroGalleryItems.length;
-      const cardRadius = Math.round(rect.width * HERO_GALLERY_BORDER_RADIUS);
+      heroGalleryMetricsRef.current = {
+        centerX: rect.width / 2,
+        cardWidth,
+        step,
+        totalWidth: step * heroGalleryItems.length,
+        cardRadius: Math.round(rect.width * HERO_GALLERY_BORDER_RADIUS),
+        arcDepth: rect.width < 700 ? 74 : 160,
+      };
+    };
+
+    const updateCards = () => {
+      const metrics = heroGalleryMetricsRef.current;
 
       heroGalleryCardRefs.current.forEach((card, index) => {
         if (!card) return;
-        let x = index * step - motionState.current;
-        x = ((x + totalWidth / 2) % totalWidth + totalWidth) % totalWidth - totalWidth / 2;
-        const distance = (x / rect.width) * 2.15;
+        let x = index * metrics.step - motionState.current;
+        x = ((x + metrics.totalWidth / 2) % metrics.totalWidth + metrics.totalWidth) % metrics.totalWidth - metrics.totalWidth / 2;
+        const distance = (x / Math.max(metrics.centerX * 2, 1)) * 2.15;
         const clamped = Math.max(-1.15, Math.min(1.15, distance));
         const abs = Math.abs(clamped);
         const rotation = 0;
-        const arcDepth = rect.width < 700 ? 74 : 160;
-        const y = Math.pow(clamped, 2) * arcDepth * HERO_GALLERY_BEND;
+        const y = Math.pow(clamped, 2) * metrics.arcDepth * HERO_GALLERY_BEND;
         const scale = 1 - Math.min(0.065, abs * 0.045);
         const fadeStart = 0.62;
         const fadeEnd = 1.18;
         const fadeProgress = Math.max(0, Math.min(1, (abs - fadeStart) / (fadeEnd - fadeStart)));
         const opacity = 1 - fadeProgress * 0.72;
-        card.style.setProperty('--gallery-x', `${centerX + x - cardWidth / 2}px`);
+        card.style.setProperty('--gallery-x', `${metrics.centerX + x - metrics.cardWidth / 2}px`);
         card.style.setProperty('--gallery-rotate', `${rotation}deg`);
         card.style.setProperty('--gallery-y', `${y}px`);
         card.style.setProperty('--gallery-scale', `${scale}`);
-        card.style.setProperty('--gallery-radius', `${Math.max(16, Math.min(28, cardRadius))}px`);
+        card.style.setProperty('--gallery-radius', `${Math.max(16, Math.min(28, metrics.cardRadius))}px`);
         card.style.setProperty('--gallery-opacity', `${opacity}`);
         card.style.zIndex = `${Math.round((1.25 - abs) * 100)}`;
       });
     };
 
     const tick = (time: number) => {
-      const gallery = heroGalleryRef.current;
-      if (!gallery) return;
       const state = heroGalleryMotionRef.current;
       const delta = state.lastTime ? Math.min(time - state.lastTime, 48) : 16;
       state.lastTime = time;
+      if (!heroGalleryVisibleRef.current && !heroGalleryDragRef.current.isDown) {
+        state.raf = window.requestAnimationFrame(tick);
+        return;
+      }
       if (!heroGalleryDragRef.current.isDown) {
         state.target += delta * HERO_GALLERY_AUTO_SPEED;
       }
@@ -540,10 +594,21 @@ export default function App() {
       state.raf = window.requestAnimationFrame(tick);
     };
 
+    measureGallery();
     updateCards();
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        heroGalleryVisibleRef.current = Boolean(entry?.isIntersecting);
+      },
+      { rootMargin: '280px 0px', threshold: 0.01 },
+    );
+    observer.observe(track);
+    window.addEventListener('resize', measureGallery);
     motionState.raf = window.requestAnimationFrame(tick);
 
     return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measureGallery);
       window.cancelAnimationFrame(heroGalleryMotionRef.current.raf);
     };
   }, []);
@@ -633,7 +698,13 @@ export default function App() {
           </a>
           <div className="nav-links">
             {navItems.map((item) => (
-              <a key={item.href} href={item.href}>
+              <a
+                key={item.href}
+                href={item.href}
+                className={activeNavHref === item.href ? 'is-active' : ''}
+                aria-current={activeNavHref === item.href ? 'page' : undefined}
+                onClick={() => setActiveNavHref(item.href)}
+              >
                 {item.label}
               </a>
             ))}
@@ -715,7 +786,7 @@ export default function App() {
       <section className="gallery-showcase" aria-label="精选项目画廊">
         <div className="gallery-showcase-inner">
           <div className="gallery-showcase-head">
-            <p className="eyebrow">艺术画廊 / Art Gallery</p>
+            <p className="eyebrow">ART GALLERY</p>
           </div>
           <div className="hero-gallery">
             <div
@@ -745,7 +816,7 @@ export default function App() {
                       if (Number.isInteger(index) && projects[index]) setSelectedProject(projects[index]);
                     }}
                   >
-                    <img src={item.image} alt={item.text} draggable={false} decoding="async" />
+                    <img src={item.image} alt={item.text} draggable={false} loading="lazy" decoding="async" />
                     <span>{item.text}</span>
                   </div>
                 );
@@ -807,7 +878,7 @@ export default function App() {
       </section>
 
       <section className="section work-showcase" id="work">
-        <p className="eyebrow">精选作品</p>
+        <p className="eyebrow">FEATURED WORK</p>
         <div className="work-filter-grid" aria-label="作品分类筛选">
           {workCategories.map((category) => (
             <button
