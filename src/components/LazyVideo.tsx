@@ -31,6 +31,14 @@ export default function LazyVideo({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    let rafId = 0;
+
+    const isVideoVisible = () => {
+      const rect = video.getBoundingClientRect();
+      const visibleWidth = Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0);
+      const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+      return visibleWidth > 0 && visibleHeight > 0;
+    };
 
     const loadVideo = () => {
       if (hasLoadedRef.current) return;
@@ -40,7 +48,7 @@ export default function LazyVideo({
     };
 
     const playVideo = () => {
-      if (!autoPlay) return;
+      if (!autoPlay || !isVideoVisible() || document.hidden) return;
       loadVideo();
       const playRequest = video.play();
       if (playRequest && typeof playRequest.catch === 'function') {
@@ -54,10 +62,30 @@ export default function LazyVideo({
       if (!video.paused) video.pause();
     };
 
+    const syncPlayback = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        if (isVideoVisible() && !document.hidden) {
+          playVideo();
+        } else {
+          pauseVideo();
+        }
+      });
+    };
+
     if (!('IntersectionObserver' in window)) {
       loadVideo();
       playVideo();
-      return () => pauseVideo();
+      window.addEventListener('scroll', syncPlayback, { passive: true });
+      window.addEventListener('resize', syncPlayback);
+      document.addEventListener('visibilitychange', syncPlayback);
+      return () => {
+        pauseVideo();
+        cancelAnimationFrame(rafId);
+        window.removeEventListener('scroll', syncPlayback);
+        window.removeEventListener('resize', syncPlayback);
+        document.removeEventListener('visibilitychange', syncPlayback);
+      };
     }
 
     const loadObserver = new IntersectionObserver(
@@ -84,11 +112,18 @@ export default function LazyVideo({
 
     loadObserver.observe(video);
     playbackObserver.observe(video);
+    window.addEventListener('scroll', syncPlayback, { passive: true });
+    window.addEventListener('resize', syncPlayback);
+    document.addEventListener('visibilitychange', syncPlayback);
 
     return () => {
       pauseVideo();
+      cancelAnimationFrame(rafId);
       loadObserver.disconnect();
       playbackObserver.disconnect();
+      window.removeEventListener('scroll', syncPlayback);
+      window.removeEventListener('resize', syncPlayback);
+      document.removeEventListener('visibilitychange', syncPlayback);
     };
   }, [autoPlay, rootMargin, src]);
 
