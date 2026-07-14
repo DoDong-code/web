@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, MessageCircle, Phone, Sparkl
 import { motion } from 'motion/react';
 import React, { useEffect, useRef, useState } from 'react';
 import BorderGlow from './components/BorderGlow';
+import LazyVideo from './components/LazyVideo';
 
 const navItems = [
   { label: '首页', href: '#top' },
@@ -150,6 +151,12 @@ const project7DetailImages = [
   '/portfolio/project7-detail/gift-011.gif',
 ];
 
+const COS_VIDEO_BASE = 'https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com';
+
+const videoUrl = (fileName: string, localPath: string) => (
+  import.meta.env.DEV ? localPath : `${COS_VIDEO_BASE}/${fileName}`
+);
+
 const projects = [
   {
     title: '多多视频-直播礼物',
@@ -158,7 +165,7 @@ const projects = [
     year: '2024',
     image: '/portfolio/reference-project1.png',
     desc: '春节直播礼物 3D 动态设计，围绕开播引导、付费人数和 ARPPU 指标建立高冲击视觉表达。',
-    video: '/portfolio/project1-detail/gift-collection.mp4',
+    video: videoUrl('gift-collection.mp4', '/portfolio/project1-detail/gift-collection.mp4'),
     detailImages: project1DetailImages,
   },
   {
@@ -168,7 +175,7 @@ const projects = [
     year: '2024',
     image: '/portfolio/project2-cover.png',
     desc: '提炼弹窗、toast、退场、活动按钮等可复用动效参数，建立面向落地和性能的 UI 动效规范。',
-    video: '/portfolio/project2-detail/ui-motion.mp4',
+    video: videoUrl('ui-motion.mp4', '/portfolio/project2-detail/ui-motion.mp4'),
     detailImages: project2DetailImages,
   },
   {
@@ -205,7 +212,7 @@ const projects = [
     year: '2021',
     image: '/portfolio/project6-cover.png',
     desc: '围绕直播互动与轻量养成玩法设计的 3D 小游戏视觉，覆盖角色资产、动效反馈、状态演示与玩法包装。',
-    video: '/portfolio/project6-detail/dog-demo.mp4',
+    video: videoUrl('dog-demo.mp4', '/portfolio/project6-detail/dog-demo.mp4'),
     detailImages: project6DetailImages,
   },
   {
@@ -215,7 +222,7 @@ const projects = [
     year: '2020',
     image: '/portfolio/project7-cover.png',
     desc: '面向直播场景的礼物动效与视觉包装项目，强调礼物识别度、播放节奏和送礼瞬间的情绪价值。',
-    video: '/portfolio/project7-detail/live-gift-2020.mp4',
+    video: videoUrl('live-gift-2020.mp4', '/portfolio/project7-detail/live-gift-2020.mp4'),
     detailImages: project7DetailImages,
   },
 ];
@@ -746,6 +753,7 @@ export default function App() {
           muted
           loop
           playsInline
+          preload="metadata"
           aria-hidden="true"
         />
         <div className="hero-scrim" />
@@ -976,7 +984,7 @@ export default function App() {
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5 }}
                 >
-                  <video src={selectedProject.video} controls autoPlay muted loop playsInline preload="metadata" />
+                  <LazyVideo src={selectedProject.video} controls autoPlay muted loop playsInline preload="metadata" />
                 </motion.figure>
               )}
               {selectedProject.detailImages.map((image, index) => (

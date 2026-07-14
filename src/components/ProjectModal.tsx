@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, ArrowLeft, Plus, Trash2, Upload, ArrowUp, ArrowDown, Video, Image as ImageIcon } from 'lucide-react';
 import type { Project } from '../constants';
 import { translations, type Language } from '../i18n';
+import LazyVideo from './LazyVideo';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -177,12 +178,14 @@ export default function ProjectModal({ project, onClose, lang, onUpdateProject }
                   viewport={{ once: true, margin: "-100px" }}
                   className="relative group w-full bg-brand-gray/20 overflow-hidden rounded-2xl"
                 >
-                  <video 
+                  <LazyVideo 
                     src={cleanUrl(project.video)} 
                     controls 
                     autoPlay 
                     muted 
                     loop 
+                    playsInline
+                    preload="metadata"
                     className="w-full h-auto block"
                   />
                   
@@ -262,12 +265,14 @@ export default function ProjectModal({ project, onClose, lang, onUpdateProject }
                     className="relative group w-full bg-brand-gray/10 border border-white/5 overflow-hidden rounded-2xl flex items-center justify-center min-h-[300px]"
                   >
                     {isVideo ? (
-                      <video 
+                      <LazyVideo 
                         src={displayUrl} 
                         controls 
                         autoPlay 
                         muted 
                         loop 
+                        playsInline
+                        preload="metadata"
                         className="w-full h-auto max-h-[85vh] object-contain block"
                       />
                     ) : (
@@ -385,4 +390,3 @@ export default function ProjectModal({ project, onClose, lang, onUpdateProject }
     </AnimatePresence>
   );
 }
-
