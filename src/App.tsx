@@ -2,7 +2,9 @@ import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, MessageCircle, Phone, Sparkl
 import { motion } from 'motion/react';
 import React, { useEffect, useRef, useState } from 'react';
 import BorderGlow from './components/BorderGlow';
-import LazyVideo from './components/LazyVideo';
+import MotionMasonry, { type MotionItem } from './components/MotionMasonry';
+import TiltedPortraitCard from './components/TiltedPortraitCard';
+import Grainient from './components/Grainient';
 
 const navItems = [
   { label: '首页', href: '#top' },
@@ -151,12 +153,6 @@ const project7DetailImages = [
   '/portfolio/project7-detail/gift-011.gif',
 ];
 
-const COS_VIDEO_BASE = 'https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com';
-
-const videoUrl = (fileName: string, localPath: string) => (
-  import.meta.env.DEV ? localPath : `${COS_VIDEO_BASE}/${fileName}`
-);
-
 const projects = [
   {
     title: '多多视频-直播礼物',
@@ -164,8 +160,10 @@ const projects = [
     category: '3D Motion',
     year: '2024',
     image: '/portfolio/reference-project1.png',
+    hoverGif: '/portfolio/project1-detail/board-28.gif',
+    hasVideo: true,
     desc: '春节直播礼物 3D 动态设计，围绕开播引导、付费人数和 ARPPU 指标建立高冲击视觉表达。',
-    video: videoUrl('gift-collection.mp4', '/portfolio/project1-detail/gift-collection.mp4'),
+    video: '/portfolio/project1-detail/gift-collection.mp4',
     detailImages: project1DetailImages,
   },
   {
@@ -174,8 +172,9 @@ const projects = [
     category: 'UI Motion',
     year: '2024',
     image: '/portfolio/project2-cover.png',
+    hasVideo: true,
     desc: '提炼弹窗、toast、退场、活动按钮等可复用动效参数，建立面向落地和性能的 UI 动效规范。',
-    video: videoUrl('ui-motion.mp4', '/portfolio/project2-detail/ui-motion.mp4'),
+    video: '/portfolio/project2-detail/ui-motion.mp4',
     detailImages: project2DetailImages,
   },
   {
@@ -211,8 +210,9 @@ const projects = [
     category: '3D Motion',
     year: '2021',
     image: '/portfolio/project6-cover.png',
+    hasVideo: true,
     desc: '围绕直播互动与轻量养成玩法设计的 3D 小游戏视觉，覆盖角色资产、动效反馈、状态演示与玩法包装。',
-    video: videoUrl('dog-demo.mp4', '/portfolio/project6-detail/dog-demo.mp4'),
+    video: '/portfolio/project6-detail/dog-demo.mp4',
     detailImages: project6DetailImages,
   },
   {
@@ -221,8 +221,9 @@ const projects = [
     category: '3D Motion',
     year: '2020',
     image: '/portfolio/project7-cover.png',
+    hasVideo: true,
     desc: '面向直播场景的礼物动效与视觉包装项目，强调礼物识别度、播放节奏和送礼瞬间的情绪价值。',
-    video: videoUrl('live-gift-2020.mp4', '/portfolio/project7-detail/live-gift-2020.mp4'),
+    video: '/portfolio/project7-detail/live-gift-2020.mp4',
     detailImages: project7DetailImages,
   },
 ];
@@ -256,6 +257,12 @@ const strengths = [
   },
 ];
 
+const motionItems: MotionItem[] = Array.from({ length: 14 }, (_, index) => {
+  const number = String(index + 1).padStart(2, '0');
+  const isVideo = index >= 12;
+  return { id: `motion-${number}`, src: `/motion-wall/motion-${number}.${isVideo ? 'mp4' : 'gif'}`, type: isVideo ? 'video' : 'image', alt: `Motion ${number}` };
+});
+
 const experience = [
   { company: '拼多多-TEMU', role: 'UI 视觉设计', time: '2024.02-2026.05' },
   { company: '拼多多-多多视频', role: '资深3D动效设计师', time: '2021.04-2024.02' },
@@ -279,7 +286,6 @@ const HERO_GALLERY_SCROLL_EASE = 0.04;
 const HERO_GALLERY_AUTO_SPEED = 0.018;
 
 export default function App() {
-  const [activeNavHref, setActiveNavHref] = useState('#top');
   const [activeWorkCategory, setActiveWorkCategory] = useState<(typeof workCategories)[number]['id']>('All');
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -289,20 +295,10 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [qrUrl, setQrUrl] = useState('');
 
-  const activeNavHrefRef = useRef('#top');
   const footerWechatRef = useRef<HTMLDivElement>(null);
   const heroGalleryRef = useRef<HTMLDivElement>(null);
   const heroGalleryCardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const heroGalleryMotionRef = useRef({ current: 0, target: 0, raf: 0, lastTime: 0 });
-  const heroGalleryVisibleRef = useRef(false);
-  const heroGalleryMetricsRef = useRef({
-    centerX: 0,
-    cardWidth: 360,
-    step: 404,
-    totalWidth: 404 * heroGalleryItems.length,
-    cardRadius: 24,
-    arcDepth: 160,
-  });
   const heroGalleryDragRef = useRef({
     isDown: false,
     startX: 0,
@@ -325,6 +321,27 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const media = window.matchMedia('(hover: hover) and (pointer: fine)');
+    if (!media.matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let frame = 0;
+    const movePointerLight = (event: PointerEvent) => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        document.documentElement.style.setProperty('--pointer-x', `${event.clientX}px`);
+        document.documentElement.style.setProperty('--pointer-y', `${event.clientY}px`);
+        frame = 0;
+      });
+    };
+
+    window.addEventListener('pointermove', movePointerLight, { passive: true });
+    return () => {
+      window.removeEventListener('pointermove', movePointerLight);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  useEffect(() => {
     setQrUrl(window.location.href);
     const handleUrlChange = () => {
       setQrUrl(window.location.href);
@@ -334,51 +351,6 @@ export default function App() {
     return () => {
       window.removeEventListener('hashchange', handleUrlChange);
       window.removeEventListener('popstate', handleUrlChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    let frame = 0;
-    let sections: { item: (typeof navItems)[number]; element: HTMLElement }[] = [];
-
-    const refreshSections = () => {
-      sections = navItems
-        .map((item) => ({ item, element: document.querySelector<HTMLElement>(item.href) }))
-        .filter((entry): entry is { item: (typeof navItems)[number]; element: HTMLElement } => Boolean(entry.element));
-    };
-
-    const updateActiveSection = () => {
-      frame = 0;
-      const marker = window.innerHeight * 0.34;
-
-      const current = sections.find(({ element }) => {
-        const rect = element.getBoundingClientRect();
-        return rect.top <= marker && rect.bottom > marker;
-      });
-
-      if (current && activeNavHrefRef.current !== current.item.href) {
-        activeNavHrefRef.current = current.item.href;
-        setActiveNavHref(current.item.href);
-      }
-    };
-
-    const requestUpdate = () => {
-      if (!frame) frame = window.requestAnimationFrame(updateActiveSection);
-    };
-
-    const handleResize = () => {
-      refreshSections();
-      requestUpdate();
-    };
-
-    refreshSections();
-    updateActiveSection();
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('scroll', requestUpdate);
-      window.removeEventListener('resize', handleResize);
-      if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -493,24 +465,13 @@ export default function App() {
   useEffect(() => {
     const elements = Array.from(
       document.querySelectorAll<HTMLElement>(
-        '.gallery-showcase-head, .hero-gallery, .section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-card, .project-card, .strength-card, .finale-actions > *, .footer-line',
+      '.section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-card, .project-card, .strength-card, .finale-actions > *, .footer-line',
       ),
     );
 
     elements.forEach((element, index) => {
       element.classList.add('scroll-reveal');
       element.style.setProperty('--reveal-index', `${Math.min(index % 8, 7)}`);
-    });
-
-    const revealGroups = ['.stats-grid', '.timeline', '.work-filter-grid', '.project-grid', '.strength-grid', '.finale-actions'];
-    revealGroups.forEach((selector) => {
-      document.querySelectorAll<HTMLElement>(selector).forEach((group) => {
-        Array.from(group.children).forEach((child, childIndex) => {
-          if (child instanceof HTMLElement && child.classList.contains('scroll-reveal')) {
-            child.style.setProperty('--reveal-index', `${Math.min(childIndex, 7)}`);
-          }
-        });
-      });
     });
 
     const observer = new IntersectionObserver(
@@ -538,58 +499,50 @@ export default function App() {
     motionState.current = 0;
     motionState.target = 0;
 
-    const measureGallery = () => {
-      const rect = track.getBoundingClientRect();
+    const updateCards = () => {
+      const gallery = heroGalleryRef.current;
+      if (!gallery) return;
+      const rect = gallery.getBoundingClientRect();
+      const centerX = rect.width / 2;
       const firstCard = heroGalleryCardRefs.current.find(Boolean);
       const cardWidth = firstCard?.offsetWidth ?? 360;
-      const styles = window.getComputedStyle(track);
+      const styles = window.getComputedStyle(gallery);
       const gap = Number.parseFloat(styles.getPropertyValue('--gallery-gap')) || 44;
       const step = cardWidth + gap;
-      heroGalleryMetricsRef.current = {
-        centerX: rect.width / 2,
-        cardWidth,
-        step,
-        totalWidth: step * heroGalleryItems.length,
-        cardRadius: Math.round(rect.width * HERO_GALLERY_BORDER_RADIUS),
-        arcDepth: rect.width < 700 ? 74 : 160,
-      };
-    };
-
-    const updateCards = () => {
-      const metrics = heroGalleryMetricsRef.current;
+      const totalWidth = step * heroGalleryItems.length;
+      const cardRadius = Math.round(rect.width * HERO_GALLERY_BORDER_RADIUS);
 
       heroGalleryCardRefs.current.forEach((card, index) => {
         if (!card) return;
-        let x = index * metrics.step - motionState.current;
-        x = ((x + metrics.totalWidth / 2) % metrics.totalWidth + metrics.totalWidth) % metrics.totalWidth - metrics.totalWidth / 2;
-        const distance = (x / Math.max(metrics.centerX * 2, 1)) * 2.15;
+        let x = index * step - motionState.current;
+        x = ((x + totalWidth / 2) % totalWidth + totalWidth) % totalWidth - totalWidth / 2;
+        const distance = (x / rect.width) * 2.15;
         const clamped = Math.max(-1.15, Math.min(1.15, distance));
         const abs = Math.abs(clamped);
         const rotation = 0;
-        const y = Math.pow(clamped, 2) * metrics.arcDepth * HERO_GALLERY_BEND;
+        const arcDepth = rect.width < 700 ? 74 : 160;
+        const y = Math.pow(clamped, 2) * arcDepth * HERO_GALLERY_BEND;
         const scale = 1 - Math.min(0.065, abs * 0.045);
         const fadeStart = 0.62;
         const fadeEnd = 1.18;
         const fadeProgress = Math.max(0, Math.min(1, (abs - fadeStart) / (fadeEnd - fadeStart)));
         const opacity = 1 - fadeProgress * 0.72;
-        card.style.setProperty('--gallery-x', `${metrics.centerX + x - metrics.cardWidth / 2}px`);
+        card.style.setProperty('--gallery-x', `${centerX + x - cardWidth / 2}px`);
         card.style.setProperty('--gallery-rotate', `${rotation}deg`);
         card.style.setProperty('--gallery-y', `${y}px`);
         card.style.setProperty('--gallery-scale', `${scale}`);
-        card.style.setProperty('--gallery-radius', `${Math.max(16, Math.min(28, metrics.cardRadius))}px`);
+        card.style.setProperty('--gallery-radius', `${Math.max(16, Math.min(28, cardRadius))}px`);
         card.style.setProperty('--gallery-opacity', `${opacity}`);
         card.style.zIndex = `${Math.round((1.25 - abs) * 100)}`;
       });
     };
 
     const tick = (time: number) => {
+      const gallery = heroGalleryRef.current;
+      if (!gallery) return;
       const state = heroGalleryMotionRef.current;
       const delta = state.lastTime ? Math.min(time - state.lastTime, 48) : 16;
       state.lastTime = time;
-      if (!heroGalleryVisibleRef.current && !heroGalleryDragRef.current.isDown) {
-        state.raf = window.requestAnimationFrame(tick);
-        return;
-      }
       if (!heroGalleryDragRef.current.isDown) {
         state.target += delta * HERO_GALLERY_AUTO_SPEED;
       }
@@ -601,21 +554,10 @@ export default function App() {
       state.raf = window.requestAnimationFrame(tick);
     };
 
-    measureGallery();
     updateCards();
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        heroGalleryVisibleRef.current = Boolean(entry?.isIntersecting);
-      },
-      { rootMargin: '280px 0px', threshold: 0.01 },
-    );
-    observer.observe(track);
-    window.addEventListener('resize', measureGallery);
     motionState.raf = window.requestAnimationFrame(tick);
 
     return () => {
-      observer.disconnect();
-      window.removeEventListener('resize', measureGallery);
       window.cancelAnimationFrame(heroGalleryMotionRef.current.raf);
     };
   }, []);
@@ -698,6 +640,7 @@ export default function App() {
 
   return (
     <main className="site-shell font-geist">
+      <Grainient className="site-grainient" color1="#451a0c" color2="#151a31" color3="#0f2659" />
       <nav className="nav">
         <div className="nav-left">
           <a className="brand" href="#top" aria-label="返回首页">
@@ -705,13 +648,7 @@ export default function App() {
           </a>
           <div className="nav-links">
             {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className={activeNavHref === item.href ? 'is-active' : ''}
-                aria-current={activeNavHref === item.href ? 'page' : undefined}
-                onClick={() => setActiveNavHref(item.href)}
-              >
+              <a key={item.href} href={item.href}>
                 {item.label}
               </a>
             ))}
@@ -753,7 +690,6 @@ export default function App() {
           muted
           loop
           playsInline
-          preload="metadata"
           aria-hidden="true"
         />
         <div className="hero-scrim" />
@@ -794,7 +730,7 @@ export default function App() {
       <section className="gallery-showcase" aria-label="精选项目画廊">
         <div className="gallery-showcase-inner">
           <div className="gallery-showcase-head">
-            <p className="eyebrow">ART GALLERY</p>
+            <p className="eyebrow">艺术画廊 / Art Gallery</p>
           </div>
           <div className="hero-gallery">
             <div
@@ -824,7 +760,7 @@ export default function App() {
                       if (Number.isInteger(index) && projects[index]) setSelectedProject(projects[index]);
                     }}
                   >
-                    <img src={item.image} alt={item.text} draggable={false} loading="lazy" decoding="async" />
+                    <img src={item.image} alt={item.text} draggable={false} decoding="async" />
                     <span>{item.text}</span>
                   </div>
                 );
@@ -836,12 +772,15 @@ export default function App() {
 
       <section className="section about-section" id="about">
         <div className="section-grid">
-          <div className="portrait-panel">
-            <div className="portrait-card">
-              <div>
-                <strong>ZHAO WEIDONG</strong>
-                <small>Shanghai</small>
+          <div className="portrait-tilt-shell portrait-panel">
+            <TiltedPortraitCard className="portrait-photo-layer" rotateAmplitude={6} scaleOnHover={1.01} perspective={900}>
+              <div className="portrait-photo">
+                <img src="/about-avatar.png" alt="Zhao Weidong" />
               </div>
+            </TiltedPortraitCard>
+            <div className="portrait-text-layer">
+              <strong data-text="ZHAO WEIDONG">ZHAO WEIDONG</strong>
+              <small data-text="Shanghai">Shanghai</small>
             </div>
           </div>
 
@@ -886,7 +825,7 @@ export default function App() {
       </section>
 
       <section className="section work-showcase" id="work">
-        <p className="eyebrow">FEATURED WORK</p>
+        <p className="eyebrow">精选作品</p>
         <div className="work-filter-grid" aria-label="作品分类筛选">
           {workCategories.map((category) => (
             <button
@@ -928,6 +867,16 @@ export default function App() {
             >
               <div className="project-image">
                 <img src={project.image} alt={project.title} loading="lazy" decoding="async" />
+                {project.hasVideo ? (
+                  <span className="project-play-badge" aria-label="视频项目">
+                    <svg className="project-play-icon" viewBox="0 0 48 48" aria-hidden="true">
+                      <path d="M17 13.5c0-2.15 2.37-3.45 4.18-2.28l15.1 9.65a3.72 3.72 0 0 1 0 6.26l-15.1 9.65C19.37 37.95 17 36.65 17 34.5v-21Z" />
+                    </svg>
+                  </span>
+                ) : null}
+                {'hoverGif' in project && project.hoverGif ? (
+                  <img className="project-hover-gif" src={project.hoverGif} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+                ) : null}
                 <span className="project-hover-label">查看作品详情</span>
               </div>
               <div className="project-meta">
@@ -984,7 +933,7 @@ export default function App() {
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5 }}
                 >
-                  <LazyVideo src={selectedProject.video} controls autoPlay muted loop playsInline preload="metadata" />
+                  <video src={selectedProject.video} controls autoPlay muted loop playsInline preload="metadata" />
                 </motion.figure>
               )}
               {selectedProject.detailImages.map((image, index) => (
@@ -1007,6 +956,14 @@ export default function App() {
           </div>
         </motion.section>
       )}
+
+      <section className="section motion-wall-section" id="motion-wall">
+        <div className="section-head compact">
+          <p className="eyebrow">MOTION ARCHIVE</p>
+          <p>收录动态图形、AI 视觉、品牌动效与界面实验。</p>
+        </div>
+        <MotionMasonry items={motionItems} />
+      </section>
 
       <section className="section strengths-section" id="strengths">
         <div className="section-head compact">

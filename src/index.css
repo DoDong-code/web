@@ -79,46 +79,29 @@ button:focus-visible {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 14% 20%, rgba(26, 83, 88, 0.22), transparent 34vw),
-    radial-gradient(circle at 82% 42%, rgba(255, 80, 29, 0.13), transparent 36vw),
-    radial-gradient(circle at 50% 82%, rgba(32, 118, 255, 0.12), transparent 42vw),
-    linear-gradient(180deg, #050607 0%, #07090b 100%);
-  background-attachment: fixed;
+  background: #050607;
 }
 
 .site-shell::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.24;
-  background:
-    radial-gradient(520px circle at 18% 22%, rgba(155, 200, 198, 0.08), transparent 68%),
-    linear-gradient(rgba(244, 242, 237, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(244, 242, 237, 0.035) 1px, transparent 1px);
-  background-size: 84px 84px;
-  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  display: none;
 }
 
 .site-shell::after {
-  content: "";
-  position: fixed;
-  inset: -5vh -5vw;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.18;
-  background:
-    linear-gradient(180deg, rgba(5, 6, 7, 0.72), rgba(5, 6, 7, 0.9)),
-    url("/portfolio/live-header-31.png") center 18% / cover no-repeat;
-  filter: blur(18px) saturate(1.2);
-  transform: scale(1.04);
+  display: none;
 }
 
 .site-shell > * {
   position: relative;
   z-index: 1;
+}
+
+.site-shell > .site-grainient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 1;
+  mix-blend-mode: normal;
 }
 
 .scroll-progress {
@@ -334,14 +317,14 @@ button:focus-visible {
 .finale-actions a:hover,
 .finale-wechat-button:hover {
   color: #ffffff;
-  background: linear-gradient(180deg, #ff6b34, #f04a18);
+  background: #ff4f1f;
   transform: translateY(-1px);
 }
 
 .finale-actions a.is-active,
 .finale-wechat-button.is-active {
-  border-color: rgba(255, 80, 29, 0.72);
-  background: linear-gradient(180deg, #ff5a24, #df3f14);
+  border-color: #ff4f1f;
+  background: #ff4f1f;
   color: #ffffff;
   box-shadow: 0 14px 36px rgba(255, 80, 29, 0.18);
 }
@@ -798,8 +781,11 @@ button:focus-visible {
 }
 
 .cta-glow {
+  position: relative;
   border-radius: 999px;
   background: rgba(18, 19, 22, 0.72);
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .hero-main-cta {
@@ -808,7 +794,10 @@ button:focus-visible {
 }
 
 .cta-glow .border-glow-inner {
+  position: relative;
+  z-index: 1;
   border-radius: inherit;
+  overflow: hidden;
 }
 
 .cta-glow .text-link {
@@ -951,6 +940,11 @@ button:focus-visible {
   isolation: isolate;
 }
 
+.about-section,
+.portrait-panel {
+  overflow: visible;
+}
+
 .about-section::before,
 .work-showcase::after,
 .strengths-section::before,
@@ -977,48 +971,121 @@ button:focus-visible {
   grid-template-columns: 0.82fr 1.18fr;
   gap: 76px;
   align-items: stretch;
+  perspective: 900px;
+  overflow: visible;
 }
 
-.portrait-panel {
+.portrait-tilt-shell {
   min-height: 760px;
-  padding: 28px;
-  border: 1px solid rgba(244, 242, 237, 0.12);
-  border-radius: 20px;
-  background:
-    linear-gradient(140deg, rgba(244, 242, 237, 0.08), transparent 42%),
-    url("/about-avatar.png") center 42% / cover;
   position: relative;
-  overflow: hidden;
+  padding: 28px;
+  margin: -28px;
+  perspective: 900px;
+  overflow: visible;
 }
 
-.portrait-panel::after {
+.portrait-photo-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 1px solid rgba(244, 242, 237, 0.14);
+  border-radius: 20px;
+  background: rgba(6, 7, 9, 0.18);
+  transform-style: preserve-3d;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  will-change: transform;
+}
+
+.portrait-photo-layer::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(5, 6, 7, 0.12), rgba(5, 6, 7, 0.84));
-}
-
-.portrait-card {
-  position: relative;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(5, 6, 7, 0.15), rgba(5, 6, 7, 0.50)),
+    linear-gradient(140deg, rgba(244, 242, 237, 0.08), transparent 42%);
+  transform: translateZ(0);
   z-index: 1;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  backface-visibility: hidden;
 }
 
-.portrait-card strong {
+.portrait-photo-layer::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  z-index: 2;
+  border-radius: inherit;
+  background: linear-gradient(to top, rgba(4, 5, 8, 0.9), rgba(4, 5, 8, 0.35) 48%, transparent 100%);
+  transform: translateZ(6px);
+  backface-visibility: hidden;
+  pointer-events: none;
+}
+
+.portrait-photo {
+  position: relative;
+  z-index: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.portrait-photo img {
   display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+}
+
+.portrait-text-layer {
+  position: absolute;
+  z-index: 5;
+  left: 44px;
+  bottom: 42px;
+  width: fit-content;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: perspective(900px) translate3d(var(--text-x, 0px), var(--text-y, 0px), 0)
+    rotateX(var(--text-rotate-x, 0deg))
+    rotateY(var(--text-rotate-y, 0deg))
+    translateZ(32px);
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.portrait-text-layer::before {
+  content: none;
+}
+
+.portrait-photo-layer:hover {
+  border-color: rgba(244, 242, 237, 0.24);
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(244, 242, 237, 0.06);
+}
+
+.portrait-tilt-shell.scroll-reveal,
+.portrait-tilt-shell.scroll-reveal.is-visible {
+  clip-path: none;
+}
+
+.portrait-text-layer strong {
+  display: block;
+  width: max-content;
   font-size: clamp(38px, 3.2vw, 54px);
+  font-weight: 800;
   line-height: 1;
   letter-spacing: 0;
+  text-shadow: 0 16px 28px rgba(0, 0, 0, 0.46);
 }
 
-.portrait-card small {
+.portrait-text-layer small {
   display: block;
+  width: max-content;
   margin-top: 14px;
   color: rgba(244, 242, 237, 0.56);
   font-size: 17px;
+  text-shadow: 0 12px 24px rgba(0, 0, 0, 0.38);
 }
 
 .about-content h2,
@@ -1030,6 +1097,12 @@ button:focus-visible {
   line-height: 1.12;
   font-weight: 640;
   letter-spacing: -0.02em;
+}
+
+.about-content h2 {
+  max-width: 1000px;
+  font-size: clamp(34px, 2.8vw, 52px);
+  line-height: 1.35;
 }
 
 .lead,
@@ -1060,6 +1133,7 @@ button:focus-visible {
   background: rgba(244, 242, 237, 0.04);
   color: rgba(244, 242, 237, 0.74);
   font-size: 14px;
+  transition: transform 220ms ease, color 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
 }
 
 .stats-grid {
@@ -1081,6 +1155,26 @@ button:focus-visible {
 .stat-card {
   min-height: 132px;
   padding: 22px;
+  transition: transform 260ms ease, border-color 260ms ease, background 260ms ease, box-shadow 260ms ease;
+}
+
+.contact-strip span:hover,
+.contact-strip a:hover,
+.contact-strip a:focus-visible {
+  color: rgba(255, 255, 255, 0.94);
+  border-color: rgba(244, 242, 237, 0.28);
+  background: rgba(244, 242, 237, 0.075);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22), 0 0 24px rgba(244, 242, 237, 0.06);
+  transform: translateY(-2px);
+}
+
+.stat-card:hover {
+  border-color: rgba(244, 242, 237, 0.24);
+  background:
+    linear-gradient(145deg, rgba(244, 242, 237, 0.08), rgba(244, 242, 237, 0.032)),
+    rgba(8, 9, 12, 0.68);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.28), 0 0 42px rgba(15, 38, 89, 0.16);
+  transform: translateY(-4px);
 }
 
 .stat-card strong {
@@ -1461,6 +1555,33 @@ button:focus-visible {
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.14);
 }
 
+.project-play-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(120, 120, 126, 0.38);
+  border: 1.5px solid rgba(255, 255, 255, 0.42);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+  pointer-events: none;
+}
+
+.project-play-icon {
+  width: 30px;
+  height: 30px;
+  display: block;
+  overflow: visible;
+}
+
+.project-play-icon path {
+  fill: rgba(255, 255, 255, 0.70);
+}
+
 .project-image::before {
   content: "";
   position: absolute;
@@ -1500,10 +1621,22 @@ button:focus-visible {
   filter: saturate(0.82) contrast(1.04);
 }
 
+.project-hover-gif {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  object-fit: contain;
+  object-position: center center;
+  background: #020304;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
 .project-hover-label {
   position: absolute;
   inset: 50% auto auto 50%;
-  z-index: 2;
+  z-index: 4;
   transform: translate(-50%, -44%);
   opacity: 0;
   padding: 12px 22px;
@@ -1522,6 +1655,12 @@ button:focus-visible {
   filter: saturate(1) contrast(1.08);
 }
 
+.project-card:hover .project-image .project-hover-gif {
+  opacity: 1;
+  transform: none;
+  filter: saturate(1) contrast(1.04);
+}
+
 .project-card:hover .project-image {
   transform: translateY(-7px) perspective(1000px) rotateX(1.2deg);
   box-shadow: 0 34px 76px rgba(0, 0, 0, 0.36), 0 0 36px rgba(32, 118, 255, 0.1);
@@ -1533,6 +1672,10 @@ button:focus-visible {
 
 .project-card:hover .project-image::after {
   opacity: 0.72;
+}
+
+.motion-wall-section {
+  position: relative;
 }
 
 .project-card:hover .project-hover-label {
@@ -1681,8 +1824,12 @@ button:focus-visible {
 
 .detail-gallery {
   display: grid;
-  gap: 72px;
+  gap: 0;
   width: 100%;
+}
+
+.detail-gallery .detail-video {
+  margin-bottom: 72px;
 }
 
 .detail-gallery figure {
@@ -2113,14 +2260,16 @@ button:focus-visible {
     gap: 34px;
   }
 
-  .portrait-panel {
+  .portrait-tilt-shell {
     min-height: 560px;
-    padding: 20px;
-    border-radius: 16px;
-    background-position: center top;
+    padding: 0;
   }
 
-  .portrait-card strong {
+  .portrait-photo-layer {
+    border-radius: 16px;
+  }
+
+  .portrait-text-layer strong {
     font-size: clamp(34px, 10vw, 48px);
   }
 
@@ -2314,7 +2463,11 @@ button:focus-visible {
 
   .detail-gallery {
     margin-top: 54px;
-    gap: 24px;
+    gap: 0;
+  }
+
+  .detail-gallery .detail-video {
+    margin-bottom: 24px;
   }
 
   .scroll-reveal {
@@ -2327,6 +2480,20 @@ button:focus-visible {
    ========================================== */
 .qr-trigger-float {
   display: none;
+}
+
+@media (max-width: 640px) {
+  .project-play-badge {
+    top: 16px;
+    right: 16px;
+    width: 46px;
+    height: 46px;
+  }
+
+  .project-play-icon {
+    width: 30px;
+    height: 30px;
+  }
 }
 
 @media (min-width: 768px) {
