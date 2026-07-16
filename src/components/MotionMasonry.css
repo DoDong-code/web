@@ -1,4 +1,5 @@
 .motion-wall-viewport {
+  --motion-fade-height: 140px;
   position: relative;
   width: 100%;
   height: auto;
@@ -6,11 +7,15 @@
   max-height: min(145vh, 1320px);
   overflow: hidden;
   transition: max-height 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - var(--motion-fade-height)), rgba(0, 0, 0, 0.94) calc(100% - 115px), rgba(0, 0, 0, 0.72) calc(100% - 80px), rgba(0, 0, 0, 0.38) calc(100% - 42px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - var(--motion-fade-height)), rgba(0, 0, 0, 0.94) calc(100% - 115px), rgba(0, 0, 0, 0.72) calc(100% - 80px), rgba(0, 0, 0, 0.38) calc(100% - 42px), transparent 100%);
 }
 
 .motion-wall-viewport.is-expanded {
   max-height: none;
   overflow: visible;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 .motion-masonry {
@@ -85,27 +90,12 @@
   visibility: hidden;
 }
 
-.motion-wall-fade {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 180px;
-  z-index: 4;
-  pointer-events: none;
-  background: linear-gradient(to bottom, rgba(4, 5, 10, 0), rgba(4, 5, 10, 0.82) 45%, rgba(4, 5, 10, 1) 100%);
-  transition: opacity 400ms ease;
-}
-
-.motion-wall-viewport.is-expanded .motion-wall-fade {
-  opacity: 0;
-}
-
 .motion-wall-toggle {
   position: absolute;
   left: 50%;
-  bottom: 24px;
-  z-index: 8;
+  bottom: 48px;
+  z-index: 9999;
+  isolation: isolate;
   width: 48px;
   height: 48px;
   display: grid;
@@ -201,7 +191,6 @@
 }
 
 @media (max-width: 719px) {
-  .motion-wall-fade { height: 140px; }
   .motion-lightbox { padding: 7vh 3vw; }
   .motion-lightbox-content,
   .motion-lightbox-content img,

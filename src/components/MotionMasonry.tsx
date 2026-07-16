@@ -199,7 +199,6 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
           </article>;
         })}
       </div>
-      <div className="motion-wall-fade" aria-hidden="true" />
       <button className="motion-wall-toggle" type="button" onClick={() => setExpanded((value) => !value)} aria-label={expanded ? '收起全部' : '展开全部'} aria-expanded={expanded}><svg className="motion-wall-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={expanded ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6'} /></svg></button>
       {activeItem && <div className="motion-lightbox" role="dialog" aria-modal="true" aria-label={activeItem.alt}>
         <button className="motion-lightbox-backdrop" type="button" aria-label="关闭预览" onClick={() => setActiveItem(null)} />
