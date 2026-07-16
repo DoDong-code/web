@@ -1100,9 +1100,10 @@ button:focus-visible {
 }
 
 .about-content h2 {
-  max-width: 1000px;
-  font-size: clamp(34px, 2.8vw, 52px);
-  line-height: 1.35;
+  max-width: 1120px;
+  font-size: clamp(32px, 3.2vw, 64px);
+  line-height: 1.5;
+  letter-spacing: 0.1em;
 }
 
 .lead,
