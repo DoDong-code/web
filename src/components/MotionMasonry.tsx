@@ -41,6 +41,7 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   const cardsRef = useRef(new Map<string, HTMLElement>());
   const isLightboxOpenRef = useRef(false);
   const activeOriginRef = useRef<string | null>(null);
+  const entrancePlayedRef = useRef(false);
   const [loadedItems, setLoadedItems] = useState<MotionItem[]>(() => stableMotionOrder(items));
   const [ratios, setRatios] = useState<Record<string, number>>({});
   const [failed, setFailed] = useState<Set<string>>(new Set());
@@ -89,12 +90,42 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   }, [loadedItems, ratios, failed]);
 
   useLayoutEffect(() => {
-    if (!loadedItems.length) return;
+    const shell = shellRef.current;
+    if (!shell || !loadedItems.length || entrancePlayedRef.current) return;
+
+    let observer: IntersectionObserver | null = null;
     const context = gsap.context(() => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { gsap.set('.motion-masonry-item', { opacity: 1, filter: 'blur(0px)' }); return; }
-      gsap.fromTo('.motion-masonry-item', { opacity: 0, filter: 'blur(8px)', y: 30 }, { opacity: 1, filter: 'blur(0px)', y: 0, duration: 0.6, stagger: 0.045, ease: 'power3.out' });
+      const items = gsap.utils.toArray<HTMLElement>('.motion-masonry-item');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        gsap.set(items, { opacity: 1, filter: 'blur(0px)', y: 0 });
+        entrancePlayedRef.current = true;
+        return;
+      }
+
+      gsap.set(items, { opacity: 0, filter: 'blur(8px)', y: 72 });
+
+      observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        entrancePlayedRef.current = true;
+        observer?.disconnect();
+        gsap.to(items, {
+          opacity: 1,
+          filter: 'blur(0px)',
+          y: 0,
+          duration: 0.6,
+          stagger: 0.045,
+          ease: 'power3.out',
+          clearProps: 'opacity,filter,transform',
+        });
+      }, { threshold: 0.12 });
+
+      observer.observe(shell);
     }, shellRef);
-    return () => context.revert();
+
+    return () => {
+      observer?.disconnect();
+      context.revert();
+    };
   }, [loadedItems]);
 
   useEffect(() => {

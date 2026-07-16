@@ -848,18 +848,21 @@ export default function App() {
           <span>显示 {filteredProjects.length} 个项目</span>
         </div>
 
-        <motion.div layout className="project-grid">
+        <motion.div className="project-grid">
           {filteredProjects.map((project, index) => (
             <motion.article
-              layout
               className="project-card"
               key={project.title}
               role="button"
               tabIndex={0}
-              initial={{ opacity: 0, y: 28 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.45, delay: index * 0.04 }}
+              transition={{
+                duration: 0.32,
+                ease: [0.22, 1, 0.36, 1],
+                delay: index * 0.018,
+              }}
               onClick={() => setSelectedProject(project)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
