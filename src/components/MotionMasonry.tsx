@@ -27,15 +27,21 @@ const stableMotionOrder = (source: MotionItem[]) => {
   const ordered: MotionItem[] = [];
   let videoIndex = 0;
   let imageIndex = 0;
-  while (videoIndex < videos.length || imageIndex < images.length) {
+  while (imageIndex < images.length || videoIndex < videos.length) {
+    for (let count = 0; count < 6 && imageIndex < images.length; count += 1) ordered.push(images[imageIndex++]);
     if (videoIndex < videos.length) ordered.push(videos[videoIndex++]);
-    for (let count = 0; count < 3 && imageIndex < images.length; count += 1) ordered.push(images[imageIndex++]);
   }
   return ordered;
+};
+const motionSrcSet = (src: string) => {
+  if (!src.startsWith('/optimized/motion-wall/') || !src.endsWith('.webp')) return undefined;
+  const base = src.slice(0, -5);
+  return [480, 640, 960, 1280].map((width) => `${base}-${width}.webp ${width}w`).join(', ');
 };
 
 export default function MotionMasonry({ items }: MotionMasonryProps) {
   const shellRef = useRef<HTMLDivElement>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const backgroundVideosRef = useRef(new Map<string, HTMLVideoElement>());
   const cardsRef = useRef(new Map<string, HTMLElement>());
@@ -52,6 +58,7 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   const [collapsedHeight] = useState(() => Math.min(Math.max(window.innerHeight * 0.95, 900), 1080));
   const [expanded, setExpanded] = useState(false);
   const [activeItem, setActiveItem] = useState<MotionItem | null>(null);
+  const [renderLimit, setRenderLimit] = useState(12);
   const [visibleVideos, setVisibleVideos] = useState(new Set<HTMLVideoElement>());
   const wasExpandedRef = useRef(false);
   const warned = useRef(new Set<string>());
@@ -171,6 +178,17 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   }, [activeItem]);
 
   const visibleItems = loadedItems.filter((item) => !failed.has(item.id));
+  const renderedItems = expanded ? visibleItems : visibleItems.slice(0, renderLimit);
+  useEffect(() => {
+    if (expanded || renderLimit >= visibleItems.length) return;
+    const sentinel = loadMoreRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) setRenderLimit((current) => Math.min(current + 24, visibleItems.length));
+    }, { rootMargin: '900px 0px' });
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [expanded, renderLimit, visibleItems.length]);
   const openLightbox = (item: MotionItem) => { activeOriginRef.current = item.id; setActiveItem(item); };
   const toggleExpanded = () => {
     setExpanded((current) => {
@@ -188,17 +206,18 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   return (
     <div className={`motion-wall-viewport${expanded ? ' is-expanded' : ''}`} style={{ '--motion-collapsed-height': `${collapsedHeight}px`, '--motion-full-height': `${fullHeight || 900}px` } as CSSProperties}>
       <div ref={shellRef} className={`motion-masonry${activeItem ? ' is-preview-open' : ''}`} style={{ '--motion-cell-size': `${cellSize}px` } as CSSProperties}>
-        {visibleItems.map((item, index) => {
+        {renderedItems.map((item, index) => {
           const ratio = ratios[item.id] ?? item.aspectRatio ?? 1;
           const shape = ratio >= 1.35 ? 'landscape' : ratio <= 0.75 ? 'portrait' : 'square';
           const layout = { x: 0, y: 0, width: 0, height: 0 };
           return <article ref={(node) => { if (node) cardsRef.current.set(item.id, node); }} className={`motion-masonry-item motion-item--${shape}`} key={item.id} style={{ left: layout.x, top: layout.y, width: layout.width, height: layout.height }} role="button" tabIndex={0} aria-label={`放大查看 ${item.alt}`} onClick={() => openLightbox(item)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(item); } }}>
             <div className="motion-masonry-media">
-              {item.type === 'video' ? <video src={item.src} poster={item.poster} muted loop playsInline preload={index < 2 ? 'metadata' : 'none'} aria-label={item.alt} onLoadedMetadata={(event) => markRatio(item, event.currentTarget.videoWidth, event.currentTarget.videoHeight)} onError={() => markFailure(item)} /> : <img src={item.src} alt={item.alt} loading={index < 2 ? 'eager' : 'lazy'} fetchPriority={index < 2 ? 'high' : 'auto'} decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
+              {item.type === 'video' ? <video src={item.src} poster={item.poster} muted loop playsInline preload="none" aria-label={item.alt} onLoadedMetadata={(event) => markRatio(item, event.currentTarget.videoWidth, event.currentTarget.videoHeight)} onError={() => markFailure(item)} /> : <img src={item.src} srcSet={motionSrcSet(item.src)} sizes={shape === 'landscape' ? '(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 25vw' : '(max-width: 760px) 50vw, (max-width: 1200px) 25vw, 12.5vw'} alt={item.alt} loading="lazy" decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
             </div>
           </article>;
         })}
       </div>
+      {!expanded && renderLimit < visibleItems.length ? <div ref={loadMoreRef} aria-hidden="true" className="motion-wall-load-sentinel" /> : null}
       <button className="motion-wall-toggle" type="button" onClick={() => setExpanded((value) => !value)} aria-label={expanded ? '收起全部' : '展开全部'} aria-expanded={expanded}><svg className="motion-wall-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={expanded ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6'} /></svg></button>
       {activeItem && <div className="motion-lightbox" role="dialog" aria-modal="true" aria-label={activeItem.alt}>
         <button className="motion-lightbox-backdrop" type="button" aria-label="关闭预览" onClick={() => setActiveItem(null)} />

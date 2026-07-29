@@ -698,13 +698,16 @@ export default function App() {
       </div>
 
       <section className="hero" id="top">
+        <link rel="preload" as="image" href="/optimized/posters/home-hero.webp" fetchPriority="high" />
         <video
           className="hero-video"
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_204221_5339e40b-e73d-4ab0-9c65-79c18c66fd50.mp4"
+          poster="/optimized/posters/home-hero.webp"
           autoPlay
           muted
           loop
           playsInline
+          preload="metadata"
           aria-hidden="true"
         />
         <div className="hero-scrim" />
@@ -775,7 +778,7 @@ export default function App() {
                       if (Number.isInteger(index) && projects[index]) setSelectedProject(projects[index]);
                     }}
                   >
-                    <img src={optimizedImageSrc(item.image)} srcSet={optimizedImageSrcSet(item.image)} sizes="(max-width: 720px) 100vw, 50vw" alt={item.text} draggable={false} loading={galleryIndex < 2 ? 'eager' : 'lazy'} fetchPriority={galleryIndex < 2 ? 'high' : 'auto'} decoding="async" />
+                    <img src={optimizedImageSrc(item.image)} srcSet={optimizedImageSrcSet(item.image)} sizes="(max-width: 720px) 100vw, 50vw" alt={item.text} draggable={false} loading="lazy" decoding="async" />
                     <span>{item.text}</span>
                   </div>
                 );
@@ -790,7 +793,7 @@ export default function App() {
           <div className="portrait-tilt-shell portrait-panel">
             <TiltedPortraitCard className="portrait-photo-layer" rotateAmplitude={6} scaleOnHover={1.01} perspective={900}>
               <div className="portrait-photo">
-                <img src={optimizedImageSrc('/about-avatar.png')} srcSet={optimizedImageSrcSet('/about-avatar.png')} sizes="(max-width: 900px) 100vw, 50vw" alt="Zhao Weidong" width="900" height="1200" loading="eager" fetchPriority="high" decoding="async" />
+                <img src={optimizedImageSrc('/about-avatar.png')} srcSet={optimizedImageSrcSet('/about-avatar.png')} sizes="(max-width: 900px) 100vw, 50vw" alt="Zhao Weidong" width="900" height="1200" loading="lazy" decoding="async" />
               </div>
             </TiltedPortraitCard>
             <div className="portrait-text-layer">
@@ -884,7 +887,7 @@ export default function App() {
               }}
             >
               <div className="project-image">
-                <img src={optimizedImageSrc(project.image)} srcSet={optimizedImageSrcSet(project.image)} sizes="(max-width: 720px) 100vw, 33vw" alt={project.title} width="1200" height="800" loading={index < 2 ? 'eager' : 'lazy'} fetchPriority={index < 2 ? 'high' : 'auto'} decoding="async" />
+                <img src={optimizedImageSrc(project.image)} srcSet={optimizedImageSrcSet(project.image)} sizes="(max-width: 720px) 100vw, 33vw" alt={project.title} width="1200" height="800" loading="lazy" decoding="async" />
                 {project.hasVideo ? (
                   <span className="project-play-badge" aria-label="视频项目">
                     <svg className="project-play-icon" viewBox="0 0 48 48" aria-hidden="true">
