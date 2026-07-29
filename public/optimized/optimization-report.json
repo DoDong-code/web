@@ -1,0 +1,1340 @@
+{
+  "scanned": 111,
+  "converted": 555,
+  "beforeBytes": 151990604,
+  "afterBytes": 66446032,
+  "files": [
+    {
+      "source": "about-avatar.png",
+      "width": 1086,
+      "height": 1448,
+      "outputs": [
+        "optimized/about-avatar.webp",
+        "optimized/about-avatar-640.webp",
+        "optimized/about-avatar-960.webp",
+        "optimized/about-avatar-1280.webp",
+        "optimized/about-avatar-1920.webp"
+      ]
+    },
+    {
+      "source": "contact-wechat.jpg",
+      "width": 888,
+      "height": 1131,
+      "outputs": [
+        "optimized/contact-wechat.webp",
+        "optimized/contact-wechat-640.webp",
+        "optimized/contact-wechat-960.webp",
+        "optimized/contact-wechat-1280.webp",
+        "optimized/contact-wechat-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/克苏鲁 (0-00-00-00).png",
+      "width": 2000,
+      "height": 1200,
+      "outputs": [
+        "optimized/motion-wall/克苏鲁 (0-00-00-00).webp",
+        "optimized/motion-wall/克苏鲁 (0-00-00-00)-640.webp",
+        "optimized/motion-wall/克苏鲁 (0-00-00-00)-960.webp",
+        "optimized/motion-wall/克苏鲁 (0-00-00-00)-1280.webp",
+        "optimized/motion-wall/克苏鲁 (0-00-00-00)-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/克苏鲁1 (0-00-00-00).png",
+      "width": 2000,
+      "height": 1200,
+      "outputs": [
+        "optimized/motion-wall/克苏鲁1 (0-00-00-00).webp",
+        "optimized/motion-wall/克苏鲁1 (0-00-00-00)-640.webp",
+        "optimized/motion-wall/克苏鲁1 (0-00-00-00)-960.webp",
+        "optimized/motion-wall/克苏鲁1 (0-00-00-00)-1280.webp",
+        "optimized/motion-wall/克苏鲁1 (0-00-00-00)-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/克苏鲁1.png",
+      "width": 2000,
+      "height": 1200,
+      "outputs": [
+        "optimized/motion-wall/克苏鲁1.webp",
+        "optimized/motion-wall/克苏鲁1-640.webp",
+        "optimized/motion-wall/克苏鲁1-960.webp",
+        "optimized/motion-wall/克苏鲁1-1280.webp",
+        "optimized/motion-wall/克苏鲁1-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/女神像.jpg",
+      "width": 1000,
+      "height": 1000,
+      "outputs": [
+        "optimized/motion-wall/女神像.webp",
+        "optimized/motion-wall/女神像-640.webp",
+        "optimized/motion-wall/女神像-960.webp",
+        "optimized/motion-wall/女神像-1280.webp",
+        "optimized/motion-wall/女神像-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/女神像特写.jpg",
+      "width": 1000,
+      "height": 1000,
+      "outputs": [
+        "optimized/motion-wall/女神像特写.webp",
+        "optimized/motion-wall/女神像特写-640.webp",
+        "optimized/motion-wall/女神像特写-960.webp",
+        "optimized/motion-wall/女神像特写-1280.webp",
+        "optimized/motion-wall/女神像特写-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/小王子.jpg",
+      "width": 1000,
+      "height": 1000,
+      "outputs": [
+        "optimized/motion-wall/小王子.webp",
+        "optimized/motion-wall/小王子-640.webp",
+        "optimized/motion-wall/小王子-960.webp",
+        "optimized/motion-wall/小王子-1280.webp",
+        "optimized/motion-wall/小王子-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/小王子铜.jpg",
+      "width": 1000,
+      "height": 1000,
+      "outputs": [
+        "optimized/motion-wall/小王子铜.webp",
+        "optimized/motion-wall/小王子铜-640.webp",
+        "optimized/motion-wall/小王子铜-960.webp",
+        "optimized/motion-wall/小王子铜-1280.webp",
+        "optimized/motion-wall/小王子铜-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/方.png",
+      "width": 2000,
+      "height": 2000,
+      "outputs": [
+        "optimized/motion-wall/方.webp",
+        "optimized/motion-wall/方-640.webp",
+        "optimized/motion-wall/方-960.webp",
+        "optimized/motion-wall/方-1280.webp",
+        "optimized/motion-wall/方-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/方1.png",
+      "width": 2000,
+      "height": 2000,
+      "outputs": [
+        "optimized/motion-wall/方1.webp",
+        "optimized/motion-wall/方1-640.webp",
+        "optimized/motion-wall/方1-960.webp",
+        "optimized/motion-wall/方1-1280.webp",
+        "optimized/motion-wall/方1-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/方2.png",
+      "width": 2000,
+      "height": 2000,
+      "outputs": [
+        "optimized/motion-wall/方2.webp",
+        "optimized/motion-wall/方2-640.webp",
+        "optimized/motion-wall/方2-960.webp",
+        "optimized/motion-wall/方2-1280.webp",
+        "optimized/motion-wall/方2-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/方3.png",
+      "width": 1000,
+      "height": 1000,
+      "outputs": [
+        "optimized/motion-wall/方3.webp",
+        "optimized/motion-wall/方3-640.webp",
+        "optimized/motion-wall/方3-960.webp",
+        "optimized/motion-wall/方3-1280.webp",
+        "optimized/motion-wall/方3-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/方4.png",
+      "width": 1000,
+      "height": 1000,
+      "outputs": [
+        "optimized/motion-wall/方4.webp",
+        "optimized/motion-wall/方4-640.webp",
+        "optimized/motion-wall/方4-960.webp",
+        "optimized/motion-wall/方4-1280.webp",
+        "optimized/motion-wall/方4-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/方5-1.png",
+      "width": 2200,
+      "height": 1080,
+      "outputs": [
+        "optimized/motion-wall/方5-1.webp",
+        "optimized/motion-wall/方5-1-640.webp",
+        "optimized/motion-wall/方5-1-960.webp",
+        "optimized/motion-wall/方5-1-1280.webp",
+        "optimized/motion-wall/方5-1-1920.webp"
+      ]
+    },
+    {
+      "source": "motion-wall/浮雕.png",
+      "width": 1000,
+      "height": 1000,
+      "outputs": [
+        "optimized/motion-wall/浮雕.webp",
+        "optimized/motion-wall/浮雕-640.webp",
+        "optimized/motion-wall/浮雕-960.webp",
+        "optimized/motion-wall/浮雕-1280.webp",
+        "optimized/motion-wall/浮雕-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/ai-design-19.png",
+      "width": 3840,
+      "height": 6624,
+      "outputs": [
+        "optimized/portfolio/ai-design-19.webp",
+        "optimized/portfolio/ai-design-19-640.webp",
+        "optimized/portfolio/ai-design-19-960.webp",
+        "optimized/portfolio/ai-design-19-1280.webp",
+        "optimized/portfolio/ai-design-19-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/dragon-model-27.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/dragon-model-27.webp",
+        "optimized/portfolio/dragon-model-27-640.webp",
+        "optimized/portfolio/dragon-model-27-960.webp",
+        "optimized/portfolio/dragon-model-27-1280.webp",
+        "optimized/portfolio/dragon-model-27-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/gift-system-22.png",
+      "width": 3840,
+      "height": 2160,
+      "outputs": [
+        "optimized/portfolio/gift-system-22.webp",
+        "optimized/portfolio/gift-system-22-640.webp",
+        "optimized/portfolio/gift-system-22-960.webp",
+        "optimized/portfolio/gift-system-22-1280.webp",
+        "optimized/portfolio/gift-system-22-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/growth-ui-08.png",
+      "width": 3840,
+      "height": 3564,
+      "outputs": [
+        "optimized/portfolio/growth-ui-08.webp",
+        "optimized/portfolio/growth-ui-08-640.webp",
+        "optimized/portfolio/growth-ui-08-960.webp",
+        "optimized/portfolio/growth-ui-08-1280.webp",
+        "optimized/portfolio/growth-ui-08-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/h5-visual-30.png",
+      "width": 3840,
+      "height": 4392,
+      "outputs": [
+        "optimized/portfolio/h5-visual-30.webp",
+        "optimized/portfolio/h5-visual-30-640.webp",
+        "optimized/portfolio/h5-visual-30-960.webp",
+        "optimized/portfolio/h5-visual-30-1280.webp",
+        "optimized/portfolio/h5-visual-30-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/live-header-31.png",
+      "width": 3840,
+      "height": 6624,
+      "outputs": [
+        "optimized/portfolio/live-header-31.webp",
+        "optimized/portfolio/live-header-31-640.webp",
+        "optimized/portfolio/live-header-31-960.webp",
+        "optimized/portfolio/live-header-31-1280.webp",
+        "optimized/portfolio/live-header-31-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/motion-principles-03.png",
+      "width": 3840,
+      "height": 2968,
+      "outputs": [
+        "optimized/portfolio/motion-principles-03.webp",
+        "optimized/portfolio/motion-principles-03-640.webp",
+        "optimized/portfolio/motion-principles-03-960.webp",
+        "optimized/portfolio/motion-principles-03-1280.webp",
+        "optimized/portfolio/motion-principles-03-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project2-cover.png",
+      "width": 1200,
+      "height": 800,
+      "outputs": [
+        "optimized/portfolio/project2-cover.webp",
+        "optimized/portfolio/project2-cover-640.webp",
+        "optimized/portfolio/project2-cover-960.webp",
+        "optimized/portfolio/project2-cover-1280.webp",
+        "optimized/portfolio/project2-cover-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-cover.png",
+      "width": 1200,
+      "height": 800,
+      "outputs": [
+        "optimized/portfolio/project3-cover.webp",
+        "optimized/portfolio/project3-cover-640.webp",
+        "optimized/portfolio/project3-cover-960.webp",
+        "optimized/portfolio/project3-cover-1280.webp",
+        "optimized/portfolio/project3-cover-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-cover.png",
+      "width": 1200,
+      "height": 800,
+      "outputs": [
+        "optimized/portfolio/project4-cover.webp",
+        "optimized/portfolio/project4-cover-640.webp",
+        "optimized/portfolio/project4-cover-960.webp",
+        "optimized/portfolio/project4-cover-1280.webp",
+        "optimized/portfolio/project4-cover-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project5-cover.png",
+      "width": 1536,
+      "height": 1024,
+      "outputs": [
+        "optimized/portfolio/project5-cover.webp",
+        "optimized/portfolio/project5-cover-640.webp",
+        "optimized/portfolio/project5-cover-960.webp",
+        "optimized/portfolio/project5-cover-1280.webp",
+        "optimized/portfolio/project5-cover-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-cover.png",
+      "width": 1200,
+      "height": 800,
+      "outputs": [
+        "optimized/portfolio/project6-cover.webp",
+        "optimized/portfolio/project6-cover-640.webp",
+        "optimized/portfolio/project6-cover-960.webp",
+        "optimized/portfolio/project6-cover-1280.webp",
+        "optimized/portfolio/project6-cover-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project7-cover.png",
+      "width": 1200,
+      "height": 800,
+      "outputs": [
+        "optimized/portfolio/project7-cover.webp",
+        "optimized/portfolio/project7-cover-640.webp",
+        "optimized/portfolio/project7-cover-960.webp",
+        "optimized/portfolio/project7-cover-1280.webp",
+        "optimized/portfolio/project7-cover-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/quiz-growth-18.png",
+      "width": 3840,
+      "height": 9860,
+      "outputs": [
+        "optimized/portfolio/quiz-growth-18.webp",
+        "optimized/portfolio/quiz-growth-18-640.webp",
+        "optimized/portfolio/quiz-growth-18-960.webp",
+        "optimized/portfolio/quiz-growth-18-1280.webp",
+        "optimized/portfolio/quiz-growth-18-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/reference-project1.png",
+      "width": 1200,
+      "height": 800,
+      "outputs": [
+        "optimized/portfolio/reference-project1.webp",
+        "optimized/portfolio/reference-project1-640.webp",
+        "optimized/portfolio/reference-project1-960.webp",
+        "optimized/portfolio/reference-project1-1280.webp",
+        "optimized/portfolio/reference-project1-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/board-22.png",
+      "width": 3840,
+      "height": 2160,
+      "outputs": [
+        "optimized/portfolio/project1-detail/board-22.webp",
+        "optimized/portfolio/project1-detail/board-22-640.webp",
+        "optimized/portfolio/project1-detail/board-22-960.webp",
+        "optimized/portfolio/project1-detail/board-22-1280.webp",
+        "optimized/portfolio/project1-detail/board-22-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/board-23.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project1-detail/board-23.webp",
+        "optimized/portfolio/project1-detail/board-23-640.webp",
+        "optimized/portfolio/project1-detail/board-23-960.webp",
+        "optimized/portfolio/project1-detail/board-23-1280.webp",
+        "optimized/portfolio/project1-detail/board-23-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/board-24.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project1-detail/board-24.webp",
+        "optimized/portfolio/project1-detail/board-24-640.webp",
+        "optimized/portfolio/project1-detail/board-24-960.webp",
+        "optimized/portfolio/project1-detail/board-24-1280.webp",
+        "optimized/portfolio/project1-detail/board-24-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/board-25.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project1-detail/board-25.webp",
+        "optimized/portfolio/project1-detail/board-25-640.webp",
+        "optimized/portfolio/project1-detail/board-25-960.webp",
+        "optimized/portfolio/project1-detail/board-25-1280.webp",
+        "optimized/portfolio/project1-detail/board-25-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/board-26.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project1-detail/board-26.webp",
+        "optimized/portfolio/project1-detail/board-26-640.webp",
+        "optimized/portfolio/project1-detail/board-26-960.webp",
+        "optimized/portfolio/project1-detail/board-26-1280.webp",
+        "optimized/portfolio/project1-detail/board-26-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/board-27.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project1-detail/board-27.webp",
+        "optimized/portfolio/project1-detail/board-27-640.webp",
+        "optimized/portfolio/project1-detail/board-27-960.webp",
+        "optimized/portfolio/project1-detail/board-27-1280.webp",
+        "optimized/portfolio/project1-detail/board-27-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/board-28-1.jpg",
+      "width": 1920,
+      "height": 1396,
+      "outputs": [
+        "optimized/portfolio/project1-detail/board-28-1.webp",
+        "optimized/portfolio/project1-detail/board-28-1-640.webp",
+        "optimized/portfolio/project1-detail/board-28-1-960.webp",
+        "optimized/portfolio/project1-detail/board-28-1-1280.webp",
+        "optimized/portfolio/project1-detail/board-28-1-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/board-28.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project1-detail/board-28.webp",
+        "optimized/portfolio/project1-detail/board-28-640.webp",
+        "optimized/portfolio/project1-detail/board-28-960.webp",
+        "optimized/portfolio/project1-detail/board-28-1280.webp",
+        "optimized/portfolio/project1-detail/board-28-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/board-29.png",
+      "width": 3840,
+      "height": 3040,
+      "outputs": [
+        "optimized/portfolio/project1-detail/board-29.webp",
+        "optimized/portfolio/project1-detail/board-29-640.webp",
+        "optimized/portfolio/project1-detail/board-29-960.webp",
+        "optimized/portfolio/project1-detail/board-29-1280.webp",
+        "optimized/portfolio/project1-detail/board-29-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-000.jpg",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-000.webp",
+        "optimized/portfolio/project1-detail/item-000-640.webp",
+        "optimized/portfolio/project1-detail/item-000-960.webp",
+        "optimized/portfolio/project1-detail/item-000-1280.webp",
+        "optimized/portfolio/project1-detail/item-000-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-001.jpg",
+      "width": 1920,
+      "height": 625,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-001.webp",
+        "optimized/portfolio/project1-detail/item-001-640.webp",
+        "optimized/portfolio/project1-detail/item-001-960.webp",
+        "optimized/portfolio/project1-detail/item-001-1280.webp",
+        "optimized/portfolio/project1-detail/item-001-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-002.jpg",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-002.webp",
+        "optimized/portfolio/project1-detail/item-002-640.webp",
+        "optimized/portfolio/project1-detail/item-002-960.webp",
+        "optimized/portfolio/project1-detail/item-002-1280.webp",
+        "optimized/portfolio/project1-detail/item-002-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-003.jpg",
+      "width": 1920,
+      "height": 1560,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-003.webp",
+        "optimized/portfolio/project1-detail/item-003-640.webp",
+        "optimized/portfolio/project1-detail/item-003-960.webp",
+        "optimized/portfolio/project1-detail/item-003-1280.webp",
+        "optimized/portfolio/project1-detail/item-003-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-004.jpg",
+      "width": 1920,
+      "height": 1560,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-004.webp",
+        "optimized/portfolio/project1-detail/item-004-640.webp",
+        "optimized/portfolio/project1-detail/item-004-960.webp",
+        "optimized/portfolio/project1-detail/item-004-1280.webp",
+        "optimized/portfolio/project1-detail/item-004-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-005.jpg",
+      "width": 1920,
+      "height": 1396,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-005.webp",
+        "optimized/portfolio/project1-detail/item-005-640.webp",
+        "optimized/portfolio/project1-detail/item-005-960.webp",
+        "optimized/portfolio/project1-detail/item-005-1280.webp",
+        "optimized/portfolio/project1-detail/item-005-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-006.jpg",
+      "width": 1920,
+      "height": 1395,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-006.webp",
+        "optimized/portfolio/project1-detail/item-006-640.webp",
+        "optimized/portfolio/project1-detail/item-006-960.webp",
+        "optimized/portfolio/project1-detail/item-006-1280.webp",
+        "optimized/portfolio/project1-detail/item-006-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-007.jpg",
+      "width": 1920,
+      "height": 1396,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-007.webp",
+        "optimized/portfolio/project1-detail/item-007-640.webp",
+        "optimized/portfolio/project1-detail/item-007-960.webp",
+        "optimized/portfolio/project1-detail/item-007-1280.webp",
+        "optimized/portfolio/project1-detail/item-007-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-008.jpg",
+      "width": 1920,
+      "height": 1395,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-008.webp",
+        "optimized/portfolio/project1-detail/item-008-640.webp",
+        "optimized/portfolio/project1-detail/item-008-960.webp",
+        "optimized/portfolio/project1-detail/item-008-1280.webp",
+        "optimized/portfolio/project1-detail/item-008-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-009.jpg",
+      "width": 1920,
+      "height": 1396,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-009.webp",
+        "optimized/portfolio/project1-detail/item-009-640.webp",
+        "optimized/portfolio/project1-detail/item-009-960.webp",
+        "optimized/portfolio/project1-detail/item-009-1280.webp",
+        "optimized/portfolio/project1-detail/item-009-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-010.jpg",
+      "width": 1920,
+      "height": 1395,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-010.webp",
+        "optimized/portfolio/project1-detail/item-010-640.webp",
+        "optimized/portfolio/project1-detail/item-010-960.webp",
+        "optimized/portfolio/project1-detail/item-010-1280.webp",
+        "optimized/portfolio/project1-detail/item-010-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-011.jpg",
+      "width": 1920,
+      "height": 1396,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-011.webp",
+        "optimized/portfolio/project1-detail/item-011-640.webp",
+        "optimized/portfolio/project1-detail/item-011-960.webp",
+        "optimized/portfolio/project1-detail/item-011-1280.webp",
+        "optimized/portfolio/project1-detail/item-011-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-012.jpg",
+      "width": 1920,
+      "height": 1395,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-012.webp",
+        "optimized/portfolio/project1-detail/item-012-640.webp",
+        "optimized/portfolio/project1-detail/item-012-960.webp",
+        "optimized/portfolio/project1-detail/item-012-1280.webp",
+        "optimized/portfolio/project1-detail/item-012-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-013.jpg",
+      "width": 1920,
+      "height": 1396,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-013.webp",
+        "optimized/portfolio/project1-detail/item-013-640.webp",
+        "optimized/portfolio/project1-detail/item-013-960.webp",
+        "optimized/portfolio/project1-detail/item-013-1280.webp",
+        "optimized/portfolio/project1-detail/item-013-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-014.jpg",
+      "width": 1920,
+      "height": 1395,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-014.webp",
+        "optimized/portfolio/project1-detail/item-014-640.webp",
+        "optimized/portfolio/project1-detail/item-014-960.webp",
+        "optimized/portfolio/project1-detail/item-014-1280.webp",
+        "optimized/portfolio/project1-detail/item-014-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-016.jpg",
+      "width": 1920,
+      "height": 1395,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-016.webp",
+        "optimized/portfolio/project1-detail/item-016-640.webp",
+        "optimized/portfolio/project1-detail/item-016-960.webp",
+        "optimized/portfolio/project1-detail/item-016-1280.webp",
+        "optimized/portfolio/project1-detail/item-016-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-017.jpg",
+      "width": 1920,
+      "height": 1396,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-017.webp",
+        "optimized/portfolio/project1-detail/item-017-640.webp",
+        "optimized/portfolio/project1-detail/item-017-960.webp",
+        "optimized/portfolio/project1-detail/item-017-1280.webp",
+        "optimized/portfolio/project1-detail/item-017-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-018.jpg",
+      "width": 1920,
+      "height": 1395,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-018.webp",
+        "optimized/portfolio/project1-detail/item-018-640.webp",
+        "optimized/portfolio/project1-detail/item-018-960.webp",
+        "optimized/portfolio/project1-detail/item-018-1280.webp",
+        "optimized/portfolio/project1-detail/item-018-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-019.jpg",
+      "width": 1920,
+      "height": 1396,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-019.webp",
+        "optimized/portfolio/project1-detail/item-019-640.webp",
+        "optimized/portfolio/project1-detail/item-019-960.webp",
+        "optimized/portfolio/project1-detail/item-019-1280.webp",
+        "optimized/portfolio/project1-detail/item-019-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-020.jpg",
+      "width": 1920,
+      "height": 1395,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-020.webp",
+        "optimized/portfolio/project1-detail/item-020-640.webp",
+        "optimized/portfolio/project1-detail/item-020-960.webp",
+        "optimized/portfolio/project1-detail/item-020-1280.webp",
+        "optimized/portfolio/project1-detail/item-020-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project1-detail/item-021.jpg",
+      "width": 1920,
+      "height": 2411,
+      "outputs": [
+        "optimized/portfolio/project1-detail/item-021.webp",
+        "optimized/portfolio/project1-detail/item-021-640.webp",
+        "optimized/portfolio/project1-detail/item-021-960.webp",
+        "optimized/portfolio/project1-detail/item-021-1280.webp",
+        "optimized/portfolio/project1-detail/item-021-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project2-detail/board-3.png",
+      "width": 3840,
+      "height": 2968,
+      "outputs": [
+        "optimized/portfolio/project2-detail/board-3.webp",
+        "optimized/portfolio/project2-detail/board-3-640.webp",
+        "optimized/portfolio/project2-detail/board-3-960.webp",
+        "optimized/portfolio/project2-detail/board-3-1280.webp",
+        "optimized/portfolio/project2-detail/board-3-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project2-detail/board-4.png",
+      "width": 3840,
+      "height": 4148,
+      "outputs": [
+        "optimized/portfolio/project2-detail/board-4.webp",
+        "optimized/portfolio/project2-detail/board-4-640.webp",
+        "optimized/portfolio/project2-detail/board-4-960.webp",
+        "optimized/portfolio/project2-detail/board-4-1280.webp",
+        "optimized/portfolio/project2-detail/board-4-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project2-detail/board-5.png",
+      "width": 3840,
+      "height": 2716,
+      "outputs": [
+        "optimized/portfolio/project2-detail/board-5.webp",
+        "optimized/portfolio/project2-detail/board-5-640.webp",
+        "optimized/portfolio/project2-detail/board-5-960.webp",
+        "optimized/portfolio/project2-detail/board-5-1280.webp",
+        "optimized/portfolio/project2-detail/board-5-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project2-detail/board-6.png",
+      "width": 3840,
+      "height": 2716,
+      "outputs": [
+        "optimized/portfolio/project2-detail/board-6.webp",
+        "optimized/portfolio/project2-detail/board-6-640.webp",
+        "optimized/portfolio/project2-detail/board-6-960.webp",
+        "optimized/portfolio/project2-detail/board-6-1280.webp",
+        "optimized/portfolio/project2-detail/board-6-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project2-detail/board-7.png",
+      "width": 3840,
+      "height": 2984,
+      "outputs": [
+        "optimized/portfolio/project2-detail/board-7.webp",
+        "optimized/portfolio/project2-detail/board-7-640.webp",
+        "optimized/portfolio/project2-detail/board-7-960.webp",
+        "optimized/portfolio/project2-detail/board-7-1280.webp",
+        "optimized/portfolio/project2-detail/board-7-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-10.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-10.webp",
+        "optimized/portfolio/project3-detail/board-10-640.webp",
+        "optimized/portfolio/project3-detail/board-10-960.webp",
+        "optimized/portfolio/project3-detail/board-10-1280.webp",
+        "optimized/portfolio/project3-detail/board-10-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-11.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-11.webp",
+        "optimized/portfolio/project3-detail/board-11-640.webp",
+        "optimized/portfolio/project3-detail/board-11-960.webp",
+        "optimized/portfolio/project3-detail/board-11-1280.webp",
+        "optimized/portfolio/project3-detail/board-11-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-12.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-12.webp",
+        "optimized/portfolio/project3-detail/board-12-640.webp",
+        "optimized/portfolio/project3-detail/board-12-960.webp",
+        "optimized/portfolio/project3-detail/board-12-1280.webp",
+        "optimized/portfolio/project3-detail/board-12-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-13.png",
+      "width": 3840,
+      "height": 3868,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-13.webp",
+        "optimized/portfolio/project3-detail/board-13-640.webp",
+        "optimized/portfolio/project3-detail/board-13-960.webp",
+        "optimized/portfolio/project3-detail/board-13-1280.webp",
+        "optimized/portfolio/project3-detail/board-13-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-14.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-14.webp",
+        "optimized/portfolio/project3-detail/board-14-640.webp",
+        "optimized/portfolio/project3-detail/board-14-960.webp",
+        "optimized/portfolio/project3-detail/board-14-1280.webp",
+        "optimized/portfolio/project3-detail/board-14-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-15.png",
+      "width": 3840,
+      "height": 4392,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-15.webp",
+        "optimized/portfolio/project3-detail/board-15-640.webp",
+        "optimized/portfolio/project3-detail/board-15-960.webp",
+        "optimized/portfolio/project3-detail/board-15-1280.webp",
+        "optimized/portfolio/project3-detail/board-15-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-16.png",
+      "width": 3840,
+      "height": 3420,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-16.webp",
+        "optimized/portfolio/project3-detail/board-16-640.webp",
+        "optimized/portfolio/project3-detail/board-16-960.webp",
+        "optimized/portfolio/project3-detail/board-16-1280.webp",
+        "optimized/portfolio/project3-detail/board-16-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-17.png",
+      "width": 3840,
+      "height": 5824,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-17.webp",
+        "optimized/portfolio/project3-detail/board-17-640.webp",
+        "optimized/portfolio/project3-detail/board-17-960.webp",
+        "optimized/portfolio/project3-detail/board-17-1280.webp",
+        "optimized/portfolio/project3-detail/board-17-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-18.png",
+      "width": 3840,
+      "height": 9860,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-18.webp",
+        "optimized/portfolio/project3-detail/board-18-640.webp",
+        "optimized/portfolio/project3-detail/board-18-960.webp",
+        "optimized/portfolio/project3-detail/board-18-1280.webp",
+        "optimized/portfolio/project3-detail/board-18-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-8.png",
+      "width": 3840,
+      "height": 3564,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-8.webp",
+        "optimized/portfolio/project3-detail/board-8-640.webp",
+        "optimized/portfolio/project3-detail/board-8-960.webp",
+        "optimized/portfolio/project3-detail/board-8-1280.webp",
+        "optimized/portfolio/project3-detail/board-8-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project3-detail/board-9.png",
+      "width": 3840,
+      "height": 2516,
+      "outputs": [
+        "optimized/portfolio/project3-detail/board-9.webp",
+        "optimized/portfolio/project3-detail/board-9-640.webp",
+        "optimized/portfolio/project3-detail/board-9-960.webp",
+        "optimized/portfolio/project3-detail/board-9-1280.webp",
+        "optimized/portfolio/project3-detail/board-9-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-detail/board-23.jpg",
+      "width": 1920,
+      "height": 1521,
+      "outputs": [
+        "optimized/portfolio/project4-detail/board-23.webp",
+        "optimized/portfolio/project4-detail/board-23-640.webp",
+        "optimized/portfolio/project4-detail/board-23-960.webp",
+        "optimized/portfolio/project4-detail/board-23-1280.webp",
+        "optimized/portfolio/project4-detail/board-23-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-detail/board-24.jpg",
+      "width": 1920,
+      "height": 1329,
+      "outputs": [
+        "optimized/portfolio/project4-detail/board-24.webp",
+        "optimized/portfolio/project4-detail/board-24-640.webp",
+        "optimized/portfolio/project4-detail/board-24-960.webp",
+        "optimized/portfolio/project4-detail/board-24-1280.webp",
+        "optimized/portfolio/project4-detail/board-24-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-detail/board-25.jpg",
+      "width": 1920,
+      "height": 1329,
+      "outputs": [
+        "optimized/portfolio/project4-detail/board-25.webp",
+        "optimized/portfolio/project4-detail/board-25-640.webp",
+        "optimized/portfolio/project4-detail/board-25-960.webp",
+        "optimized/portfolio/project4-detail/board-25-1280.webp",
+        "optimized/portfolio/project4-detail/board-25-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-detail/board-26.jpg",
+      "width": 1920,
+      "height": 1329,
+      "outputs": [
+        "optimized/portfolio/project4-detail/board-26.webp",
+        "optimized/portfolio/project4-detail/board-26-640.webp",
+        "optimized/portfolio/project4-detail/board-26-960.webp",
+        "optimized/portfolio/project4-detail/board-26-1280.webp",
+        "optimized/portfolio/project4-detail/board-26-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-detail/board-27.jpg",
+      "width": 1920,
+      "height": 1329,
+      "outputs": [
+        "optimized/portfolio/project4-detail/board-27.webp",
+        "optimized/portfolio/project4-detail/board-27-640.webp",
+        "optimized/portfolio/project4-detail/board-27-960.webp",
+        "optimized/portfolio/project4-detail/board-27-1280.webp",
+        "optimized/portfolio/project4-detail/board-27-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-detail/board-28.jpg",
+      "width": 1920,
+      "height": 1329,
+      "outputs": [
+        "optimized/portfolio/project4-detail/board-28.webp",
+        "optimized/portfolio/project4-detail/board-28-640.webp",
+        "optimized/portfolio/project4-detail/board-28-960.webp",
+        "optimized/portfolio/project4-detail/board-28-1280.webp",
+        "optimized/portfolio/project4-detail/board-28-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-detail/board-30-extra.jpg",
+      "width": 1920,
+      "height": 1329,
+      "outputs": [
+        "optimized/portfolio/project4-detail/board-30-extra.webp",
+        "optimized/portfolio/project4-detail/board-30-extra-640.webp",
+        "optimized/portfolio/project4-detail/board-30-extra-960.webp",
+        "optimized/portfolio/project4-detail/board-30-extra-1280.webp",
+        "optimized/portfolio/project4-detail/board-30-extra-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-detail/board-30.png",
+      "width": 3840,
+      "height": 4392,
+      "outputs": [
+        "optimized/portfolio/project4-detail/board-30.webp",
+        "optimized/portfolio/project4-detail/board-30-640.webp",
+        "optimized/portfolio/project4-detail/board-30-960.webp",
+        "optimized/portfolio/project4-detail/board-30-1280.webp",
+        "optimized/portfolio/project4-detail/board-30-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-detail/board-31-extra.jpg",
+      "width": 1920,
+      "height": 1446,
+      "outputs": [
+        "optimized/portfolio/project4-detail/board-31-extra.webp",
+        "optimized/portfolio/project4-detail/board-31-extra-640.webp",
+        "optimized/portfolio/project4-detail/board-31-extra-960.webp",
+        "optimized/portfolio/project4-detail/board-31-extra-1280.webp",
+        "optimized/portfolio/project4-detail/board-31-extra-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project4-detail/board-31.png",
+      "width": 3840,
+      "height": 6624,
+      "outputs": [
+        "optimized/portfolio/project4-detail/board-31.webp",
+        "optimized/portfolio/project4-detail/board-31-640.webp",
+        "optimized/portfolio/project4-detail/board-31-960.webp",
+        "optimized/portfolio/project4-detail/board-31-1280.webp",
+        "optimized/portfolio/project4-detail/board-31-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project5-detail/board-19.png",
+      "width": 3840,
+      "height": 6624,
+      "outputs": [
+        "optimized/portfolio/project5-detail/board-19.webp",
+        "optimized/portfolio/project5-detail/board-19-640.webp",
+        "optimized/portfolio/project5-detail/board-19-960.webp",
+        "optimized/portfolio/project5-detail/board-19-1280.webp",
+        "optimized/portfolio/project5-detail/board-19-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project5-detail/board-20.png",
+      "width": 3840,
+      "height": 6124,
+      "outputs": [
+        "optimized/portfolio/project5-detail/board-20.webp",
+        "optimized/portfolio/project5-detail/board-20-640.webp",
+        "optimized/portfolio/project5-detail/board-20-960.webp",
+        "optimized/portfolio/project5-detail/board-20-1280.webp",
+        "optimized/portfolio/project5-detail/board-20-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project5-detail/board-21.png",
+      "width": 3840,
+      "height": 8420,
+      "outputs": [
+        "optimized/portfolio/project5-detail/board-21.webp",
+        "optimized/portfolio/project5-detail/board-21-640.webp",
+        "optimized/portfolio/project5-detail/board-21-960.webp",
+        "optimized/portfolio/project5-detail/board-21-1280.webp",
+        "optimized/portfolio/project5-detail/board-21-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-002.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-002.webp",
+        "optimized/portfolio/project6-detail/dog-002-640.webp",
+        "optimized/portfolio/project6-detail/dog-002-960.webp",
+        "optimized/portfolio/project6-detail/dog-002-1280.webp",
+        "optimized/portfolio/project6-detail/dog-002-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-003.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-003.webp",
+        "optimized/portfolio/project6-detail/dog-003-640.webp",
+        "optimized/portfolio/project6-detail/dog-003-960.webp",
+        "optimized/portfolio/project6-detail/dog-003-1280.webp",
+        "optimized/portfolio/project6-detail/dog-003-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-004.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-004.webp",
+        "optimized/portfolio/project6-detail/dog-004-640.webp",
+        "optimized/portfolio/project6-detail/dog-004-960.webp",
+        "optimized/portfolio/project6-detail/dog-004-1280.webp",
+        "optimized/portfolio/project6-detail/dog-004-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-005.png",
+      "width": 1920,
+      "height": 2000,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-005.webp",
+        "optimized/portfolio/project6-detail/dog-005-640.webp",
+        "optimized/portfolio/project6-detail/dog-005-960.webp",
+        "optimized/portfolio/project6-detail/dog-005-1280.webp",
+        "optimized/portfolio/project6-detail/dog-005-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-006.png",
+      "width": 1920,
+      "height": 1920,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-006.webp",
+        "optimized/portfolio/project6-detail/dog-006-640.webp",
+        "optimized/portfolio/project6-detail/dog-006-960.webp",
+        "optimized/portfolio/project6-detail/dog-006-1280.webp",
+        "optimized/portfolio/project6-detail/dog-006-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-015.png",
+      "width": 1920,
+      "height": 2000,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-015.webp",
+        "optimized/portfolio/project6-detail/dog-015-640.webp",
+        "optimized/portfolio/project6-detail/dog-015-960.webp",
+        "optimized/portfolio/project6-detail/dog-015-1280.webp",
+        "optimized/portfolio/project6-detail/dog-015-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-023.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-023.webp",
+        "optimized/portfolio/project6-detail/dog-023-640.webp",
+        "optimized/portfolio/project6-detail/dog-023-960.webp",
+        "optimized/portfolio/project6-detail/dog-023-1280.webp",
+        "optimized/portfolio/project6-detail/dog-023-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-024.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-024.webp",
+        "optimized/portfolio/project6-detail/dog-024-640.webp",
+        "optimized/portfolio/project6-detail/dog-024-960.webp",
+        "optimized/portfolio/project6-detail/dog-024-1280.webp",
+        "optimized/portfolio/project6-detail/dog-024-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-025.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-025.webp",
+        "optimized/portfolio/project6-detail/dog-025-640.webp",
+        "optimized/portfolio/project6-detail/dog-025-960.webp",
+        "optimized/portfolio/project6-detail/dog-025-1280.webp",
+        "optimized/portfolio/project6-detail/dog-025-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-1.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-1.webp",
+        "optimized/portfolio/project6-detail/dog-1-640.webp",
+        "optimized/portfolio/project6-detail/dog-1-960.webp",
+        "optimized/portfolio/project6-detail/dog-1-1280.webp",
+        "optimized/portfolio/project6-detail/dog-1-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-2.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-2.webp",
+        "optimized/portfolio/project6-detail/dog-2-640.webp",
+        "optimized/portfolio/project6-detail/dog-2-960.webp",
+        "optimized/portfolio/project6-detail/dog-2-1280.webp",
+        "optimized/portfolio/project6-detail/dog-2-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-21.png",
+      "width": 1920,
+      "height": 2000,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-21.webp",
+        "optimized/portfolio/project6-detail/dog-21-640.webp",
+        "optimized/portfolio/project6-detail/dog-21-960.webp",
+        "optimized/portfolio/project6-detail/dog-21-1280.webp",
+        "optimized/portfolio/project6-detail/dog-21-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-22.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-22.webp",
+        "optimized/portfolio/project6-detail/dog-22-640.webp",
+        "optimized/portfolio/project6-detail/dog-22-960.webp",
+        "optimized/portfolio/project6-detail/dog-22-1280.webp",
+        "optimized/portfolio/project6-detail/dog-22-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-23.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-23.webp",
+        "optimized/portfolio/project6-detail/dog-23-640.webp",
+        "optimized/portfolio/project6-detail/dog-23-960.webp",
+        "optimized/portfolio/project6-detail/dog-23-1280.webp",
+        "optimized/portfolio/project6-detail/dog-23-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-24.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-24.webp",
+        "optimized/portfolio/project6-detail/dog-24-640.webp",
+        "optimized/portfolio/project6-detail/dog-24-960.webp",
+        "optimized/portfolio/project6-detail/dog-24-1280.webp",
+        "optimized/portfolio/project6-detail/dog-24-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-3.png",
+      "width": 1920,
+      "height": 1080,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-3.webp",
+        "optimized/portfolio/project6-detail/dog-3-640.webp",
+        "optimized/portfolio/project6-detail/dog-3-960.webp",
+        "optimized/portfolio/project6-detail/dog-3-1280.webp",
+        "optimized/portfolio/project6-detail/dog-3-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-4.png",
+      "width": 1920,
+      "height": 2000,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-4.webp",
+        "optimized/portfolio/project6-detail/dog-4-640.webp",
+        "optimized/portfolio/project6-detail/dog-4-960.webp",
+        "optimized/portfolio/project6-detail/dog-4-1280.webp",
+        "optimized/portfolio/project6-detail/dog-4-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project6-detail/dog-5.png",
+      "width": 1920,
+      "height": 1920,
+      "outputs": [
+        "optimized/portfolio/project6-detail/dog-5.webp",
+        "optimized/portfolio/project6-detail/dog-5-640.webp",
+        "optimized/portfolio/project6-detail/dog-5-960.webp",
+        "optimized/portfolio/project6-detail/dog-5-1280.webp",
+        "optimized/portfolio/project6-detail/dog-5-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project7-detail/gift-002.png",
+      "width": 2560,
+      "height": 4700,
+      "outputs": [
+        "optimized/portfolio/project7-detail/gift-002.webp",
+        "optimized/portfolio/project7-detail/gift-002-640.webp",
+        "optimized/portfolio/project7-detail/gift-002-960.webp",
+        "optimized/portfolio/project7-detail/gift-002-1280.webp",
+        "optimized/portfolio/project7-detail/gift-002-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project7-detail/gift-003.jpg",
+      "width": 2560,
+      "height": 5000,
+      "outputs": [
+        "optimized/portfolio/project7-detail/gift-003.webp",
+        "optimized/portfolio/project7-detail/gift-003-640.webp",
+        "optimized/portfolio/project7-detail/gift-003-960.webp",
+        "optimized/portfolio/project7-detail/gift-003-1280.webp",
+        "optimized/portfolio/project7-detail/gift-003-1920.webp"
+      ]
+    },
+    {
+      "source": "portfolio/project7-detail/gift-010.png",
+      "width": 2560,
+      "height": 2500,
+      "outputs": [
+        "optimized/portfolio/project7-detail/gift-010.webp",
+        "optimized/portfolio/project7-detail/gift-010-640.webp",
+        "optimized/portfolio/project7-detail/gift-010-960.webp",
+        "optimized/portfolio/project7-detail/gift-010-1280.webp",
+        "optimized/portfolio/project7-detail/gift-010-1920.webp"
+      ]
+    }
+  ]
+}

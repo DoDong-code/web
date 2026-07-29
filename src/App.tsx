@@ -6,6 +6,16 @@ import MotionMasonry, { type MotionItem } from './components/MotionMasonry';
 import TiltedPortraitCard from './components/TiltedPortraitCard';
 import Grainient from './components/Grainient';
 
+const optimizedImageSrc = (src: string) => {
+  if (!/\.(png|jpe?g)$/i.test(src)) return src;
+  return `/optimized/${src.replace(/^\//, '').replace(/\.(png|jpe?g)$/i, '.webp')}`;
+};
+const optimizedImageSrcSet = (src: string) => {
+  if (!/\.(png|jpe?g)$/i.test(src)) return undefined;
+  const base = `/optimized/${src.replace(/^\//, '').replace(/\.(png|jpe?g)$/i, '')}`;
+  return [640, 960, 1280, 1920].map((width) => `${base}-${width}.webp ${width}w`).join(', ');
+};
+
 const navItems = [
   { label: '首页', href: '#top' },
   { label: '经历', href: '#about' },
@@ -260,11 +270,7 @@ const strengths = [
   },
 ];
 
-const motionItems: MotionItem[] = Array.from({ length: 14 }, (_, index) => {
-  const number = String(index + 1).padStart(2, '0');
-  const isVideo = index >= 12;
-  return { id: `motion-${number}`, src: `/motion-wall/motion-${number}.${isVideo ? 'mp4' : 'gif'}`, type: isVideo ? 'video' : 'image', alt: `Motion ${number}` };
-});
+const motionItems: MotionItem[] = [];
 
 const experience = [
   { company: '拼多多-TEMU', role: 'UI 视觉设计', time: '2024.02-2026.05' },
@@ -320,7 +326,7 @@ export default function App() {
 
   useEffect(() => {
     const contactImage = new Image();
-    contactImage.src = '/contact-wechat.jpg';
+    contactImage.src = optimizedImageSrc('/contact-wechat.jpg');
   }, []);
 
   useEffect(() => {
@@ -763,7 +769,7 @@ export default function App() {
                       if (Number.isInteger(index) && projects[index]) setSelectedProject(projects[index]);
                     }}
                   >
-                    <img src={item.image} alt={item.text} draggable={false} decoding="async" />
+                    <img src={optimizedImageSrc(item.image)} srcSet={optimizedImageSrcSet(item.image)} sizes="(max-width: 720px) 100vw, 50vw" alt={item.text} draggable={false} loading={galleryIndex < 2 ? 'eager' : 'lazy'} fetchPriority={galleryIndex < 2 ? 'high' : 'auto'} decoding="async" />
                     <span>{item.text}</span>
                   </div>
                 );
@@ -778,7 +784,7 @@ export default function App() {
           <div className="portrait-tilt-shell portrait-panel">
             <TiltedPortraitCard className="portrait-photo-layer" rotateAmplitude={6} scaleOnHover={1.01} perspective={900}>
               <div className="portrait-photo">
-                <img src="/about-avatar.png" alt="Zhao Weidong" />
+                <img src={optimizedImageSrc('/about-avatar.png')} srcSet={optimizedImageSrcSet('/about-avatar.png')} sizes="(max-width: 900px) 100vw, 50vw" alt="Zhao Weidong" width="900" height="1200" loading="eager" fetchPriority="high" decoding="async" />
               </div>
             </TiltedPortraitCard>
             <div className="portrait-text-layer">
@@ -872,7 +878,7 @@ export default function App() {
               }}
             >
               <div className="project-image">
-                <img src={project.image} alt={project.title} loading="lazy" decoding="async" />
+                <img src={optimizedImageSrc(project.image)} srcSet={optimizedImageSrcSet(project.image)} sizes="(max-width: 720px) 100vw, 33vw" alt={project.title} width="1200" height="800" loading={index < 2 ? 'eager' : 'lazy'} fetchPriority={index < 2 ? 'high' : 'auto'} decoding="async" />
                 {project.hasVideo ? (
                   <span className="project-play-badge" aria-label="视频项目">
                     <svg className="project-play-icon" viewBox="0 0 48 48" aria-hidden="true">
@@ -950,7 +956,7 @@ export default function App() {
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5, delay: index * 0.04 }}
                 >
-                  <img src={image} alt={`${selectedProject.title} 详情 ${index + 1}`} loading="lazy" decoding="async" />
+                  <img src={optimizedImageSrc(image)} srcSet={optimizedImageSrcSet(image)} sizes="(max-width: 720px) 100vw, 50vw" alt={`${selectedProject.title} 详情 ${index + 1}`} loading="lazy" decoding="async" />
                 </motion.figure>
               ))}
             </div>
@@ -1037,7 +1043,7 @@ export default function App() {
                 微信
               </button>
               <div className={`contact-bubble finale-wechat-bubble${wechatOpen ? ' is-open' : ''}`} role="dialog" aria-hidden={!wechatOpen}>
-                <img src="/contact-wechat.jpg" alt="微信二维码" decoding="async" />
+                <img src={optimizedImageSrc('/contact-wechat.jpg')} srcSet={optimizedImageSrcSet('/contact-wechat.jpg')} sizes="180px" alt="微信二维码" decoding="async" />
               </div>
             </div>
           </div>

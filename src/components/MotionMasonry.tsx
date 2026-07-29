@@ -188,13 +188,13 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   return (
     <div className={`motion-wall-viewport${expanded ? ' is-expanded' : ''}`} style={{ '--motion-collapsed-height': `${collapsedHeight}px`, '--motion-full-height': `${fullHeight || 900}px` } as CSSProperties}>
       <div ref={shellRef} className={`motion-masonry${activeItem ? ' is-preview-open' : ''}`} style={{ '--motion-cell-size': `${cellSize}px` } as CSSProperties}>
-        {visibleItems.map((item) => {
+        {visibleItems.map((item, index) => {
           const ratio = ratios[item.id] ?? item.aspectRatio ?? 1;
           const shape = ratio >= 1.35 ? 'landscape' : ratio <= 0.75 ? 'portrait' : 'square';
           const layout = { x: 0, y: 0, width: 0, height: 0 };
           return <article ref={(node) => { if (node) cardsRef.current.set(item.id, node); }} className={`motion-masonry-item motion-item--${shape}`} key={item.id} style={{ left: layout.x, top: layout.y, width: layout.width, height: layout.height }} role="button" tabIndex={0} aria-label={`放大查看 ${item.alt}`} onClick={() => openLightbox(item)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(item); } }}>
             <div className="motion-masonry-media">
-              {item.type === 'video' ? <video src={item.src} muted loop playsInline preload="metadata" aria-label={item.alt} onLoadedMetadata={(event) => markRatio(item, event.currentTarget.videoWidth, event.currentTarget.videoHeight)} onError={() => markFailure(item)} /> : <img src={item.src} alt={item.alt} loading="lazy" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
+              {item.type === 'video' ? <video src={item.src} muted loop playsInline preload="metadata" aria-label={item.alt} onLoadedMetadata={(event) => markRatio(item, event.currentTarget.videoWidth, event.currentTarget.videoHeight)} onError={() => markFailure(item)} /> : <img src={item.src} alt={item.alt} loading={index < 2 ? 'eager' : 'lazy'} fetchPriority={index < 2 ? 'high' : 'auto'} decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
             </div>
           </article>;
         })}
