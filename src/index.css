@@ -726,19 +726,11 @@ button:focus-visible {
 }
 
 .hero-explore::after {
-  content: "";
-  position: absolute;
-  top: -80%;
-  left: -50%;
-  width: 24%;
-  height: 260%;
-  transform: rotate(24deg) translateX(-220%);
-  background: rgba(255, 255, 255, 0.32);
-  transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  display: none;
 }
 
 .hero-explore:hover::after {
-  transform: rotate(24deg) translateX(820%);
+  display: none;
 }
 
 .hero-explore-glow {
