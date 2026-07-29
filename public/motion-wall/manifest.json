@@ -190,7 +190,8 @@
     "src": "/motion-wall/报名界面待机.mp4",
     "type": "video",
     "alt": "报名界面待机",
-    "poster": "/optimized/posters/报名界面待机.webp"
+    "poster": "/optimized/posters/报名界面待机.webp",
+    "aspectRatio": 2.2222222222222223
   },
   {
     "id": "拍手 日 2",
@@ -449,7 +450,8 @@
     "src": "/motion-wall/赛事转场动画.mp4",
     "type": "video",
     "alt": "赛事转场动画",
-    "poster": "/optimized/posters/赛事转场动画.webp"
+    "poster": "/optimized/posters/赛事转场动画.webp",
+    "aspectRatio": 2.2222222222222223
   },
   {
     "id": "金砖_英语",
@@ -462,7 +464,8 @@
     "src": "/motion-wall/镜头1.mp4",
     "type": "video",
     "alt": "镜头1",
-    "poster": "/optimized/posters/镜头1.webp"
+    "poster": "/optimized/posters/镜头1.webp",
+    "aspectRatio": 3.0
   },
   {
     "id": "马来 英",

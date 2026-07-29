@@ -3,6 +3,11 @@ from PIL import Image, ImageSequence
 import json
 
 root = Path('public/motion-wall')
+VIDEO_RATIOS = {
+    '报名界面待机': 1600 / 720,
+    '赛事转场动画': 1600 / 720,
+    '镜头1': 1920 / 640,
+}
 converted = 0
 before = 0
 after = 0
@@ -42,6 +47,8 @@ for source in sorted(root.iterdir(), key=lambda path: path.name.casefold()):
     item = {'id': source.stem, 'src': src_path, 'type': media_type, 'alt': source.stem}
     if media_type == 'video':
         item['poster'] = f'/optimized/posters/{source.stem}.webp'
+        if source.stem in VIDEO_RATIOS:
+            item['aspectRatio'] = VIDEO_RATIOS[source.stem]
     items.append(item)
 manifest_path.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding='utf-8')
 
