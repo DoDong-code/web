@@ -24,14 +24,25 @@ for source in root.glob('*.gif'):
         after += target.stat().st_size
 
 manifest_path = root / 'manifest.json'
-if manifest_path.exists():
-    manifest = json.loads(manifest_path.read_text(encoding='utf-8-sig'))
-    for item in manifest:
-        if item.get('type') == 'image' and item.get('src', '').lower().endswith('.gif'):
-            candidate = root / Path(item['src']).name
-            webp = candidate.with_suffix('.webp')
-            if webp.exists():
-                item['src'] = item['src'][:-4] + '.webp'
-    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
+items = []
+for source in sorted(root.iterdir(), key=lambda path: path.name.casefold()):
+    if not source.is_file() or source.name == 'manifest.json':
+        continue
+    suffix = source.suffix.lower()
+    if suffix == '.gif' and source.with_suffix('.webp').exists():
+        continue
+    if suffix not in {'.webp', '.png', '.jpg', '.jpeg', '.mp4', '.webm'}:
+        continue
+    media_type = 'video' if suffix in {'.mp4', '.webm'} else 'image'
+    src_path = f'/motion-wall/{source.name}'
+    if media_type == 'image' and suffix in {'.png', '.jpg', '.jpeg'}:
+        optimized = Path('public/optimized/motion-wall') / f'{source.stem}.webp'
+        if optimized.exists():
+            src_path = f'/optimized/motion-wall/{source.stem}.webp'
+    item = {'id': source.stem, 'src': src_path, 'type': media_type, 'alt': source.stem}
+    if media_type == 'video':
+        item['poster'] = f'/optimized/posters/{source.stem}.webp'
+    items.append(item)
+manifest_path.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding='utf-8')
 
 print(json.dumps({'converted': converted, 'beforeBytes': before, 'afterBytes': after}, ensure_ascii=False, indent=2))

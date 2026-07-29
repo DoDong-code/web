@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 import { gsap } from 'gsap';
 import './MotionMasonry.css';
 
-export type MotionItem = { id: string; src: string; type: 'image' | 'video'; alt: string; aspectRatio?: number };
+export type MotionItem = { id: string; src: string; type: 'image' | 'video'; alt: string; aspectRatio?: number; poster?: string };
 type MotionMasonryProps = { items: MotionItem[] };
 type Layout = { x: number; y: number; width: number; height: number };
 type Placed = Layout;
@@ -194,7 +194,7 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
           const layout = { x: 0, y: 0, width: 0, height: 0 };
           return <article ref={(node) => { if (node) cardsRef.current.set(item.id, node); }} className={`motion-masonry-item motion-item--${shape}`} key={item.id} style={{ left: layout.x, top: layout.y, width: layout.width, height: layout.height }} role="button" tabIndex={0} aria-label={`放大查看 ${item.alt}`} onClick={() => openLightbox(item)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(item); } }}>
             <div className="motion-masonry-media">
-              {item.type === 'video' ? <video src={item.src} muted loop playsInline preload="metadata" aria-label={item.alt} onLoadedMetadata={(event) => markRatio(item, event.currentTarget.videoWidth, event.currentTarget.videoHeight)} onError={() => markFailure(item)} /> : <img src={item.src} alt={item.alt} loading={index < 2 ? 'eager' : 'lazy'} fetchPriority={index < 2 ? 'high' : 'auto'} decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
+              {item.type === 'video' ? <video src={item.src} poster={item.poster} muted loop playsInline preload={index < 2 ? 'metadata' : 'none'} aria-label={item.alt} onLoadedMetadata={(event) => markRatio(item, event.currentTarget.videoWidth, event.currentTarget.videoHeight)} onError={() => markFailure(item)} /> : <img src={item.src} alt={item.alt} loading={index < 2 ? 'eager' : 'lazy'} fetchPriority={index < 2 ? 'high' : 'auto'} decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
             </div>
           </article>;
         })}
@@ -204,7 +204,7 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
         <button className="motion-lightbox-backdrop" type="button" aria-label="关闭预览" onClick={() => setActiveItem(null)} />
         <div className="motion-lightbox-content">
           <button ref={closeRef} className="motion-lightbox-close" type="button" aria-label="关闭预览" onClick={() => setActiveItem(null)}>×</button>
-          {activeItem.type === 'video' ? <video src={activeItem.src} muted autoPlay loop playsInline controls /> : <img src={activeItem.src} alt={activeItem.alt} />}
+          {activeItem.type === 'video' ? <video src={activeItem.src} poster={activeItem.poster} muted autoPlay loop playsInline controls /> : <img src={activeItem.src} alt={activeItem.alt} />}
         </div>
       </div>}
     </div>

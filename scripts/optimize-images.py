@@ -6,7 +6,7 @@ import os
 ROOT = Path('public')
 OUT = ROOT / 'optimized'
 EXTENSIONS = {'.png', '.jpg', '.jpeg'}
-WIDTHS = (640, 960, 1280, 1920)
+WIDTHS = (480, 640, 960, 1280, 1920)
 report = {'scanned': 0, 'converted': 0, 'beforeBytes': 0, 'afterBytes': 0, 'files': []}
 
 for source in ROOT.rglob('*'):

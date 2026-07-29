@@ -10,10 +10,16 @@ const optimizedImageSrc = (src: string) => {
   if (!/\.(png|jpe?g)$/i.test(src)) return src;
   return `/optimized/${src.replace(/^\//, '').replace(/\.(png|jpe?g)$/i, '.webp')}`;
 };
-const optimizedImageSrcSet = (src: string) => {
+const optimizedImageSrcSet = (src: string, includeFull = false) => {
   if (!/\.(png|jpe?g)$/i.test(src)) return undefined;
   const base = `/optimized/${src.replace(/^\//, '').replace(/\.(png|jpe?g)$/i, '')}`;
-  return [640, 960, 1280, 1920].map((width) => `${base}-${width}.webp ${width}w`).join(', ');
+  const widths = includeFull ? [640, 960, 1280, 1920] : [480, 640, 960, 1280];
+  return widths.map((width) => `${base}-${width}.webp ${width}w`).join(', ');
+};
+const optimizedVideoPoster = (src?: string) => {
+  if (!src) return undefined;
+  const filename = src.split('/').pop()?.replace(/\.[^.]+$/, '.webp');
+  return filename ? `/optimized/posters/${filename}` : undefined;
 };
 
 const navItems = [
@@ -945,7 +951,7 @@ export default function App() {
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5 }}
                 >
-                  <video src={selectedProject.video} controls autoPlay muted loop playsInline preload="metadata" />
+                  <video src={selectedProject.video} poster={optimizedVideoPoster(selectedProject.video)} controls autoPlay muted loop playsInline preload="metadata" />
                 </motion.figure>
               )}
               {selectedProject.detailImages.map((image, index) => (
@@ -956,7 +962,7 @@ export default function App() {
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5, delay: index * 0.04 }}
                 >
-                  <img src={optimizedImageSrc(image)} srcSet={optimizedImageSrcSet(image)} sizes="(max-width: 720px) 100vw, 50vw" alt={`${selectedProject.title} 详情 ${index + 1}`} loading="lazy" decoding="async" />
+                  <img src={optimizedImageSrc(image)} srcSet={optimizedImageSrcSet(image, true)} sizes="(max-width: 720px) 100vw, 50vw" alt={`${selectedProject.title} 详情 ${index + 1}`} loading="lazy" decoding="async" />
                 </motion.figure>
               ))}
             </div>
