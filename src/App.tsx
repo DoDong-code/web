@@ -5,6 +5,7 @@ import BorderGlow from './components/BorderGlow';
 import MotionMasonry, { type MotionItem } from './components/MotionMasonry';
 import TiltedPortraitCard from './components/TiltedPortraitCard';
 import Grainient from './components/Grainient';
+import LazyVideo from './components/LazyVideo';
 
 const optimizedImageSrc = (src: string) => {
   if (!/\.(png|jpe?g)$/i.test(src)) return src;
@@ -748,7 +749,7 @@ export default function App() {
       <section className="gallery-showcase" aria-label="精选项目画廊">
         <div className="gallery-showcase-inner">
           <div className="gallery-showcase-head">
-            <p className="eyebrow">艺术画廊 / Art Gallery</p>
+            <p className="eyebrow">Art Gallery</p>
           </div>
           <div className="hero-gallery">
             <div
@@ -954,7 +955,7 @@ export default function App() {
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5 }}
                 >
-                  <video src={selectedProject.video} poster={optimizedVideoPoster(selectedProject.video)} controls autoPlay muted loop playsInline preload="metadata" />
+                  <LazyVideo src={selectedProject.video} poster={optimizedVideoPoster(selectedProject.video)} controls autoPlay muted loop playsInline preload="metadata" />
                 </motion.figure>
               )}
               {selectedProject.detailImages.map((image, index) => (
@@ -965,7 +966,7 @@ export default function App() {
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5, delay: index * 0.04 }}
                 >
-                  <img src={optimizedImageSrc(image)} srcSet={optimizedImageSrcSet(image, true)} sizes="(max-width: 720px) 100vw, 50vw" alt={`${selectedProject.title} 详情 ${index + 1}`} loading="lazy" decoding="async" />
+                  <img src={optimizedImageSrc(image)} srcSet={optimizedImageSrcSet(image, true)} sizes="(max-width: 720px) 100vw, 50vw" alt={`${selectedProject.title} 详情 ${index + 1}`} loading={index === 0 ? 'eager' : 'lazy'} fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />
                 </motion.figure>
               ))}
             </div>
