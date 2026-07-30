@@ -23,6 +23,12 @@ const optimizedVideoPoster = (src?: string) => {
   return filename ? `/optimized/posters/${filename}` : undefined;
 };
 
+const HOME_ASSET_CDN_BASE = (
+  import.meta.env.VITE_ASSET_CDN_BASE_URL ||
+  'https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com'
+).replace(/\/$/, '');
+const homeAsset = (key: string) => `${HOME_ASSET_CDN_BASE}/portfolio/home/${key}`;
+
 const navItems = [
   { label: '首页', href: '#top' },
   { label: '经历', href: '#about' },
@@ -176,8 +182,8 @@ const projects = [
     tag: '3D动效',
     category: '3D Motion',
     year: '2024',
-    image: '/portfolio/reference-project1.png',
-    hoverGif: '/portfolio/project1-detail/board-28.gif',
+    image: homeAsset('gallery/reference-project1-640.webp'),
+    hoverGif: homeAsset('hover-motion/board-28.gif'),
     hasVideo: true,
     desc: '春节直播礼物 3D 动态设计，围绕开播引导、付费人数和 ARPPU 指标建立高冲击视觉表达。',
     video: '/portfolio/project1-detail/gift-collection.mp4',
@@ -188,8 +194,8 @@ const projects = [
     tag: 'UI动效',
     category: 'UI Motion',
     year: '2024',
-    image: '/portfolio/project2-cover.png',
-    hoverGif: '/portfolio/project2-detail/ui_motion_2.gif',
+    image: homeAsset('gallery/project2-cover-640.webp'),
+    hoverGif: homeAsset('hover-motion/ui_motion_2.gif'),
     hasVideo: true,
     desc: '提炼弹窗、toast、退场、活动按钮等可复用动效参数，建立面向落地和性能的 UI 动效规范。',
     video: '/portfolio/project2-detail/ui-motion.mp4',
@@ -200,7 +206,7 @@ const projects = [
     tag: '增长UI',
     category: 'UI',
     year: '2026',
-    image: '/portfolio/project3-cover.png',
+    image: homeAsset('gallery/project3-cover-640.webp'),
     desc: '针对海外裂变增长链路设计 UI 体验，覆盖入口吸引、利益对比、任务反馈与转化路径。',
     detailImages: project3DetailImages,
   },
@@ -209,7 +215,7 @@ const projects = [
     tag: '视觉',
     category: 'Visual',
     year: '2026',
-    image: '/portfolio/project4-cover.png',
+    image: homeAsset('gallery/project4-cover-640.webp'),
     desc: '运营视觉、H5 与头图模板系统，强化信息层级、行动引导和多场景视觉一致性。',
     detailImages: project4DetailImages,
   },
@@ -218,7 +224,7 @@ const projects = [
     tag: 'AI辅助',
     category: 'AI',
     year: '2026',
-    image: '/portfolio/project5-cover.png',
+    image: homeAsset('gallery/project5-cover-640.webp'),
     desc: '将 AI 融入创意探索、视觉生成、文案与动效流程，提升概念到交付的整体效率。',
     detailImages: project5DetailImages,
   },
@@ -227,8 +233,8 @@ const projects = [
     tag: '3D动效',
     category: '3D Motion',
     year: '2021',
-    image: '/portfolio/project6-cover.png',
-    hoverGif: '/portfolio/project6-detail/ui_motion_6.gif',
+    image: homeAsset('gallery/project6-cover-640.webp'),
+    hoverGif: homeAsset('hover-motion/ui_motion_6.gif'),
     hasVideo: true,
     desc: '围绕直播互动与轻量养成玩法设计的 3D 小游戏视觉，覆盖角色资产、动效反馈、状态演示与玩法包装。',
     video: '/portfolio/project6-detail/dog-demo.mp4',
@@ -239,8 +245,8 @@ const projects = [
     tag: '3D动效',
     category: '3D Motion',
     year: '2020',
-    image: '/portfolio/project7-cover.png',
-    hoverGif: '/portfolio/project7-detail/gift-extra-2.gif',
+    image: homeAsset('gallery/project7-cover-640.webp'),
+    hoverGif: homeAsset('hover-motion/gift-extra-2.gif'),
     hasVideo: true,
     desc: '面向直播场景的礼物动效与视觉包装项目，强调礼物识别度、播放节奏和送礼瞬间的情绪价值。',
     video: '/portfolio/project7-detail/live-gift-2020.mp4',
@@ -699,11 +705,11 @@ export default function App() {
       </div>
 
       <section className="hero" id="top">
-        <link rel="preload" as="image" href="/optimized/posters/home-hero.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href={homeAsset('hero/home-hero.webp')} fetchPriority="high" />
         <video
           className="hero-video"
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_204221_5339e40b-e73d-4ab0-9c65-79c18c66fd50.mp4"
-          poster="/optimized/posters/home-hero.webp"
+          poster={homeAsset('hero/home-hero.webp')}
           autoPlay
           muted
           loop
