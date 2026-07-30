@@ -1,3 +1,8 @@
+.motion-wall-shell {
+  position: relative;
+  width: 100%;
+}
+
 .motion-wall-viewport {
   --motion-fade-height: 140px;
   position: relative;
@@ -72,6 +77,39 @@
   object-position: center;
 }
 
+.motion-wall-viewport.is-lightbox-open {
+  overflow: visible;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.motion-wall-controls {
+  position: relative;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.motion-wall-play-all {
+  border: 1px solid rgba(244, 242, 237, 0.2);
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: rgba(10, 11, 15, 0.58);
+  color: rgba(244, 242, 237, 0.78);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.motion-wall-play-all:hover,
+.motion-wall-play-all[aria-pressed="true"] {
+  color: rgba(244, 242, 237, 1);
+  border-color: rgba(244, 242, 237, 0.42);
+  background: rgba(22, 23, 29, 0.82);
+}
+
 .motion-hover-video {
   position: absolute;
   inset: 0;
@@ -118,6 +156,10 @@
 }
 
 .motion-hover-image-media.is-ready { opacity: 1; }
+
+/* Animated artwork is mounted only after hover/Play All; the poster remains the sole
+   visible frame until the deferred media has decoded. */
+.motion-hover-image-media:not(.is-ready) { visibility: hidden; }
 
 .motion-masonry-media:hover {
   transform: scale(0.99);
@@ -175,7 +217,7 @@
   display: grid;
   place-items: center;
   padding: 7vh 6vw;
-  background: rgba(0, 0, 0, 0.78);
+  background: #000;
   backdrop-filter: blur(16px);
   animation: motion-lightbox-in 240ms ease both;
 }
@@ -184,7 +226,7 @@
   position: absolute;
   inset: 0;
   border: 0;
-  background: transparent;
+  background: #000;
   cursor: zoom-out;
 }
 
@@ -235,6 +277,8 @@
 
   .motion-lightbox,
   .motion-lightbox-content { animation: none; }
+
+  .motion-wall-play-all { transition: none; }
 }
 
 @media (max-width: 719px) {

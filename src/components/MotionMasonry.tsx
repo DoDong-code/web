@@ -1,15 +1,17 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import './MotionMasonry.css';
 
-export type MotionItem = { id: string; src: string; type: 'image' | 'video'; alt: string; aspectRatio?: number; poster?: string; animated?: boolean };
+export type MotionItem = { id: string; src: string; type: 'image' | 'video'; alt: string; aspectRatio?: number; poster?: string; animated?: boolean; animatedSrc?: string };
 type MotionMasonryProps = { items: MotionItem[] };
 type Layout = { x: number; y: number; width: number; height: number };
 type Placed = Layout;
 const hoverVideoRegistry = new Set<HTMLVideoElement>();
 const playingHoverVideos = new Set<HTMLVideoElement>();
+const hoveredHoverVideos = new Set<HTMLVideoElement>();
 
-function HoverVideo({ item, onRatio, onError }: { item: MotionItem; onRatio: (width: number, height: number) => void; onError: () => void }) {
+function HoverVideo({ item, onRatio, onError, playAll }: { item: MotionItem; onRatio: (width: number, height: number) => void; onError: () => void; playAll: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hovered, setHovered] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -25,8 +27,26 @@ function HoverVideo({ item, onRatio, onError }: { item: MotionItem; onRatio: (wi
       video.pause();
       hoverVideoRegistry.delete(video);
       playingHoverVideos.delete(video);
+      hoveredHoverVideos.delete(video);
     }
   }, []);
+
+  useEffect(() => {
+    if (playAll) {
+      setHovered(true);
+      setMounted(true);
+      return;
+    }
+    setHovered(false);
+    const video = videoRef.current;
+      video?.pause();
+    if (video) {
+      playingHoverVideos.delete(video);
+      hoveredHoverVideos.delete(video);
+    }
+    setMounted(false);
+    setReady(false);
+  }, [playAll]);
 
   const handleEnter = () => {
     setHovered(true);
@@ -36,11 +56,15 @@ function HoverVideo({ item, onRatio, onError }: { item: MotionItem; onRatio: (wi
   };
 
   const handleLeave = () => {
+      if (playAll) return;
     setHovered(false);
     if (timerRef.current) window.clearTimeout(timerRef.current);
     const video = videoRef.current;
     video?.pause();
-    if (video) playingHoverVideos.delete(video);
+    if (video) {
+      playingHoverVideos.delete(video);
+      hoveredHoverVideos.delete(video);
+    }
     unloadRef.current = window.setTimeout(() => {
       setMounted(false);
       setReady(false);
@@ -52,7 +76,8 @@ function HoverVideo({ item, onRatio, onError }: { item: MotionItem; onRatio: (wi
     if (!video) return;
     setReady(true);
     if (!hovered) return;
-    if (playingHoverVideos.size >= 2) {
+    hoveredHoverVideos.add(video);
+    if (!playAll && playingHoverVideos.size >= 2) {
       const first = playingHoverVideos.values().next().value as HTMLVideoElement | undefined;
       first?.pause();
       if (first) playingHoverVideos.delete(first);
@@ -63,13 +88,13 @@ function HoverVideo({ item, onRatio, onError }: { item: MotionItem; onRatio: (wi
 
   return (
     <div className="motion-hover-video" onPointerEnter={handleEnter} onPointerLeave={handleLeave}>
-      {item.poster ? <img className="motion-hover-poster" src={item.poster} alt="" aria-hidden="true" loading="lazy" decoding="async" /> : <span className="motion-hover-poster motion-hover-poster--fallback" aria-hidden="true" />}
-      {mounted ? <video ref={(node) => { if (!node && videoRef.current) hoverVideoRegistry.delete(videoRef.current); videoRef.current = node; if (node) hoverVideoRegistry.add(node); }} src={item.src} muted loop playsInline preload="auto" aria-label={item.alt} className={ready ? 'is-ready' : ''} onLoadedMetadata={(event) => onRatio(event.currentTarget.videoWidth, event.currentTarget.videoHeight)} onCanPlay={handleCanPlay} onError={() => { setReady(false); onError(); }} /> : null}
+      {item.poster ? <img className="motion-hover-poster" src={item.poster} alt="" aria-hidden="true" loading="lazy" decoding="async" onLoad={(event) => onRatio(event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} /> : <span className="motion-hover-poster motion-hover-poster--fallback" aria-hidden="true" />}
+      {mounted ? <video ref={(node) => { if (!node && videoRef.current) hoverVideoRegistry.delete(videoRef.current); videoRef.current = node; if (node) hoverVideoRegistry.add(node); }} src={item.src} muted loop playsInline preload="metadata" aria-label={item.alt} className={ready ? 'is-ready' : ''} onLoadedMetadata={(event) => onRatio(event.currentTarget.videoWidth, event.currentTarget.videoHeight)} onCanPlay={handleCanPlay} onError={() => { setReady(false); onError(); }} /> : null}
     </div>
   );
 }
 
-function HoverImage({ item, onRatio, onError }: { item: MotionItem; onRatio: (width: number, height: number) => void; onError: () => void }) {
+function HoverImage({ item, onRatio, onError, playAll }: { item: MotionItem; onRatio: (width: number, height: number) => void; onError: () => void; playAll: boolean }) {
   const [mounted, setMounted] = useState(false);
   const [ready, setReady] = useState(false);
   const timerRef = useRef<number | null>(null);
@@ -80,6 +105,15 @@ function HoverImage({ item, onRatio, onError }: { item: MotionItem; onRatio: (wi
     if (unloadRef.current) window.clearTimeout(unloadRef.current);
   }, []);
 
+  useEffect(() => {
+    if (playAll) {
+      setMounted(true);
+      return;
+    }
+    setMounted(false);
+    setReady(false);
+  }, [playAll]);
+
   const handleEnter = () => {
     if (unloadRef.current) window.clearTimeout(unloadRef.current);
     if (timerRef.current) window.clearTimeout(timerRef.current);
@@ -87,6 +121,7 @@ function HoverImage({ item, onRatio, onError }: { item: MotionItem; onRatio: (wi
   };
 
   const handleLeave = () => {
+    if (playAll) return;
     if (timerRef.current) window.clearTimeout(timerRef.current);
     unloadRef.current = window.setTimeout(() => {
       setMounted(false);
@@ -96,8 +131,8 @@ function HoverImage({ item, onRatio, onError }: { item: MotionItem; onRatio: (wi
 
   return (
     <div className="motion-hover-image" onPointerEnter={handleEnter} onPointerLeave={handleLeave}>
-      {item.poster ? <img className="motion-hover-poster" src={item.poster} alt="" aria-hidden="true" loading="lazy" decoding="async" /> : <span className="motion-hover-poster motion-hover-poster--fallback" aria-hidden="true" />}
-      {mounted ? <img className={`motion-hover-image-media${ready ? ' is-ready' : ''}`} src={item.src} alt={item.alt} loading="eager" decoding="async" draggable={false} onLoad={(event) => { setReady(true); onRatio(event.currentTarget.naturalWidth, event.currentTarget.naturalHeight); }} onError={() => { setReady(false); onError(); }} /> : null}
+      {item.poster ? <img className="motion-hover-poster" src={item.poster} alt="" aria-hidden="true" loading="lazy" decoding="async" onLoad={(event) => onRatio(event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} /> : <span className="motion-hover-poster motion-hover-poster--fallback" aria-hidden="true" />}
+      {mounted ? <img className={`motion-hover-image-media${ready ? ' is-ready' : ''}`} src={item.animatedSrc || item.src} alt={item.alt} loading="eager" decoding="async" draggable={false} onLoad={(event) => { setReady(true); onRatio(event.currentTarget.naturalWidth, event.currentTarget.naturalHeight); }} onError={() => { setReady(false); onError(); }} /> : null}
     </div>
   );
 }
@@ -133,7 +168,7 @@ const motionSrcSet = (src: string) => {
   const base = src.slice(0, -5);
   return [480, 640, 960, 1280].map((width) => `${base}-${width}.webp ${width}w`).join(', ');
 };
-const isDeferredImage = (item: MotionItem) => item.type === 'image' && (item.animated === true || /\.gif$/i.test(item.src));
+const isDeferredImage = (item: MotionItem) => item.type === 'image' && (item.animated === true || Boolean(item.animatedSrc) || /\.gif$/i.test(item.src));
 
 export default function MotionMasonry({ items }: MotionMasonryProps) {
   const shellRef = useRef<HTMLDivElement>(null);
@@ -154,10 +189,16 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   const [collapsedHeight] = useState(() => Math.min(Math.max(window.innerHeight * 0.95, 900), 1080));
   const [expanded, setExpanded] = useState(false);
   const [activeItem, setActiveItem] = useState<MotionItem | null>(null);
+  const [playAll, setPlayAll] = useState(false);
+  const playAllRef = useRef(false);
   const [renderLimit, setRenderLimit] = useState(12);
   const [visibleVideos, setVisibleVideos] = useState(new Set<HTMLVideoElement>());
   const wasExpandedRef = useRef(false);
   const warned = useRef(new Set<string>());
+
+  useEffect(() => {
+    playAllRef.current = playAll;
+  }, [playAll]);
 
   useEffect(() => {
     fetch('/motion-wall/manifest.json')
@@ -241,7 +282,9 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
     return () => {
       isLightboxOpenRef.current = false;
       document.body.style.overflow = '';
-      hoverVideoRegistry.forEach((video) => void video.play().catch(() => undefined));
+      hoverVideoRegistry.forEach((video) => {
+        if (playAllRef.current || hoveredHoverVideos.has(video)) void video.play().catch(() => undefined);
+      });
       cardsRef.current.get(originId ?? '')?.focus();
       activeOriginRef.current = null;
     };
@@ -269,7 +312,14 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   const openLightbox = (item: MotionItem) => { activeOriginRef.current = item.id; setActiveItem(item); };
   const toggleExpanded = () => {
     setExpanded((current) => {
-      if (current) window.setTimeout(() => shellRef.current?.closest('.motion-wall-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 720);
+      if (current) {
+        window.setTimeout(() => {
+          const section = shellRef.current?.closest<HTMLElement>('.motion-wall-section');
+          if (!section) return;
+          const top = section.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }, 720);
+      }
       return !current;
     });
   };
@@ -281,7 +331,13 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
     wasExpandedRef.current = expanded;
   }, [expanded]);
   return (
-    <div className={`motion-wall-viewport${expanded ? ' is-expanded' : ''}`} style={{ '--motion-collapsed-height': `${collapsedHeight}px`, '--motion-full-height': `${fullHeight || 900}px` } as CSSProperties}>
+    <div className="motion-wall-shell">
+      <div className={`motion-wall-viewport${expanded ? ' is-expanded' : ''}${activeItem ? ' is-lightbox-open' : ''}`} style={{ '--motion-collapsed-height': `${collapsedHeight}px`, '--motion-full-height': `${fullHeight || 900}px` } as CSSProperties}>
+      <div className="motion-wall-controls">
+        <button className="motion-wall-play-all" type="button" onClick={() => setPlayAll((value) => !value)} aria-pressed={playAll}>
+          {playAll ? 'Stop All' : 'Play All'}
+        </button>
+      </div>
       <div ref={shellRef} className={`motion-masonry${activeItem ? ' is-preview-open' : ''}`} style={{ '--motion-cell-size': `${cellSize}px` } as CSSProperties}>
         {renderedItems.map((item, index) => {
           const ratio = ratios[item.id] ?? item.aspectRatio ?? 1;
@@ -289,20 +345,21 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
           const layout = { x: 0, y: 0, width: 0, height: 0 };
           return <article ref={(node) => { if (node) cardsRef.current.set(item.id, node); }} className={`motion-masonry-item motion-item--${shape}`} key={item.id} style={{ left: layout.x, top: layout.y, width: layout.width, height: layout.height }} role="button" tabIndex={0} aria-label={`放大查看 ${item.alt}`} onClick={() => openLightbox(item)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(item); } }}>
             <div className="motion-masonry-media">
-              {item.type === 'video' ? <HoverVideo item={item} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : isDeferredImage(item) ? <HoverImage item={item} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : <img src={item.src} srcSet={motionSrcSet(item.src)} sizes={shape === 'landscape' ? '(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 25vw' : '(max-width: 760px) 50vw, (max-width: 1200px) 25vw, 12.5vw'} alt={item.alt} loading="lazy" decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
+              {item.type === 'video' ? <HoverVideo item={item} playAll={playAll} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : isDeferredImage(item) ? <HoverImage item={item} playAll={playAll} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : <img src={item.src} srcSet={motionSrcSet(item.src)} sizes={shape === 'landscape' ? '(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 25vw' : '(max-width: 760px) 50vw, (max-width: 1200px) 25vw, 12.5vw'} alt={item.alt} loading="lazy" decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
             </div>
           </article>;
         })}
       </div>
       {!expanded && renderLimit < visibleItems.length ? <div ref={loadMoreRef} aria-hidden="true" className="motion-wall-load-sentinel" /> : null}
-      <button className="motion-wall-toggle" type="button" onClick={() => setExpanded((value) => !value)} aria-label={expanded ? '收起全部' : '展开全部'} aria-expanded={expanded}><svg className="motion-wall-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={expanded ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6'} /></svg></button>
-      {activeItem && <div className="motion-lightbox" role="dialog" aria-modal="true" aria-label={activeItem.alt}>
+      {activeItem && createPortal(<div className="motion-lightbox" role="dialog" aria-modal="true" aria-label={activeItem.alt}>
         <button className="motion-lightbox-backdrop" type="button" aria-label="关闭预览" onClick={() => setActiveItem(null)} />
         <div className="motion-lightbox-content">
           <button ref={closeRef} className="motion-lightbox-close" type="button" aria-label="关闭预览" onClick={() => setActiveItem(null)}>×</button>
           {activeItem.type === 'video' ? <video src={activeItem.src} poster={activeItem.poster} muted autoPlay loop playsInline controls /> : <img src={activeItem.src} alt={activeItem.alt} />}
         </div>
-      </div>}
+      </div>, document.body)}
+      </div>
+      <button className="motion-wall-toggle" type="button" onClick={toggleExpanded} aria-label={expanded ? '收起全部' : '展开全部'} aria-expanded={expanded}><svg className="motion-wall-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={expanded ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6'} /></svg></button>
     </div>
   );
 }

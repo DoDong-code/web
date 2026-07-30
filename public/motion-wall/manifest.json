@@ -3,139 +3,208 @@
     "id": "1英语 粉盒",
     "src": "/motion-wall/1英语 粉盒.webp",
     "type": "image",
-    "alt": "1英语 粉盒"
+    "alt": "1英语 粉盒",
+    "animated": true,
+    "poster": "/motion-wall/posters/1英语 粉盒.webp",
+    "animatedSrc": "/motion-wall/1英语 粉盒.gif"
   },
   {
     "id": "1英语 红星",
     "src": "/motion-wall/1英语 红星.webp",
     "type": "image",
-    "alt": "1英语 红星"
+    "alt": "1英语 红星",
+    "animated": true,
+    "poster": "/motion-wall/posters/1英语 红星.webp",
+    "animatedSrc": "/motion-wall/1英语 红星.gif"
   },
   {
     "id": "1英语 绿星",
     "src": "/motion-wall/1英语 绿星.webp",
     "type": "image",
-    "alt": "1英语 绿星"
+    "alt": "1英语 绿星",
+    "animated": true,
+    "poster": "/motion-wall/posters/1英语 绿星.webp",
+    "animatedSrc": "/motion-wall/1英语 绿星.gif"
   },
   {
     "id": "1英语 黄盒",
     "src": "/motion-wall/1英语 黄盒.webp",
     "type": "image",
-    "alt": "1英语 黄盒"
+    "alt": "1英语 黄盒",
+    "animated": true,
+    "poster": "/motion-wall/posters/1英语 黄盒.webp",
+    "animatedSrc": "/motion-wall/1英语 黄盒.gif"
   },
   {
     "id": "1英语_橙色",
     "src": "/motion-wall/1英语_橙色.webp",
     "type": "image",
-    "alt": "1英语_橙色"
+    "alt": "1英语_橙色",
+    "animated": true,
+    "poster": "/motion-wall/posters/1英语_橙色.webp",
+    "animatedSrc": "/motion-wall/1英语_橙色.gif"
   },
   {
     "id": "1英语_绿",
     "src": "/motion-wall/1英语_绿.webp",
     "type": "image",
-    "alt": "1英语_绿"
+    "alt": "1英语_绿",
+    "animated": true,
+    "poster": "/motion-wall/posters/1英语_绿.webp",
+    "animatedSrc": "/motion-wall/1英语_绿.gif"
   },
   {
     "id": "1英语_绿色",
     "src": "/motion-wall/1英语_绿色.webp",
     "type": "image",
-    "alt": "1英语_绿色"
+    "alt": "1英语_绿色",
+    "animated": true,
+    "poster": "/motion-wall/posters/1英语_绿色.webp",
+    "animatedSrc": "/motion-wall/1英语_绿色.gif"
   },
   {
     "id": "1英语_蓝",
     "src": "/motion-wall/1英语_蓝.webp",
     "type": "image",
-    "alt": "1英语_蓝"
+    "alt": "1英语_蓝",
+    "animated": true,
+    "poster": "/motion-wall/posters/1英语_蓝.webp",
+    "animatedSrc": "/motion-wall/1英语_蓝.gif"
   },
   {
     "id": "_",
     "src": "/motion-wall/_.webp",
     "type": "image",
-    "alt": "_"
+    "alt": "_",
+    "animated": true,
+    "poster": "/motion-wall/posters/_.webp",
+    "animatedSrc": "/motion-wall/_.gif"
   },
   {
     "id": "__1",
     "src": "/motion-wall/__1.webp",
     "type": "image",
-    "alt": "__1"
+    "alt": "__1",
+    "animated": true,
+    "poster": "/motion-wall/posters/__1.webp",
+    "animatedSrc": "/motion-wall/__1.gif"
   },
   {
     "id": "_jp",
     "src": "/motion-wall/_jp.webp",
     "type": "image",
-    "alt": "_jp"
+    "alt": "_jp",
+    "animated": true,
+    "poster": "/motion-wall/posters/_jp.webp",
+    "animatedSrc": "/motion-wall/_jp.gif"
   },
   {
     "id": "BF_日语",
     "src": "/motion-wall/BF_日语.webp",
     "type": "image",
-    "alt": "BF_日语"
+    "alt": "BF_日语",
+    "animated": true,
+    "poster": "/motion-wall/posters/BF_日语.webp",
+    "animatedSrc": "/motion-wall/BF_日语.gif"
   },
   {
     "id": "BF_泰语",
     "src": "/motion-wall/BF_泰语.webp",
     "type": "image",
-    "alt": "BF_泰语"
+    "alt": "BF_泰语",
+    "animated": true,
+    "poster": "/motion-wall/posters/BF_泰语.webp",
+    "animatedSrc": "/motion-wall/BF_泰语.gif"
   },
   {
     "id": "BF_英语",
     "src": "/motion-wall/BF_英语.webp",
     "type": "image",
-    "alt": "BF_英语"
+    "alt": "BF_英语",
+    "animated": true,
+    "poster": "/motion-wall/posters/BF_英语.webp",
+    "animatedSrc": "/motion-wall/BF_英语.gif"
   },
   {
     "id": "GCASH 英",
     "src": "/motion-wall/GCASH 英.webp",
     "type": "image",
-    "alt": "GCASH 英"
+    "alt": "GCASH 英",
+    "animated": true,
+    "poster": "/motion-wall/posters/GCASH 英.webp",
+    "animatedSrc": "/motion-wall/GCASH 英.gif"
   },
   {
     "id": "gerenzhongxin_yingyu",
     "src": "/motion-wall/gerenzhongxin_yingyu.webp",
     "type": "image",
-    "alt": "gerenzhongxin_yingyu"
+    "alt": "gerenzhongxin_yingyu",
+    "animated": true,
+    "poster": "/motion-wall/posters/gerenzhongxin_yingyu.webp",
+    "animatedSrc": "/motion-wall/gerenzhongxin_yingyu.gif"
   },
   {
     "id": "PC_en",
     "src": "/motion-wall/PC_en.webp",
     "type": "image",
-    "alt": "PC_en"
+    "alt": "PC_en",
+    "animated": true,
+    "poster": "/motion-wall/posters/PC_en.webp",
+    "animatedSrc": "/motion-wall/PC_en.gif"
   },
   {
     "id": "PC_xiyu",
     "src": "/motion-wall/PC_xiyu.webp",
     "type": "image",
-    "alt": "PC_xiyu"
+    "alt": "PC_xiyu",
+    "animated": true,
+    "poster": "/motion-wall/posters/PC_xiyu.webp",
+    "animatedSrc": "/motion-wall/PC_xiyu.gif"
   },
   {
     "id": "个人中心 英语_红",
     "src": "/motion-wall/个人中心 英语_红.webp",
     "type": "image",
-    "alt": "个人中心 英语_红"
+    "alt": "个人中心 英语_红",
+    "animated": true,
+    "poster": "/motion-wall/posters/个人中心 英语_红.webp",
+    "animatedSrc": "/motion-wall/个人中心 英语_红.gif"
   },
   {
     "id": "个人中心 英语_绿",
     "src": "/motion-wall/个人中心 英语_绿.webp",
     "type": "image",
-    "alt": "个人中心 英语_绿"
+    "alt": "个人中心 英语_绿",
+    "animated": true,
+    "poster": "/motion-wall/posters/个人中心 英语_绿.webp",
+    "animatedSrc": "/motion-wall/个人中心 英语_绿.gif"
   },
   {
     "id": "个人中心 英语_蓝",
     "src": "/motion-wall/个人中心 英语_蓝.webp",
     "type": "image",
-    "alt": "个人中心 英语_蓝"
+    "alt": "个人中心 英语_蓝",
+    "animated": true,
+    "poster": "/motion-wall/posters/个人中心 英语_蓝.webp",
+    "animatedSrc": "/motion-wall/个人中心 英语_蓝.gif"
   },
   {
     "id": "个人中心2",
     "src": "/motion-wall/个人中心2.webp",
     "type": "image",
-    "alt": "个人中心2"
+    "alt": "个人中心2",
+    "animated": true,
+    "poster": "/motion-wall/posters/个人中心2.webp",
+    "animatedSrc": "/motion-wall/个人中心2.gif"
   },
   {
     "id": "个人中心英语",
     "src": "/motion-wall/个人中心英语.webp",
     "type": "image",
-    "alt": "个人中心英语"
+    "alt": "个人中心英语",
+    "animated": true,
+    "poster": "/motion-wall/posters/个人中心英语.webp",
+    "animatedSrc": "/motion-wall/个人中心英语.gif"
   },
   {
     "id": "克苏鲁 (0-00-00-00)",
@@ -159,7 +228,10 @@
     "id": "入口英语",
     "src": "/motion-wall/入口英语.webp",
     "type": "image",
-    "alt": "入口英语"
+    "alt": "入口英语",
+    "animated": true,
+    "poster": "/motion-wall/posters/入口英语.webp",
+    "animatedSrc": "/motion-wall/入口英语.gif"
   },
   {
     "id": "女神像",
@@ -197,79 +269,118 @@
     "id": "拍手 日 2",
     "src": "/motion-wall/拍手 日 2.webp",
     "type": "image",
-    "alt": "拍手 日 2"
+    "alt": "拍手 日 2",
+    "animated": true,
+    "poster": "/motion-wall/posters/拍手 日 2.webp",
+    "animatedSrc": "/motion-wall/拍手 日 2.gif"
   },
   {
     "id": "拍手 英 2_1",
     "src": "/motion-wall/拍手 英 2_1.webp",
     "type": "image",
-    "alt": "拍手 英 2_1"
+    "alt": "拍手 英 2_1",
+    "animated": true,
+    "poster": "/motion-wall/posters/拍手 英 2_1.webp",
+    "animatedSrc": "/motion-wall/拍手 英 2_1.gif"
   },
   {
     "id": "新年_日语",
     "src": "/motion-wall/新年_日语.webp",
     "type": "image",
-    "alt": "新年_日语"
+    "alt": "新年_日语",
+    "animated": true,
+    "poster": "/motion-wall/posters/新年_日语.webp",
+    "animatedSrc": "/motion-wall/新年_日语.gif"
   },
   {
     "id": "新年_英语",
     "src": "/motion-wall/新年_英语.webp",
     "type": "image",
-    "alt": "新年_英语"
+    "alt": "新年_英语",
+    "animated": true,
+    "poster": "/motion-wall/posters/新年_英语.webp",
+    "animatedSrc": "/motion-wall/新年_英语.gif"
   },
   {
     "id": "新年消息2_英语",
     "src": "/motion-wall/新年消息2_英语.webp",
     "type": "image",
-    "alt": "新年消息2_英语"
+    "alt": "新年消息2_英语",
+    "animated": true,
+    "poster": "/motion-wall/posters/新年消息2_英语.webp",
+    "animatedSrc": "/motion-wall/新年消息2_英语.gif"
   },
   {
     "id": "新年消息_日",
     "src": "/motion-wall/新年消息_日.webp",
     "type": "image",
-    "alt": "新年消息_日"
+    "alt": "新年消息_日",
+    "animated": true,
+    "poster": "/motion-wall/posters/新年消息_日.webp",
+    "animatedSrc": "/motion-wall/新年消息_日.gif"
   },
   {
     "id": "新年消息_英语",
     "src": "/motion-wall/新年消息_英语.webp",
     "type": "image",
-    "alt": "新年消息_英语"
+    "alt": "新年消息_英语",
+    "animated": true,
+    "poster": "/motion-wall/posters/新年消息_英语.webp",
+    "animatedSrc": "/motion-wall/新年消息_英语.gif"
   },
   {
     "id": "方-动态",
     "src": "/motion-wall/方-动态.webp",
     "type": "image",
-    "alt": "方-动态"
+    "alt": "方-动态",
+    "animated": true,
+    "poster": "/motion-wall/posters/方-动态.webp",
+    "animatedSrc": "/motion-wall/方-动态.gif"
   },
   {
     "id": "方-动态2",
     "src": "/motion-wall/方-动态2.webp",
     "type": "image",
-    "alt": "方-动态2"
+    "alt": "方-动态2",
+    "animated": true,
+    "poster": "/motion-wall/posters/方-动态2.webp",
+    "animatedSrc": "/motion-wall/方-动态2.gif"
   },
   {
     "id": "方-动态3-1",
     "src": "/motion-wall/方-动态3-1.webp",
     "type": "image",
-    "alt": "方-动态3-1"
+    "alt": "方-动态3-1",
+    "animated": true,
+    "poster": "/motion-wall/posters/方-动态3-1.webp",
+    "animatedSrc": "/motion-wall/方-动态3-1.gif"
   },
   {
     "id": "方-动态3",
     "src": "/motion-wall/方-动态3.webp",
     "type": "image",
-    "alt": "方-动态3"
+    "alt": "方-动态3",
+    "animated": true,
+    "poster": "/motion-wall/posters/方-动态3.webp",
+    "animatedSrc": "/motion-wall/方-动态3.gif"
   },
   {
     "id": "方-动态4-1",
     "src": "/motion-wall/方-动态4-1.webp",
     "type": "image",
-    "alt": "方-动态4-1"
+    "alt": "方-动态4-1",
+    "animated": true,
+    "poster": "/motion-wall/posters/方-动态4-1.webp",
+    "animatedSrc": "/motion-wall/方-动态4-1.gif"
   },
   {
     "id": "方-动态4",
     "src": "/motion-wall/方-动态4.webp",
     "type": "image",
-    "alt": "方-动态4"
+    "alt": "方-动态4",
+    "animated": true,
+    "poster": "/motion-wall/posters/方-动态4.webp",
+    "animatedSrc": "/motion-wall/方-动态4.gif"
   },
   {
     "id": "方",
@@ -311,19 +422,28 @@
     "id": "柴犬 日_2",
     "src": "/motion-wall/柴犬 日_2.webp",
     "type": "image",
-    "alt": "柴犬 日_2"
+    "alt": "柴犬 日_2",
+    "animated": true,
+    "poster": "/motion-wall/posters/柴犬 日_2.webp",
+    "animatedSrc": "/motion-wall/柴犬 日_2.gif"
   },
   {
     "id": "柴犬 英",
     "src": "/motion-wall/柴犬 英.webp",
     "type": "image",
-    "alt": "柴犬 英"
+    "alt": "柴犬 英",
+    "animated": true,
+    "poster": "/motion-wall/posters/柴犬 英.webp",
+    "animatedSrc": "/motion-wall/柴犬 英.gif"
   },
   {
     "id": "泰国 英",
     "src": "/motion-wall/泰国 英.webp",
     "type": "image",
-    "alt": "泰国 英"
+    "alt": "泰国 英",
+    "animated": true,
+    "poster": "/motion-wall/posters/泰国 英.webp",
+    "animatedSrc": "/motion-wall/泰国 英.gif"
   },
   {
     "id": "浮雕",
@@ -335,115 +455,172 @@
     "id": "消息 英语备份 11_1",
     "src": "/motion-wall/消息 英语备份 11_1.webp",
     "type": "image",
-    "alt": "消息 英语备份 11_1"
+    "alt": "消息 英语备份 11_1",
+    "animated": true,
+    "poster": "/motion-wall/posters/消息 英语备份 11_1.webp",
+    "animatedSrc": "/motion-wall/消息 英语备份 11_1.gif"
   },
   {
     "id": "消息 英语备份 12",
     "src": "/motion-wall/消息 英语备份 12.webp",
     "type": "image",
-    "alt": "消息 英语备份 12"
+    "alt": "消息 英语备份 12",
+    "animated": true,
+    "poster": "/motion-wall/posters/消息 英语备份 12.webp",
+    "animatedSrc": "/motion-wall/消息 英语备份 12.gif"
   },
   {
     "id": "消息 英语备份 4",
     "src": "/motion-wall/消息 英语备份 4.webp",
     "type": "image",
-    "alt": "消息 英语备份 4"
+    "alt": "消息 英语备份 4",
+    "animated": true,
+    "poster": "/motion-wall/posters/消息 英语备份 4.webp",
+    "animatedSrc": "/motion-wall/消息 英语备份 4.gif"
   },
   {
     "id": "消息 英语备份 5",
     "src": "/motion-wall/消息 英语备份 5.webp",
     "type": "image",
-    "alt": "消息 英语备份 5"
+    "alt": "消息 英语备份 5",
+    "animated": true,
+    "poster": "/motion-wall/posters/消息 英语备份 5.webp",
+    "animatedSrc": "/motion-wall/消息 英语备份 5.gif"
   },
   {
     "id": "消息 英语备份 6",
     "src": "/motion-wall/消息 英语备份 6.webp",
     "type": "image",
-    "alt": "消息 英语备份 6"
+    "alt": "消息 英语备份 6",
+    "animated": true,
+    "poster": "/motion-wall/posters/消息 英语备份 6.webp",
+    "animatedSrc": "/motion-wall/消息 英语备份 6.gif"
   },
   {
     "id": "消息 英语备份 6_1",
     "src": "/motion-wall/消息 英语备份 6_1.webp",
     "type": "image",
-    "alt": "消息 英语备份 6_1"
+    "alt": "消息 英语备份 6_1",
+    "animated": true,
+    "poster": "/motion-wall/posters/消息 英语备份 6_1.webp",
+    "animatedSrc": "/motion-wall/消息 英语备份 6_1.gif"
   },
   {
     "id": "消息 英语备份 7",
     "src": "/motion-wall/消息 英语备份 7.webp",
     "type": "image",
-    "alt": "消息 英语备份 7"
+    "alt": "消息 英语备份 7",
+    "animated": true,
+    "poster": "/motion-wall/posters/消息 英语备份 7.webp",
+    "animatedSrc": "/motion-wall/消息 英语备份 7.gif"
   },
   {
     "id": "消息 英语备份 7_1",
     "src": "/motion-wall/消息 英语备份 7_1.webp",
     "type": "image",
-    "alt": "消息 英语备份 7_1"
+    "alt": "消息 英语备份 7_1",
+    "animated": true,
+    "poster": "/motion-wall/posters/消息 英语备份 7_1.webp",
+    "animatedSrc": "/motion-wall/消息 英语备份 7_1.gif"
   },
   {
     "id": "消息 英语备份 8",
     "src": "/motion-wall/消息 英语备份 8.webp",
     "type": "image",
-    "alt": "消息 英语备份 8"
+    "alt": "消息 英语备份 8",
+    "animated": true,
+    "poster": "/motion-wall/posters/消息 英语备份 8.webp",
+    "animatedSrc": "/motion-wall/消息 英语备份 8.gif"
   },
   {
     "id": "消息 英语备份 9",
     "src": "/motion-wall/消息 英语备份 9.webp",
     "type": "image",
-    "alt": "消息 英语备份 9"
+    "alt": "消息 英语备份 9",
+    "animated": true,
+    "poster": "/motion-wall/posters/消息 英语备份 9.webp",
+    "animatedSrc": "/motion-wall/消息 英语备份 9.gif"
   },
   {
     "id": "爱心 日_1",
     "src": "/motion-wall/爱心 日_1.webp",
     "type": "image",
-    "alt": "爱心 日_1"
+    "alt": "爱心 日_1",
+    "animated": true,
+    "poster": "/motion-wall/posters/爱心 日_1.webp",
+    "animatedSrc": "/motion-wall/爱心 日_1.gif"
   },
   {
     "id": "爱心 英 GCASH",
     "src": "/motion-wall/爱心 英 GCASH.webp",
     "type": "image",
-    "alt": "爱心 英 GCASH"
+    "alt": "爱心 英 GCASH",
+    "animated": true,
+    "poster": "/motion-wall/posters/爱心 英 GCASH.webp",
+    "animatedSrc": "/motion-wall/爱心 英 GCASH.gif"
   },
   {
     "id": "爱心 英 TNG",
     "src": "/motion-wall/爱心 英 TNG.webp",
     "type": "image",
-    "alt": "爱心 英 TNG"
+    "alt": "爱心 英 TNG",
+    "animated": true,
+    "poster": "/motion-wall/posters/爱心 英 TNG.webp",
+    "animatedSrc": "/motion-wall/爱心 英 TNG.gif"
   },
   {
     "id": "爱心_英语",
     "src": "/motion-wall/爱心_英语.webp",
     "type": "image",
-    "alt": "爱心_英语"
+    "alt": "爱心_英语",
+    "animated": true,
+    "poster": "/motion-wall/posters/爱心_英语.webp",
+    "animatedSrc": "/motion-wall/爱心_英语.gif"
   },
   {
     "id": "猫猫对话1 英 GCASH",
     "src": "/motion-wall/猫猫对话1 英 GCASH.webp",
     "type": "image",
-    "alt": "猫猫对话1 英 GCASH"
+    "alt": "猫猫对话1 英 GCASH",
+    "animated": true,
+    "poster": "/motion-wall/posters/猫猫对话1 英 GCASH.webp",
+    "animatedSrc": "/motion-wall/猫猫对话1 英 GCASH.gif"
   },
   {
     "id": "猫猫对话1 英 truemoney",
     "src": "/motion-wall/猫猫对话1 英 truemoney.webp",
     "type": "image",
-    "alt": "猫猫对话1 英 truemoney"
+    "alt": "猫猫对话1 英 truemoney",
+    "animated": true,
+    "poster": "/motion-wall/posters/猫猫对话1 英 truemoney.webp",
+    "animatedSrc": "/motion-wall/猫猫对话1 英 truemoney.gif"
   },
   {
     "id": "猫猫对话2 泰truemoney 2",
     "src": "/motion-wall/猫猫对话2 泰truemoney 2.webp",
     "type": "image",
-    "alt": "猫猫对话2 泰truemoney 2"
+    "alt": "猫猫对话2 泰truemoney 2",
+    "animated": true,
+    "poster": "/motion-wall/posters/猫猫对话2 泰truemoney 2.webp",
+    "animatedSrc": "/motion-wall/猫猫对话2 泰truemoney 2.gif"
   },
   {
     "id": "红砖_英语",
     "src": "/motion-wall/红砖_英语.webp",
     "type": "image",
-    "alt": "红砖_英语"
+    "alt": "红砖_英语",
+    "animated": true,
+    "poster": "/motion-wall/posters/红砖_英语.webp",
+    "animatedSrc": "/motion-wall/红砖_英语.gif"
   },
   {
     "id": "英语 绿",
     "src": "/motion-wall/英语 绿.webp",
     "type": "image",
-    "alt": "英语 绿"
+    "alt": "英语 绿",
+    "animated": true,
+    "poster": "/motion-wall/posters/英语 绿.webp",
+    "animatedSrc": "/motion-wall/英语 绿.gif"
   },
   {
     "id": "赛事转场动画",
@@ -457,7 +634,10 @@
     "id": "金砖_英语",
     "src": "/motion-wall/金砖_英语.webp",
     "type": "image",
-    "alt": "金砖_英语"
+    "alt": "金砖_英语",
+    "animated": true,
+    "poster": "/motion-wall/posters/金砖_英语.webp",
+    "animatedSrc": "/motion-wall/金砖_英语.gif"
   },
   {
     "id": "镜头1",
@@ -465,18 +645,24 @@
     "type": "video",
     "alt": "镜头1",
     "poster": "/optimized/posters/镜头1.webp",
-    "aspectRatio": 3.0
+    "aspectRatio": 3
   },
   {
     "id": "马来 英",
     "src": "/motion-wall/马来 英.webp",
     "type": "image",
-    "alt": "马来 英"
+    "alt": "马来 英",
+    "animated": true,
+    "poster": "/motion-wall/posters/马来 英.webp",
+    "animatedSrc": "/motion-wall/马来 英.gif"
   },
   {
     "id": "马来 马",
     "src": "/motion-wall/马来 马.webp",
     "type": "image",
-    "alt": "马来 马"
+    "alt": "马来 马",
+    "animated": true,
+    "poster": "/motion-wall/posters/马来 马.webp",
+    "animatedSrc": "/motion-wall/马来 马.gif"
   }
 ]
