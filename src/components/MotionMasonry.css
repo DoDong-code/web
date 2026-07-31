@@ -157,6 +157,107 @@
 
 .motion-hover-image-media.is-ready { opacity: 1; }
 
+.media-progress-loader {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.media-progress-loader__poster,
+.media-progress-loader__media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.media-progress-loader__poster {
+  filter: blur(0);
+  transform: scale(1.03);
+  transition: opacity 300ms ease;
+}
+
+.media-progress-loader.is-loading .media-progress-loader__poster {
+  filter: blur(8px);
+}
+
+.media-progress-loader__media {
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.media-progress-loader__media.is-ready,
+.media-progress-loader.is-ready .media-progress-loader__media {
+  opacity: 1;
+}
+
+.media-progress-loader.is-ready .media-progress-loader__poster {
+  opacity: 0;
+}
+
+.media-progress-loader__indicator {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.media-progress-loader__ring {
+  position: absolute;
+  inset: 7px;
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  border-top-color: rgba(255, 255, 255, 0.86);
+  border-radius: 50%;
+  animation: media-progress-spin 800ms linear infinite;
+}
+
+.media-progress-loader__label {
+  position: relative;
+  z-index: 1;
+  font-size: 10px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.82;
+}
+
+.media-progress-loader__complete {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  transform: translate(-50%, -50%) scale(0.8);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.28);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 10px;
+  opacity: 0;
+  pointer-events: none;
+  animation: media-progress-complete 200ms ease both;
+}
+
+@keyframes media-progress-spin { to { transform: rotate(360deg); } }
+@keyframes media-progress-complete {
+  from { opacity: 0.8; transform: translate(-50%, -50%) scale(0.8); }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
 /* Animated artwork is mounted only after hover/Play All; the poster remains the sole
    visible frame until the deferred media has decoded. */
 .motion-hover-image-media:not(.is-ready) { visibility: hidden; }
@@ -279,6 +380,9 @@
   .motion-lightbox-content { animation: none; }
 
   .motion-wall-play-all { transition: none; }
+  .media-progress-loader__ring { animation: none; }
+  .media-progress-loader__poster,
+  .media-progress-loader__media { transition: none; }
 }
 
 @media (max-width: 719px) {
