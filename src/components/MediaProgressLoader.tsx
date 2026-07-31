@@ -24,7 +24,7 @@ async function streamToBlobUrl(src: string, onProgress: (value: number | null) =
   const existing = activeLoads.get(src);
   if (existing) return existing;
   const request = (async () => {
-    const response = await fetch(src, { signal, credentials: 'same-origin' });
+    const response = await fetch(src, { signal, credentials: 'same-origin', priority: 'high' } as RequestInit & { priority: 'high' });
     if (!response.ok || !response.body) throw new Error(`Media request failed: ${response.status}`);
     const total = Number(response.headers.get('content-length'));
     const reader = response.body.getReader();

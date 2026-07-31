@@ -1822,7 +1822,15 @@ button:focus-visible {
 }
 
 .detail-gallery .detail-video {
+  position: relative;
   margin-bottom: 72px;
+}
+
+.detail-gallery .detail-video .media-progress-loader {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: rgba(8, 9, 12, 0.88);
 }
 
 .detail-gallery figure {

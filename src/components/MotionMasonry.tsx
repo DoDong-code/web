@@ -90,7 +90,7 @@ function HoverVideo({ item, onRatio, onError, playAll }: { item: MotionItem; onR
   return (
     <div className="motion-hover-video" onPointerEnter={handleEnter} onPointerLeave={handleLeave}>
       {item.poster ? <img className="motion-hover-poster" src={item.poster} alt="" aria-hidden="true" loading="lazy" decoding="async" onLoad={(event) => onRatio(event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} /> : <span className="motion-hover-poster motion-hover-poster--fallback" aria-hidden="true" />}
-      {mounted ? <MediaProgressLoader type="video" active src={item.src} poster={item.poster} alt={item.alt} className={ready ? 'is-ready' : ''} onMetadata={onRatio} onReady={(element) => { const video = element as HTMLVideoElement; videoRef.current = video; hoverVideoRegistry.add(video); handleCanPlay(); }} onError={() => { setReady(false); }} videoProps={{ muted: true, loop: true, playsInline: true, autoPlay: true, preload: 'metadata', 'aria-label': item.alt }} /> : null}
+      {mounted ? <MediaProgressLoader type="video" active src={item.src} poster={item.poster} alt={item.alt} className={ready ? 'is-ready' : ''} onMetadata={onRatio} onReady={(element) => { const video = element as HTMLVideoElement; videoRef.current = video; hoverVideoRegistry.add(video); handleCanPlay(); }} onError={() => { setReady(false); }} videoProps={{ muted: true, loop: true, playsInline: true, autoPlay: true, preload: 'metadata', fetchPriority: 'high', 'aria-label': item.alt }} /> : null}
     </div>
   );
 }
@@ -133,7 +133,7 @@ function HoverImage({ item, onRatio, onError, playAll }: { item: MotionItem; onR
   return (
     <div className="motion-hover-image" onPointerEnter={handleEnter} onPointerLeave={handleLeave}>
       {item.poster ? <img className="motion-hover-poster" src={item.poster} alt="" aria-hidden="true" loading="lazy" decoding="async" onLoad={(event) => onRatio(event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} /> : <span className="motion-hover-poster motion-hover-poster--fallback" aria-hidden="true" />}
-      {mounted ? <MediaProgressLoader type="image" active src={item.animatedSrc || item.src} poster={item.poster} alt={item.alt} className={`motion-hover-image-media${ready ? ' is-ready' : ''}`} onMetadata={onRatio} onReady={() => setReady(true)} onError={() => { setReady(false); }} imgProps={{ loading: 'eager', decoding: 'async', draggable: false }} /> : null}
+      {mounted ? <MediaProgressLoader type="image" active src={item.animatedSrc || item.src} poster={item.poster} alt={item.alt} className={`motion-hover-image-media${ready ? ' is-ready' : ''}`} onMetadata={onRatio} onReady={() => setReady(true)} onError={() => { setReady(false); }} imgProps={{ loading: 'eager', fetchPriority: 'high', decoding: 'async', draggable: false }} /> : null}
     </div>
   );
 }

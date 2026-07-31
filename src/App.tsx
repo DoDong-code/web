@@ -5,7 +5,7 @@ import BorderGlow from './components/BorderGlow';
 import MotionMasonry, { type MotionItem } from './components/MotionMasonry';
 import TiltedPortraitCard from './components/TiltedPortraitCard';
 import Grainient from './components/Grainient';
-import LazyVideo from './components/LazyVideo';
+import MediaProgressLoader from './components/MediaProgressLoader';
 
 const optimizedImageSrc = (src: string) => {
   if (!/\.(png|jpe?g)$/i.test(src)) return src;
@@ -961,7 +961,14 @@ export default function App() {
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5 }}
                 >
-                  <LazyVideo src={selectedProject.video} poster={optimizedVideoPoster(selectedProject.video)} controls autoPlay muted loop playsInline preload="metadata" />
+                  <MediaProgressLoader
+                    type="video"
+                    active
+                    src={selectedProject.video}
+                    poster={optimizedVideoPoster(selectedProject.video)}
+                    alt={selectedProject.title}
+                    videoProps={{ controls: true, autoPlay: true, muted: true, loop: true, playsInline: true, preload: 'metadata' }}
+                  />
                 </motion.figure>
               )}
               {selectedProject.detailImages.map((image, index) => (
