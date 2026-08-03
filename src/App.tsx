@@ -5,7 +5,7 @@ import BorderGlow from './components/BorderGlow';
 import MotionMasonry, { type MotionItem } from './components/MotionMasonry';
 import TiltedPortraitCard from './components/TiltedPortraitCard';
 import Grainient from './components/Grainient';
-import MediaProgressLoader from './components/MediaProgressLoader';
+import MediaProgressLoader, { HoverPriorityMedia } from './components/MediaProgressLoader';
 
 const optimizedImageSrc = (src: string) => {
   if (!/\.(png|jpe?g)$/i.test(src)) return src;
@@ -800,7 +800,24 @@ export default function App() {
           <div className="portrait-tilt-shell portrait-panel">
             <TiltedPortraitCard className="portrait-photo-layer" rotateAmplitude={6} scaleOnHover={1.01} perspective={900}>
               <div className="portrait-photo">
-                <img src={optimizedImageSrc('/about-avatar.png')} srcSet={optimizedImageSrcSet('/about-avatar.png')} sizes="(max-width: 900px) 100vw, 50vw" alt="Zhao Weidong" width="900" height="1200" loading="lazy" decoding="async" />
+                <img
+                  src={homeAsset('about-avatar/about-avatar.webp')}
+                  srcSet={`${homeAsset('about-avatar/about-avatar-480.webp')} 480w, ${homeAsset('about-avatar/about-avatar-640.webp')} 640w, ${homeAsset('about-avatar/about-avatar-960.webp')} 960w, ${homeAsset('about-avatar/about-avatar-1280.webp')} 1280w`}
+                  sizes="(max-width: 900px) 100vw, 50vw"
+                  alt="Zhao Weidong"
+                  width="900"
+                  height="1200"
+                  loading="lazy"
+                  decoding="async"
+                  onError={(event) => {
+                    const image = event.currentTarget;
+                    if (!image.dataset.fallback) {
+                      image.dataset.fallback = 'true';
+                      image.src = optimizedImageSrc('/about-avatar.png');
+                      image.removeAttribute('srcset');
+                    }
+                  }}
+                />
               </div>
             </TiltedPortraitCard>
             <div className="portrait-text-layer">
@@ -903,7 +920,14 @@ export default function App() {
                   </span>
                 ) : null}
                 {'hoverGif' in project && project.hoverGif ? (
-                  <img className="project-hover-gif" src={project.hoverGif} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+                  <HoverPriorityMedia
+                    type="image"
+                    src={project.hoverGif}
+                    poster={optimizedImageSrc(project.image)}
+                    alt=""
+                    className="project-hover-gif"
+                    imgProps={{ loading: 'eager', decoding: 'async', draggable: false, 'aria-hidden': true }}
+                  />
                 ) : null}
                 <span className="project-hover-label">查看作品详情</span>
               </div>

@@ -17,6 +17,10 @@ export type MediaProgressLoaderProps = {
   videoProps?: Omit<VideoHTMLAttributes<HTMLVideoElement>, 'src' | 'poster' | 'onCanPlay' | 'onLoadedData' | 'onError' | 'onLoadedMetadata'>;
 };
 
+export type HoverPriorityMediaProps = Omit<MediaProgressLoaderProps, 'active'> & {
+  delay?: number;
+};
+
 const activeLoads = new Map<string, Promise<string>>();
 const loadedSources = new Set<string>();
 
@@ -123,6 +127,40 @@ export default function MediaProgressLoader({ src, type, poster, active = true, 
         }} onLoadedData={(event) => handleReady(event.currentTarget)} onCanPlay={(event) => handleReady(event.currentTarget)} onError={() => { setState('ERROR'); onErrorRef.current?.(); }} />
       ) : null}
       {loading ? <div className="media-progress-loader__indicator" aria-live="polite"><span className="media-progress-loader__ring" />{progress === null ? <span className="media-progress-loader__label">Loading</span> : <span className="media-progress-loader__label">{Math.round(progress)}%</span>}</div> : null}
+    </div>
+  );
+}
+
+/** Loads the hovered asset only after a short intent delay, while keeping its poster visible. */
+export function HoverPriorityMedia({ delay = 150, ...props }: HoverPriorityMediaProps) {
+  const [active, setActive] = useState(false);
+  const timerRef = useRef<number | null>(null);
+
+  const cancel = () => {
+    if (timerRef.current !== null) {
+      window.clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const handleEnter = () => {
+    cancel();
+    timerRef.current = window.setTimeout(() => {
+      timerRef.current = null;
+      setActive(true);
+    }, delay);
+  };
+
+  const handleLeave = () => {
+    cancel();
+    setActive(false);
+  };
+
+  useEffect(() => () => cancel(), []);
+
+  return (
+    <div className="hover-priority-media" onPointerEnter={handleEnter} onPointerLeave={handleLeave}>
+      <MediaProgressLoader {...props} active={active} />
     </div>
   );
 }

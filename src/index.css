@@ -1826,6 +1826,32 @@ button:focus-visible {
   margin-bottom: 72px;
 }
 
+.hover-priority-media {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.hover-priority-media .media-progress-loader {
+  position: absolute;
+  inset: 0;
+}
+
+.hover-priority-media .media-progress-loader__media {
+  object-fit: contain;
+  object-position: center;
+}
+
+.hover-priority-media .media-progress-loader__poster {
+  opacity: 0;
+}
+
+.project-card:hover .hover-priority-media .media-progress-loader__poster {
+  opacity: 0;
+}
+
 .detail-gallery .detail-video .media-progress-loader {
   position: relative;
   width: 100%;
