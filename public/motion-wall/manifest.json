@@ -259,7 +259,7 @@
   },
   {
     "id": "报名界面待机",
-    "src": "/motion-wall/报名界面待机.mp4",
+    "src": "https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com/motion-wall/报名界面待机.mp4",
     "type": "video",
     "alt": "报名界面待机",
     "poster": "/optimized/posters/报名界面待机.webp",
@@ -624,7 +624,7 @@
   },
   {
     "id": "赛事转场动画",
-    "src": "/motion-wall/赛事转场动画.mp4",
+    "src": "https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com/motion-wall/赛事转场动画.mp4",
     "type": "video",
     "alt": "赛事转场动画",
     "poster": "/optimized/posters/赛事转场动画.webp",
@@ -641,7 +641,7 @@
   },
   {
     "id": "镜头1",
-    "src": "/motion-wall/镜头1.mp4",
+    "src": "https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com/motion-wall/镜头1.mp4",
     "type": "video",
     "alt": "镜头1",
     "poster": "/optimized/posters/镜头1.webp",
