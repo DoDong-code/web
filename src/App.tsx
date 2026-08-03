@@ -9,12 +9,12 @@ import MediaProgressLoader, { HoverPriorityMedia } from './components/MediaProgr
 
 const optimizedImageSrc = (src: string) => {
   if (!/\.(png|jpe?g)$/i.test(src)) return src;
-  return `/optimized/${src.replace(/^\//, '').replace(/\.(png|jpe?g)$/i, '.webp')}`;
+  return `/optimized/${src.replace(/^\//, '').replace(/\.(png|jpe?g)$/i, '-640.webp')}`;
 };
 const optimizedImageSrcSet = (src: string, includeFull = false) => {
   if (!/\.(png|jpe?g)$/i.test(src)) return undefined;
   const base = `/optimized/${src.replace(/^\//, '').replace(/\.(png|jpe?g)$/i, '')}`;
-  const widths = includeFull ? [640, 960, 1280, 1920] : [480, 640, 960, 1280];
+  const widths = [640, 1280];
   return widths.map((width) => `${base}-${width}.webp ${width}w`).join(', ');
 };
 const optimizedVideoPoster = (src?: string) => {
@@ -804,7 +804,7 @@ export default function App() {
               <div className="portrait-photo">
                 <img
                   src={homeAsset('about-avatar/about-avatar.webp')}
-                  srcSet={`${homeAsset('about-avatar/about-avatar-480.webp')} 480w, ${homeAsset('about-avatar/about-avatar-640.webp')} 640w, ${homeAsset('about-avatar/about-avatar-960.webp')} 960w, ${homeAsset('about-avatar/about-avatar-1280.webp')} 1280w`}
+                  srcSet={`${homeAsset('about-avatar/about-avatar-640.webp')} 640w, ${homeAsset('about-avatar/about-avatar-1280.webp')} 1280w`}
                   sizes="(max-width: 900px) 100vw, 50vw"
                   alt="Zhao Weidong"
                   width="900"
@@ -815,7 +815,7 @@ export default function App() {
                     const image = event.currentTarget;
                     if (!image.dataset.fallback) {
                       image.dataset.fallback = 'true';
-                      image.src = optimizedImageSrc('/about-avatar.png');
+                      image.src = homeAsset('about-avatar/about-avatar-640.webp');
                       image.removeAttribute('srcset');
                     }
                   }}

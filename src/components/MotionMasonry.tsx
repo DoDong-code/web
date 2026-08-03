@@ -167,7 +167,7 @@ const stableMotionOrder = (source: MotionItem[]) => {
 const motionSrcSet = (src: string) => {
   if (!src.startsWith('/optimized/motion-wall/') || !src.endsWith('.webp')) return undefined;
   const base = src.slice(0, -5);
-  return [480, 640, 960, 1280].map((width) => `${base}-${width}.webp ${width}w`).join(', ');
+  return [640, 1280].map((width) => `${base}-${width}.webp ${width}w`).join(', ');
 };
 const isDeferredImage = (item: MotionItem) => item.type === 'image' && (item.animated === true || Boolean(item.animatedSrc) || /\.gif$/i.test(item.src));
 
