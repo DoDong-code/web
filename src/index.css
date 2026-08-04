@@ -1619,11 +1619,28 @@ button:focus-visible {
   inset: 0;
   z-index: 2;
   opacity: 0;
-  object-fit: contain;
-  object-position: center center;
-  background: #020304;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
   pointer-events: none;
   transition: opacity 220ms ease;
+}
+
+.project-hover-gif .media-progress-loader,
+.project-hover-gif .media-progress-loader__media,
+.project-hover-gif .media-progress-loader__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.project-hover-gif .media-progress-loader__media {
+  display: block;
+  object-fit: cover;
+  object-position: center;
 }
 
 .project-hover-label {
@@ -1650,7 +1667,8 @@ button:focus-visible {
 
 .project-card:hover .project-image .project-hover-gif {
   opacity: 1;
-  transform: none;
+  transform: scale(1.08);
+  transform-origin: center;
   filter: saturate(1) contrast(1.04);
 }
 

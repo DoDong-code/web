@@ -8,6 +8,20 @@ export type MotionItem = { id: string; src: string; type: 'image' | 'video'; alt
 type MotionMasonryProps = { items: MotionItem[] };
 type Layout = { x: number; y: number; width: number; height: number };
 type Placed = Layout;
+const USE_LOCAL_ASSETS = import.meta.env.DEV && import.meta.env.VITE_LOCAL_ASSETS === '1';
+const localMotionPath = (src?: string) => {
+  if (!src || !USE_LOCAL_ASSETS) return src;
+  const motionWallIndex = src.indexOf('/motion-wall/');
+  if (motionWallIndex >= 0) return `/local-assets${src.slice(motionWallIndex)}`;
+  if (src.startsWith('/optimized/')) return `/local-assets${src}`;
+  return src;
+};
+const localizeMotionItem = (item: MotionItem): MotionItem => ({
+  ...item,
+  src: localMotionPath(item.src) ?? item.src,
+  poster: localMotionPath(item.poster),
+  animatedSrc: localMotionPath(item.animatedSrc),
+});
 const hoverVideoRegistry = new Set<HTMLVideoElement>();
 const playingHoverVideos = new Set<HTMLVideoElement>();
 const hoveredHoverVideos = new Set<HTMLVideoElement>();
@@ -204,7 +218,9 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   useEffect(() => {
     fetch('/motion-wall/manifest.json')
       .then((response) => response.ok ? response.json() : [])
-      .then((manifest: MotionItem[]) => { if (manifest.length) setLoadedItems(stableMotionOrder(manifest)); })
+      .then((manifest: MotionItem[]) => {
+        if (manifest.length) setLoadedItems(stableMotionOrder(manifest.map(localizeMotionItem)));
+      })
       .catch(() => undefined);
   }, []);
 

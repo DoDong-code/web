@@ -27,9 +27,19 @@ const HOME_ASSET_CDN_BASE = (
   import.meta.env.VITE_ASSET_CDN_BASE_URL ||
   'https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com'
 ).replace(/\/$/, '');
-const homeAsset = (key: string) => `${HOME_ASSET_CDN_BASE}/portfolio/home/${key}`;
+const USE_LOCAL_ASSETS = import.meta.env.DEV && import.meta.env.VITE_LOCAL_ASSETS === '1';
+const LOCAL_ASSET_BASE = '/local-assets';
+const localAsset = (key: string) => `${LOCAL_ASSET_BASE}/${key.replace(/^\/+/, '')}`;
+const homeAsset = (key: string) => {
+  if (!USE_LOCAL_ASSETS) return `${HOME_ASSET_CDN_BASE}/portfolio/home/${key}`;
+  if (key === 'hero/home-hero.webp') return localAsset('optimized/posters/home-hero.webp');
+  if (key.startsWith('about-avatar/')) return localAsset(`optimized/${key.slice('about-avatar/'.length)}`);
+  if (key.startsWith('gallery/')) return localAsset(`optimized/portfolio/${key.slice('gallery/'.length)}`);
+  if (key.startsWith('hover-motion/')) return localAsset(`portfolio/${key}`);
+  return localAsset(`portfolio/home/${key}`);
+};
 const cosAsset = (key: string) =>
-  `${HOME_ASSET_CDN_BASE}/${key.replace(/^\//, '')}`;
+  USE_LOCAL_ASSETS ? localAsset(key) : `${HOME_ASSET_CDN_BASE}/${key.replace(/^\//, '')}`;
 
 const navItems = [
   { label: '首页', href: '#top' },
@@ -924,7 +934,21 @@ export default function App() {
                     poster={optimizedImageSrc(project.image)}
                     alt=""
                     className="project-hover-gif"
-                    imgProps={{ loading: 'eager', decoding: 'async', draggable: false, 'aria-hidden': true }}
+                    imgProps={{
+                      loading: 'eager',
+                      decoding: 'async',
+                      draggable: false,
+                      'aria-hidden': true,
+                      style: {
+                        width: '100%',
+                        height: '100%',
+                        display: 'block',
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        background: 'transparent',
+                        transform: 'scale(1.05)',
+                      },
+                    }}
                   />
                 ) : null}
                 <span className="project-hover-label">查看作品详情</span>
