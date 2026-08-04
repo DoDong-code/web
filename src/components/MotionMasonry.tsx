@@ -9,11 +9,15 @@ type MotionMasonryProps = { items: MotionItem[] };
 type Layout = { x: number; y: number; width: number; height: number };
 type Placed = Layout;
 const USE_LOCAL_ASSETS = import.meta.env.DEV && import.meta.env.VITE_LOCAL_ASSETS === '1';
+const LOCAL_MOTION_FILES = new Set(['报名界面待机.mp4', '镜头1.mp4', '赛事转场动画.mp4']);
 const localMotionPath = (src?: string) => {
   if (!src || !USE_LOCAL_ASSETS) return src;
   const motionWallIndex = src.indexOf('/motion-wall/');
-  if (motionWallIndex >= 0) return `/local-assets${src.slice(motionWallIndex)}`;
-  if (src.startsWith('/optimized/')) return `/local-assets${src}`;
+  if (motionWallIndex >= 0) {
+    const motionPath = src.slice(motionWallIndex);
+    const filename = motionPath.split('/').pop() ?? '';
+    if (LOCAL_MOTION_FILES.has(filename)) return `/local-assets${motionPath}`;
+  }
   return src;
 };
 const localizeMotionItem = (item: MotionItem): MotionItem => ({
