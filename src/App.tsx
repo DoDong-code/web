@@ -6,40 +6,59 @@ import MotionMasonry, { type MotionItem } from './components/MotionMasonry';
 import TiltedPortraitCard from './components/TiltedPortraitCard';
 import Grainient from './components/Grainient';
 import MediaProgressLoader, { HoverPriorityMedia } from './components/MediaProgressLoader';
+import { cdnAsset } from './lib/assetCdn';
 
+// Responsive variants live in the same folder as their source file (no more
+// mirrored /optimized tree), so the derived path is just a suffix swap.
+// Each module ships exactly one width: project detail boards are unreadable at
+// 640 so they carry 1280 only, while the QR code and project covers are small
+// display surfaces that carry 640 only.
+const imageVariantWidth = (src: string) => (src.startsWith('/work/projects/') ? 1280 : 640);
 const optimizedImageSrc = (src: string) => {
-  if (!/\.(png|jpe?g)$/i.test(src)) return src;
-  return `/optimized/${src.replace(/^\//, '').replace(/\.(png|jpe?g)$/i, '-640.webp')}`;
+  if (!/\.(png|jpe?g)$/i.test(src)) return cdnAsset(src);
+  return cdnAsset(src.replace(/\.(png|jpe?g)$/i, `-${imageVariantWidth(src)}.webp`));
 };
-const optimizedImageSrcSet = (src: string, includeFull = false) => {
+const optimizedImageSrcSet = (src: string, includeSrcSet = false) => {
   if (!/\.(png|jpe?g)$/i.test(src)) return undefined;
-  const base = `/optimized/${src.replace(/^\//, '').replace(/\.(png|jpe?g)$/i, '')}`;
-  const widths = [640, 1280];
-  return widths.map((width) => `${base}-${width}.webp ${width}w`).join(', ');
+  // One variant per module: srcSet has nothing to choose from unless a caller
+  // explicitly wants the width descriptor published.
+  if (!includeSrcSet) return undefined;
+  const base = src.replace(/\.(png|jpe?g)$/i, '');
+  const width = imageVariantWidth(src);
+  // Width descriptor must stay outside the URL or srcSet parsing breaks.
+  return `${cdnAsset(`${base}-${width}.webp`)} ${width}w`;
 };
 const optimizedVideoPoster = (src?: string) => {
   if (!src) return undefined;
   const filename = src.split('/').pop()?.replace(/\.[^.]+$/, '.webp');
-  return filename ? `/optimized/posters/${filename}` : undefined;
+  return filename ? cdnAsset(`/work/posters/${filename}`) : undefined;
 };
 
-const HOME_ASSET_CDN_BASE = (
-  import.meta.env.VITE_ASSET_CDN_BASE_URL ||
-  'https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com'
-).replace(/\/$/, '');
-const USE_LOCAL_ASSETS = import.meta.env.DEV && import.meta.env.VITE_LOCAL_ASSETS === '1';
+// Only assets that have NO counterpart elsewhere in public/ live here (large
+// video/gif sources). They are uploaded to COS under the same relative path as
+// everything else, so local preview and production stay byte-identical.
 const LOCAL_ASSET_BASE = '/local-assets';
 const localAsset = (key: string) => `${LOCAL_ASSET_BASE}/${key.replace(/^\/+/, '')}`;
-const homeAsset = (key: string) => {
-  if (!USE_LOCAL_ASSETS) return `${HOME_ASSET_CDN_BASE}/portfolio/home/${key}`;
-  if (key === 'hero/home-hero.webp') return localAsset('optimized/posters/home-hero.webp');
-  if (key.startsWith('about-avatar/')) return localAsset(`optimized/${key.slice('about-avatar/'.length)}`);
-  if (key.startsWith('gallery/')) return localAsset(`optimized/portfolio/${key.slice('gallery/'.length)}`);
-  if (key.startsWith('hover-motion/')) return localAsset(`portfolio/${key}`);
+// Legacy COS keys are kept as the data-source vocabulary, but they now only
+// resolve to their dist path — the bucket mirrors public/ 1:1.
+const LOCAL_VIDEO_KEY_MAP: Record<string, string> = {
+  'portfolio/project1-detail/gift-collection.mp4': 'work/projects/project-01/gift-collection.mp4',
+  'portfolio/project2-detail/ui-motion.mp4': 'work/projects/project-02/ui-motion.mp4',
+  'portfolio/project6-detail/dog-demo.mp4': 'work/projects/project-06/dog-demo.mp4',
+  'portfolio/project7-detail/live-gift-2020.mp4': 'work/projects/project-07/live-gift-2020.mp4',
+};
+const homeAssetLocal = (key: string) => {
+  if (key === 'hero/home-hero.webp') return '/hero/home-hero.webp';
+  if (key.startsWith('about-avatar/')) {
+    const name = key.slice('about-avatar/'.length);
+    return name === 'about-avatar.webp' ? '/about/about-avatar-1280.webp' : `/about/${name}`;
+  }
+  if (key.startsWith('gallery/')) return `/work/covers/${key.slice('gallery/'.length)}`;
+  if (key.startsWith('hover-motion/')) return localAsset(`work/${key}`);
   return localAsset(`portfolio/home/${key}`);
 };
-const cosAsset = (key: string) =>
-  USE_LOCAL_ASSETS ? localAsset(key) : `${HOME_ASSET_CDN_BASE}/${key.replace(/^\//, '')}`;
+const homeAsset = (key: string) => cdnAsset(homeAssetLocal(key));
+const cosAsset = (key: string) => cdnAsset(localAsset(LOCAL_VIDEO_KEY_MAP[key] ?? key));
 
 const navItems = [
   { label: '首页', href: '#top' },
@@ -56,132 +75,132 @@ const stats = [
 ];
 
 const project1DetailImages = [
-  '/portfolio/project1-detail/board-22.png',
-  '/portfolio/project1-detail/board-23.png',
-  '/portfolio/project1-detail/board-24.png',
-  '/portfolio/project1-detail/board-25.png',
-  '/portfolio/project1-detail/board-26.png',
-  '/portfolio/project1-detail/board-27.png',
-  '/portfolio/project1-detail/board-28.png',
-  '/portfolio/project1-detail/board-28.webp',
-  '/portfolio/project1-detail/board-28-1.jpg',
-  '/portfolio/project1-detail/board-29.png',
-  '/portfolio/project1-detail/item-003.jpg',
-  '/portfolio/project1-detail/duo-2.webp',
-  '/portfolio/project1-detail/duo-3.webp',
-  '/portfolio/project1-detail/duo-4.webp',
-  '/portfolio/project1-detail/duo-5.webp',
-  '/portfolio/project1-detail/duo-6.webp',
-  '/portfolio/project1-detail/item-004.jpg',
-  '/portfolio/project1-detail/item-004.webp',
-  '/portfolio/project1-detail/item-005.jpg',
-  '/portfolio/project1-detail/item-005.webp',
-  '/portfolio/project1-detail/item-006.jpg',
-  '/portfolio/project1-detail/item-007.jpg',
-  '/portfolio/project1-detail/item-007.webp',
-  '/portfolio/project1-detail/item-008.jpg',
-  '/portfolio/project1-detail/item-009.jpg',
-  '/portfolio/project1-detail/item-009.webp',
-  '/portfolio/project1-detail/item-010.jpg',
-  '/portfolio/project1-detail/item-011.jpg',
-  '/portfolio/project1-detail/item-012.jpg',
-  '/portfolio/project1-detail/item-013.jpg',
-  '/portfolio/project1-detail/item-013.webp',
-  '/portfolio/project1-detail/item-014.jpg',
-  '/portfolio/project1-detail/item-014.webp',
-  '/portfolio/project1-detail/item-016.jpg',
-  '/portfolio/project1-detail/item-017.jpg',
-  '/portfolio/project1-detail/item-017.webp',
-  '/portfolio/project1-detail/item-018.jpg',
-  '/portfolio/project1-detail/item-019.jpg',
-  '/portfolio/project1-detail/item-019.webp',
-  '/portfolio/project1-detail/item-020.jpg',
-  '/portfolio/project1-detail/item-020.webp',
-  '/portfolio/project1-detail/item-021.jpg',
-  '/portfolio/project1-detail/duo-1.webp',
+  '/work/projects/project-01/board-22.png',
+  '/work/projects/project-01/board-23.png',
+  '/work/projects/project-01/board-24.png',
+  '/work/projects/project-01/board-25.png',
+  '/work/projects/project-01/board-26.png',
+  '/work/projects/project-01/board-27.png',
+  '/work/projects/project-01/board-28.png',
+  '/work/projects/project-01/board-28.webp',
+  '/work/projects/project-01/board-28-1.jpg',
+  '/work/projects/project-01/board-29.png',
+  '/work/projects/project-01/item-003.jpg',
+  '/work/projects/project-01/duo-2.webp',
+  '/work/projects/project-01/duo-3.webp',
+  '/work/projects/project-01/duo-4.webp',
+  '/work/projects/project-01/duo-5.webp',
+  '/work/projects/project-01/duo-6.webp',
+  '/work/projects/project-01/item-004.jpg',
+  '/work/projects/project-01/item-004.webp',
+  '/work/projects/project-01/item-005.jpg',
+  '/work/projects/project-01/item-005.webp',
+  '/work/projects/project-01/item-006.jpg',
+  '/work/projects/project-01/item-007.jpg',
+  '/work/projects/project-01/item-007.webp',
+  '/work/projects/project-01/item-008.jpg',
+  '/work/projects/project-01/item-009.jpg',
+  '/work/projects/project-01/item-009.webp',
+  '/work/projects/project-01/item-010.jpg',
+  '/work/projects/project-01/item-011.jpg',
+  '/work/projects/project-01/item-012.jpg',
+  '/work/projects/project-01/item-013.jpg',
+  '/work/projects/project-01/item-013.webp',
+  '/work/projects/project-01/item-014.jpg',
+  '/work/projects/project-01/item-014.webp',
+  '/work/projects/project-01/item-016.jpg',
+  '/work/projects/project-01/item-017.jpg',
+  '/work/projects/project-01/item-017.webp',
+  '/work/projects/project-01/item-018.jpg',
+  '/work/projects/project-01/item-019.jpg',
+  '/work/projects/project-01/item-019.webp',
+  '/work/projects/project-01/item-020.jpg',
+  '/work/projects/project-01/item-020.webp',
+  '/work/projects/project-01/item-021.jpg',
+  '/work/projects/project-01/duo-1.webp',
 ];
 
 const project2DetailImages = [
-  '/portfolio/project2-detail/board-3.png',
-  '/portfolio/project2-detail/board-4.png',
-  '/portfolio/project2-detail/board-5.png',
-  '/portfolio/project2-detail/board-6.png',
-  '/portfolio/project2-detail/board-7.png',
+  '/work/projects/project-02/board-3.png',
+  '/work/projects/project-02/board-4.png',
+  '/work/projects/project-02/board-5.png',
+  '/work/projects/project-02/board-6.png',
+  '/work/projects/project-02/board-7.png',
 ];
 
 const project3DetailImages = [
-  '/portfolio/project3-detail/board-8.png',
-  '/portfolio/project3-detail/board-9.png',
-  '/portfolio/project3-detail/board-10.png',
-  '/portfolio/project3-detail/board-11.png',
-  '/portfolio/project3-detail/board-12.png',
-  '/portfolio/project3-detail/board-13.png',
-  '/portfolio/project3-detail/board-14.png',
-  '/portfolio/project3-detail/board-15.png',
-  '/portfolio/project3-detail/board-16.png',
-  '/portfolio/project3-detail/board-17.png',
-  '/portfolio/project3-detail/board-18.png',
+  '/work/projects/project-03/board-8.png',
+  '/work/projects/project-03/board-9.png',
+  '/work/projects/project-03/board-10.png',
+  '/work/projects/project-03/board-11.png',
+  '/work/projects/project-03/board-12.png',
+  '/work/projects/project-03/board-13.png',
+  '/work/projects/project-03/board-14.png',
+  '/work/projects/project-03/board-15.png',
+  '/work/projects/project-03/board-16.png',
+  '/work/projects/project-03/board-17.png',
+  '/work/projects/project-03/board-18.png',
 ];
 
 const project4DetailImages = [
-  '/portfolio/project4-detail/board-30.png',
-  '/portfolio/project4-detail/board-31.png',
-  '/portfolio/project4-detail/board-23.jpg',
-  '/portfolio/project4-detail/board-24.jpg',
-  '/portfolio/project4-detail/board-25.jpg',
-  '/portfolio/project4-detail/board-26.jpg',
-  '/portfolio/project4-detail/board-27.jpg',
-  '/portfolio/project4-detail/board-28.jpg',
-  '/portfolio/project4-detail/board-30-extra.jpg',
-  '/portfolio/project4-detail/board-31-extra.jpg',
+  '/work/projects/project-04/board-30.png',
+  '/work/projects/project-04/board-31.png',
+  '/work/projects/project-04/board-23.jpg',
+  '/work/projects/project-04/board-24.jpg',
+  '/work/projects/project-04/board-25.jpg',
+  '/work/projects/project-04/board-26.jpg',
+  '/work/projects/project-04/board-27.jpg',
+  '/work/projects/project-04/board-28.jpg',
+  '/work/projects/project-04/board-30-extra.jpg',
+  '/work/projects/project-04/board-31-extra.jpg',
 ];
 
 const project5DetailImages = [
-  '/portfolio/project5-detail/board-19.png',
-  '/portfolio/project5-detail/board-20.png',
-  '/portfolio/project5-detail/board-21.png',
+  '/work/projects/project-05/board-19.png',
+  '/work/projects/project-05/board-20.png',
+  '/work/projects/project-05/board-21.png',
 ];
 
 const project6DetailImages = [
-  '/portfolio/project6-detail/dog-1.png',
-  '/portfolio/project6-detail/dog-2.png',
-  '/portfolio/project6-detail/dog-3.png',
-  '/portfolio/project6-detail/dog-4.png',
-  '/portfolio/project6-detail/dog-5.png',
-  '/portfolio/project6-detail/dog-6.webp',
-  '/portfolio/project6-detail/dog-7.webp',
-  '/portfolio/project6-detail/dog-8.webp',
-  '/portfolio/project6-detail/dog-9.webp',
-  '/portfolio/project6-detail/dog-10.webp',
-  '/portfolio/project6-detail/dog-11.webp',
-  '/portfolio/project6-detail/dog-12.webp',
-  '/portfolio/project6-detail/dog-13.webp',
-  '/portfolio/project6-detail/dog-14.webp',
-  '/portfolio/project6-detail/dog-15.webp',
-  '/portfolio/project6-detail/dog-16.webp',
-  '/portfolio/project6-detail/dog-17.webp',
-  '/portfolio/project6-detail/dog-18.webp',
-  '/portfolio/project6-detail/dog-19.webp',
-  '/portfolio/project6-detail/dog-20.webp',
-  '/portfolio/project6-detail/dog-21.png',
-  '/portfolio/project6-detail/dog-22.png',
-  '/portfolio/project6-detail/dog-23.png',
-  '/portfolio/project6-detail/dog-24.png',
-  '/portfolio/project6-detail/dog-25.webp',
-  '/portfolio/project6-detail/dog-26.webp',
+  '/work/projects/project-06/dog-1.png',
+  '/work/projects/project-06/dog-2.png',
+  '/work/projects/project-06/dog-3.png',
+  '/work/projects/project-06/dog-4.png',
+  '/work/projects/project-06/dog-5.png',
+  '/work/projects/project-06/dog-6.webp',
+  '/work/projects/project-06/dog-7.webp',
+  '/work/projects/project-06/dog-8.webp',
+  '/work/projects/project-06/dog-9.webp',
+  '/work/projects/project-06/dog-10.webp',
+  '/work/projects/project-06/dog-11.webp',
+  '/work/projects/project-06/dog-12.webp',
+  '/work/projects/project-06/dog-13.webp',
+  '/work/projects/project-06/dog-14.webp',
+  '/work/projects/project-06/dog-15.webp',
+  '/work/projects/project-06/dog-16.webp',
+  '/work/projects/project-06/dog-17.webp',
+  '/work/projects/project-06/dog-18.webp',
+  '/work/projects/project-06/dog-19.webp',
+  '/work/projects/project-06/dog-20.webp',
+  '/work/projects/project-06/dog-21.png',
+  '/work/projects/project-06/dog-22.png',
+  '/work/projects/project-06/dog-23.png',
+  '/work/projects/project-06/dog-24.png',
+  '/work/projects/project-06/dog-25.webp',
+  '/work/projects/project-06/dog-26.webp',
 ];
 
 const project7DetailImages = [
-  '/portfolio/project7-detail/gift-002.png',
-  '/portfolio/project7-detail/gift-003.jpg',
-  '/portfolio/project7-detail/gift-004.webp',
-  '/portfolio/project7-detail/gift-009.webp',
-  '/portfolio/project7-detail/gift-extra-1.webp',
-  '/portfolio/project7-detail/gift-extra-2.webp',
-  '/portfolio/project7-detail/gift-extra-3.webp',
-  '/portfolio/project7-detail/gift-extra-4.webp',
-  '/portfolio/project7-detail/gift-010.png',
-  '/portfolio/project7-detail/gift-011.webp',
+  '/work/projects/project-07/gift-002.png',
+  '/work/projects/project-07/gift-003.jpg',
+  '/work/projects/project-07/gift-004.webp',
+  '/work/projects/project-07/gift-009.webp',
+  '/work/projects/project-07/gift-extra-1.webp',
+  '/work/projects/project-07/gift-extra-2.webp',
+  '/work/projects/project-07/gift-extra-3.webp',
+  '/work/projects/project-07/gift-extra-4.webp',
+  '/work/projects/project-07/gift-010.png',
+  '/work/projects/project-07/gift-011.webp',
 ];
 
 const projects = [
@@ -347,7 +366,7 @@ export default function App() {
 
   useEffect(() => {
     const contactImage = new Image();
-    contactImage.src = optimizedImageSrc('/contact-wechat.jpg');
+    contactImage.src = optimizedImageSrc('/contact/contact-wechat.jpg');
   }, []);
 
   useEffect(() => {
@@ -809,7 +828,7 @@ export default function App() {
             <TiltedPortraitCard className="portrait-photo-layer" rotateAmplitude={6} scaleOnHover={1.01} perspective={900}>
               <div className="portrait-photo">
                 <img
-                  src={homeAsset('about-avatar/about-avatar.webp')}
+                  src={homeAsset('about-avatar/about-avatar-1280.webp')}
                   srcSet={`${homeAsset('about-avatar/about-avatar-640.webp')} 640w, ${homeAsset('about-avatar/about-avatar-1280.webp')} 1280w`}
                   sizes="(max-width: 900px) 100vw, 50vw"
                   alt="Zhao Weidong"
@@ -1112,7 +1131,7 @@ export default function App() {
                 微信
               </button>
               <div className={`contact-bubble finale-wechat-bubble${wechatOpen ? ' is-open' : ''}`} role="dialog" aria-hidden={!wechatOpen}>
-                <img src={optimizedImageSrc('/contact-wechat.jpg')} srcSet={optimizedImageSrcSet('/contact-wechat.jpg')} sizes="180px" alt="微信二维码" decoding="async" />
+                <img src={optimizedImageSrc('/contact/contact-wechat.jpg')} srcSet={optimizedImageSrcSet('/contact/contact-wechat.jpg')} sizes="180px" alt="微信二维码" decoding="async" />
               </div>
             </div>
           </div>

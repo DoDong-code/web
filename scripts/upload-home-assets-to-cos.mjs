@@ -1,3 +1,5 @@
+// DEPRECATED (2026-09-18): the bucket now mirrors dist/ 1:1 under the `dist/`
+// prefix instead of the per-module keys below. Use scripts/upload-dist-to-cos.mjs.
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
@@ -18,7 +20,7 @@ const publicBase = (process.env.COS_PUBLIC_BASE_URL || '').replace(/\/$/, '');
 
 const assets = [
   {
-    local: 'public/optimized/posters/home-hero.webp',
+    local: 'public/hero/home-hero.webp',
     key: 'portfolio/home/hero/home-hero.webp',
     cacheControl: 'public, max-age=31536000, immutable',
   },
@@ -31,7 +33,7 @@ const assets = [
     ['project6-cover-640.webp', 'project6-cover-640.webp'],
     ['project7-cover-640.webp', 'project7-cover-640.webp'],
   ].map(([file, key]) => ({
-    local: `public/optimized/portfolio/${file}`,
+    local: `public/work/covers/${file}`,
     key: `portfolio/home/gallery/${key}`,
     cacheControl: 'public, max-age=31536000, immutable',
   })),
@@ -41,13 +43,7 @@ const assets = [
     'ui_motion_6.gif',
     'gift-extra-2.gif',
   ].map((file) => ({
-    local: file === 'board-28.gif'
-      ? 'public/portfolio/project1-detail/board-28.gif'
-      : file === 'ui_motion_2.gif'
-        ? 'public/portfolio/project2-detail/ui_motion_2.gif'
-        : file === 'ui_motion_6.gif'
-          ? 'public/portfolio/project6-detail/ui_motion_6.gif'
-          : 'public/portfolio/project7-detail/gift-extra-2.gif',
+    local: `public/local-assets/work/hover-motion/${file}`,
     key: `portfolio/home/hover-motion/${file}`,
     cacheControl: 'public, max-age=31536000, immutable',
   })),

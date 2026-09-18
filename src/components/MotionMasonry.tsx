@@ -2,53 +2,30 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import MediaProgressLoader from './MediaProgressLoader';
+import { cdnAsset, USE_LOCAL_ASSETS } from '../lib/assetCdn';
 import './MotionMasonry.css';
 
 export type MotionItem = { id: string; src: string; type: 'image' | 'video'; alt: string; aspectRatio?: number; poster?: string; animated?: boolean; animatedSrc?: string };
 type MotionMasonryProps = { items: MotionItem[] };
 type Layout = { x: number; y: number; width: number; height: number };
 type Placed = Layout;
-const USE_LOCAL_ASSETS = import.meta.env.VITE_LOCAL_ASSETS === '1';
-const MOTION_CDN_BASE = (
-  import.meta.env.VITE_MOTION_CDN_BASE_URL ||
-  import.meta.env.VITE_ASSET_CDN_BASE_URL ||
-  'https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com'
-).replace(/\/$/, '');
 const LOCAL_MOTION_FILES = new Set(['报名界面待机.mp4', '镜头1.mp4', '赛事转场动画.mp4']);
-const MOTION_WALL_PATH = '/motion-wall/';
-const isMotionWallAnimated = (src?: string) => {
-  if (!src || !src.startsWith(MOTION_WALL_PATH)) return false;
-  const filename = src.slice(MOTION_WALL_PATH.length);
-  return !filename.includes('/') && filename.toLowerCase().endsWith('.webp');
-};
-const remoteMotionPath = (src?: string) => {
-  if (!src || USE_LOCAL_ASSETS || !isMotionWallAnimated(src)) return src;
-  return `${MOTION_CDN_BASE}${encodeURI(src)}`;
-};
+// Local preview is the only mode that needs this: the three archive videos live
+// in local-assets there, while production reads them from COS under the same
+// dist path as everything else.
+const MOTION_LOCAL_VIDEO_DIR = '/local-assets/motion-archive/';
 const localMotionPath = (src?: string) => {
   if (!src || !USE_LOCAL_ASSETS) return src;
-  const motionWallIndex = src.indexOf(MOTION_WALL_PATH);
-  if (motionWallIndex >= 0) {
-    const motionPath = src.slice(motionWallIndex);
-    const filename = motionPath.split('/').pop() ?? '';
-    if (LOCAL_MOTION_FILES.has(filename)) return `/local-assets${motionPath}`;
-  }
+  const filename = src.split('/').pop() ?? '';
+  if (LOCAL_MOTION_FILES.has(filename)) return `${MOTION_LOCAL_VIDEO_DIR}${filename}`;
   return src;
 };
-const localizeMotionItem = (item: MotionItem): MotionItem => {
-  const remote = {
-    ...item,
-    src: remoteMotionPath(item.src) ?? item.src,
-    poster: remoteMotionPath(item.poster),
-    animatedSrc: remoteMotionPath(item.animatedSrc),
-  };
-  return {
-    ...remote,
-    src: localMotionPath(remote.src) ?? remote.src,
-    poster: localMotionPath(remote.poster),
-    animatedSrc: localMotionPath(remote.animatedSrc),
-  };
-};
+const localizeMotionItem = (item: MotionItem): MotionItem => ({
+  ...item,
+  src: localMotionPath(cdnAsset(item.src)) ?? item.src,
+  poster: localMotionPath(cdnAsset(item.poster)),
+  animatedSrc: localMotionPath(cdnAsset(item.animatedSrc)),
+});
 const hoverVideoRegistry = new Set<HTMLVideoElement>();
 const playingHoverVideos = new Set<HTMLVideoElement>();
 const hoveredHoverVideos = new Set<HTMLVideoElement>();
@@ -205,10 +182,34 @@ const stableMotionOrder = (source: MotionItem[]) => {
   }
   return ordered;
 };
+// The manifest still names the full-size stills that were pruned; what actually
+// ships is the -640/-1280 pair. Matching on the directory segment (not a
+// prefix) keeps this working once src has been rewritten to a CDN URL.
+const MOTION_STILLS_SEGMENT = '/motion-archive/stills/';
+const splitStillsSrc = (src?: string) => {
+  if (!src || !src.endsWith('.webp')) return null;
+  const index = src.indexOf(MOTION_STILLS_SEGMENT);
+  if (index < 0) return null;
+  const file = src.slice(index + MOTION_STILLS_SEGMENT.length);
+  if (file.includes('/')) return null;
+  return {
+    head: src.slice(0, index + MOTION_STILLS_SEGMENT.length),
+    stem: file.slice(0, -'.webp'.length),
+    // Remote URLs already went through encodeURI; re-encoding would double it.
+    encoded: /^https?:\/\//i.test(src),
+  };
+};
 const motionSrcSet = (src: string) => {
-  if (!src.startsWith('/optimized/motion-wall/') || !src.endsWith('.webp')) return undefined;
-  const base = src.slice(0, -5);
-  return [640, 1280].map((width) => `${base}-${width}.webp ${width}w`).join(', ');
+  const parts = splitStillsSrc(src);
+  if (!parts) return undefined;
+  const stem = parts.encoded ? parts.stem : encodeURI(parts.stem);
+  return [640, 1280].map((width) => `${parts.head}${stem}-${width}.webp ${width}w`).join(', ');
+};
+const motionDisplaySrc = (src: string) => {
+  const parts = splitStillsSrc(src);
+  if (!parts) return src;
+  const stem = parts.encoded ? parts.stem : encodeURI(parts.stem);
+  return `${parts.head}${stem}-1280.webp`;
 };
 const isDeferredImage = (item: MotionItem) => item.type === 'image' && (item.animated === true || Boolean(item.animatedSrc) || /\.gif$/i.test(item.src));
 
@@ -243,7 +244,7 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   }, [playAll]);
 
   useEffect(() => {
-    fetch('/motion-wall/manifest.json')
+    fetch(cdnAsset('/motion-archive/manifest.json'))
       .then((response) => response.ok ? response.json() : [])
       .then((manifest: MotionItem[]) => {
         if (manifest.length) setLoadedItems(stableMotionOrder(manifest.map(localizeMotionItem)));
@@ -389,7 +390,7 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
           const layout = { x: 0, y: 0, width: 0, height: 0 };
           return <article ref={(node) => { if (node) cardsRef.current.set(item.id, node); }} className={`motion-masonry-item motion-item--${shape}`} key={item.id} style={{ left: layout.x, top: layout.y, width: layout.width, height: layout.height }} role="button" tabIndex={0} aria-label={`放大查看 ${item.alt}`} onClick={() => openLightbox(item)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(item); } }}>
             <div className="motion-masonry-media">
-              {item.type === 'video' ? <HoverVideo item={item} playAll={playAll} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : isDeferredImage(item) ? <HoverImage item={item} playAll={playAll} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : <img src={item.src} srcSet={motionSrcSet(item.src)} sizes={shape === 'landscape' ? '(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 25vw' : '(max-width: 760px) 50vw, (max-width: 1200px) 25vw, 12.5vw'} alt={item.alt} loading="lazy" decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
+              {item.type === 'video' ? <HoverVideo item={item} playAll={playAll} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : isDeferredImage(item) ? <HoverImage item={item} playAll={playAll} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : <img src={motionDisplaySrc(item.src)} srcSet={motionSrcSet(item.src)} sizes={shape === 'landscape' ? '(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 25vw' : '(max-width: 760px) 50vw, (max-width: 1200px) 25vw, 12.5vw'} alt={item.alt} loading="lazy" decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
             </div>
           </article>;
         })}
@@ -399,7 +400,7 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
         <button className="motion-lightbox-backdrop" type="button" aria-label="关闭预览" onClick={() => setActiveItem(null)} />
         <div className="motion-lightbox-content">
           <button ref={closeRef} className="motion-lightbox-close" type="button" aria-label="关闭预览" onClick={() => setActiveItem(null)}>×</button>
-          {activeItem.type === 'video' ? <video src={activeItem.src} poster={activeItem.poster} muted autoPlay loop playsInline controls /> : <img src={activeItem.src} alt={activeItem.alt} />}
+          {activeItem.type === 'video' ? <video src={activeItem.src} poster={activeItem.poster} muted autoPlay loop playsInline controls /> : <img src={motionDisplaySrc(activeItem.src)} srcSet={motionSrcSet(activeItem.src)} sizes="100vw" alt={activeItem.alt} />}
         </div>
       </div>, document.body)}
       </div>
