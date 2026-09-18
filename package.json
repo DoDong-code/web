@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
+    "assets:restore": "node scripts/restore-assets-from-cos.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",
     "upload:home-assets": "node scripts/upload-home-assets-to-cos.mjs"
   },

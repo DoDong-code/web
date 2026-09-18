@@ -1,9 +1,18 @@
 node_modules/
 build/
 dist/
+dist-cdn/
 coverage/
 .DS_Store
 *.log
 .env*
 !.env.example
-public/local-assets/
+
+# Asset binaries never live in git. Everything under public/ is mirrored to
+#   https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com/dist/<same path>
+# Production builds read from COS; `npm run dev` reads from local files.
+# Run `npm run assets:restore` on a fresh clone to pull assets for preview.
+public/*
+!public/motion-archive/
+public/motion-archive/*
+!public/motion-archive/manifest.json
