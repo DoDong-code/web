@@ -8,11 +8,26 @@ export type MotionItem = { id: string; src: string; type: 'image' | 'video'; alt
 type MotionMasonryProps = { items: MotionItem[] };
 type Layout = { x: number; y: number; width: number; height: number };
 type Placed = Layout;
-const USE_LOCAL_ASSETS = import.meta.env.DEV && import.meta.env.VITE_LOCAL_ASSETS === '1';
+const USE_LOCAL_ASSETS = import.meta.env.VITE_LOCAL_ASSETS === '1';
+const MOTION_CDN_BASE = (
+  import.meta.env.VITE_MOTION_CDN_BASE_URL ||
+  import.meta.env.VITE_ASSET_CDN_BASE_URL ||
+  'https://do-studio-1453848501.cos.ap-shanghai.myqcloud.com'
+).replace(/\/$/, '');
 const LOCAL_MOTION_FILES = new Set(['报名界面待机.mp4', '镜头1.mp4', '赛事转场动画.mp4']);
+const MOTION_WALL_PATH = '/motion-wall/';
+const isMotionWallAnimated = (src?: string) => {
+  if (!src || !src.startsWith(MOTION_WALL_PATH)) return false;
+  const filename = src.slice(MOTION_WALL_PATH.length);
+  return !filename.includes('/') && filename.toLowerCase().endsWith('.webp');
+};
+const remoteMotionPath = (src?: string) => {
+  if (!src || USE_LOCAL_ASSETS || !isMotionWallAnimated(src)) return src;
+  return `${MOTION_CDN_BASE}${encodeURI(src)}`;
+};
 const localMotionPath = (src?: string) => {
   if (!src || !USE_LOCAL_ASSETS) return src;
-  const motionWallIndex = src.indexOf('/motion-wall/');
+  const motionWallIndex = src.indexOf(MOTION_WALL_PATH);
   if (motionWallIndex >= 0) {
     const motionPath = src.slice(motionWallIndex);
     const filename = motionPath.split('/').pop() ?? '';
@@ -20,12 +35,20 @@ const localMotionPath = (src?: string) => {
   }
   return src;
 };
-const localizeMotionItem = (item: MotionItem): MotionItem => ({
-  ...item,
-  src: localMotionPath(item.src) ?? item.src,
-  poster: localMotionPath(item.poster),
-  animatedSrc: localMotionPath(item.animatedSrc),
-});
+const localizeMotionItem = (item: MotionItem): MotionItem => {
+  const remote = {
+    ...item,
+    src: remoteMotionPath(item.src) ?? item.src,
+    poster: remoteMotionPath(item.poster),
+    animatedSrc: remoteMotionPath(item.animatedSrc),
+  };
+  return {
+    ...remote,
+    src: localMotionPath(remote.src) ?? remote.src,
+    poster: localMotionPath(remote.poster),
+    animatedSrc: localMotionPath(remote.animatedSrc),
+  };
+};
 const hoverVideoRegistry = new Set<HTMLVideoElement>();
 const playingHoverVideos = new Set<HTMLVideoElement>();
 const hoveredHoverVideos = new Set<HTMLVideoElement>();
