@@ -31,6 +31,23 @@ const secretKey = required('COS_SECRET_KEY');
 const prefix = (process.env.COS_DIST_PREFIX || 'dist').replace(/^\/+|\/+$/g, '');
 const concurrency = Number(process.env.COS_UPLOAD_CONCURRENCY || 8);
 const localDir = 'dist';
+// Cache policy per object role. index.html must always revalidate (it is the
+// single inlined bundle, so long caching would freeze the whole site), the
+// manifest refreshes quickly, and everything else is versioned by content hash
+// in its URL, which makes it safe to cache immutably for a year.
+const CACHE_POLICY = {
+  html: 'no-cache, must-revalidate',
+  manifest: 'max-age=60, stale-while-revalidate=86400',
+  asset: 'public, max-age=31536000, immutable',
+};
+
+function cacheControlFor(relative) {
+  const base = relative.split('/').pop() || '';
+  if (base === 'index.html') return CACHE_POLICY.html;
+  if (base === 'manifest.json') return CACHE_POLICY.manifest;
+  return CACHE_POLICY.asset;
+}
+
 const cacheControl = 'public, max-age=31536000, immutable';
 
 const contentType = (file) => ({
@@ -59,42 +76,66 @@ const walk = async (dir) => {
   return out;
 };
 
+const relativeOf = (full) => path.relative(localDir, full).split(path.sep).join('/');
+
 const files = (await walk(localDir)).map((full) => ({
   local: full.split(path.sep).join('/'),
-  key: `${prefix}/${path.relative(localDir, full).split(path.sep).join('/')}`,
+  key: `${prefix}/${relativeOf(full)}`,
+  relative: relativeOf(full),
 }));
 
 const cos = new COS({ SecretId: secretId, SecretKey: secretKey });
 const headObject = (key) => new Promise((resolve) => {
   cos.headObject({ Bucket: bucket, Region: region, Key: key }, (error, data) => resolve(error ? null : data));
 });
-const putObject = (file, body) => new Promise((resolve, reject) => {
+const putObject = (file, body, control) => new Promise((resolve, reject) => {
   cos.putObject({
     Bucket: bucket,
     Region: region,
     Key: file.key,
     Body: body,
     ContentType: contentType(file.local),
-    CacheControl: cacheControl,
+    CacheControl: control,
+  }, (error, data) => (error ? reject(error) : resolve(data)));
+});
+
+// Rewrites the metadata of an existing object without re-sending its body.
+const putObjectCopy = (key, control) => new Promise((resolve, reject) => {
+  cos.putObjectCopy({
+    Bucket: bucket,
+    Region: region,
+    Key: key,
+    CopySource: `${bucket}.cos.${region}.myqcloud.com/${key.split('/').map(encodeURIComponent).join('/')}`,
+    MetadataDirective: 'Replaced',
+    CacheControl: control,
   }, (error, data) => (error ? reject(error) : resolve(data)));
 });
 
 let uploaded = 0;
 let skipped = 0;
+let metadataFixed = 0;
 let uploadedBytes = 0;
 const failures = [];
 
 const run = async (file) => {
+  const desired = cacheControlFor(file.relative);
   const body = await fs.readFile(path.resolve(root, file.local));
   const remote = await headObject(file.key);
   // COS returns the MD5 as ETag for simple (non-multipart) uploads, so an
   // unchanged file can be skipped instead of re-sending hundreds of MB.
   const localMd5 = crypto.createHash('md5').update(body).digest('hex');
   if (remote && String(remote.ETag || '').replace(/"/g, '') === localMd5) {
-    skipped += 1;
+    const current = String(remote.CacheControl ?? remote.headers?.['cache-control'] ?? '').trim();
+    if (!current || current === desired) {
+      skipped += 1;
+      return;
+    }
+    // Body is already correct, only the cache policy drifted.
+    await putObjectCopy(file.key, desired);
+    metadataFixed += 1;
     return;
   }
-  await putObject(file, body);
+  await putObject(file, body, desired);
   uploaded += 1;
   uploadedBytes += body.byteLength;
 };
@@ -130,6 +171,7 @@ console.log(`prefix      : ${prefix}/`);
 console.log(`scanned     : ${files.length} files`);
 console.log(`uploaded    : ${uploaded} files (${(uploadedBytes / 1024 / 1024).toFixed(2)} MB)`);
 console.log(`unchanged   : ${skipped} files`);
+if (metadataFixed) console.log(`metadata    : ${metadataFixed} cache-control refresh (no body re-upload)`);
 if (failures.length) {
   console.log(`failed      : ${failures.length}`);
   for (const line of failures.slice(0, 20)) console.log(`  ${line}`);

@@ -16,3 +16,6 @@ public/*
 !public/motion-archive/
 public/motion-archive/*
 !public/motion-archive/manifest.json
+
+# Generated from public/ before every dev/build run, so it stays out of git.
+src/lib/assetHashMap.generated.ts
