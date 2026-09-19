@@ -1,0 +1,14 @@
+<!doctype html><body style='margin:0'><canvas id=c width=557 height=557></canvas><img id=src src='file:///C:/Users/Administrator/Desktop/logo.svg' style='display:none'><script>
+document.getElementById('src').onload=()=>{
+  const ctx=document.getElementById('c').getContext('2d');
+  ctx.drawImage(document.getElementById('src'),0,0);
+  const d=ctx.getImageData(0,0,557,557).data;
+  const counts={};
+  for(let i=0;i<d.length;i+=4){
+    const k=d[i]+','+d[i+1]+','+d[i+2]+','+d[i+3];
+    counts[k]=(counts[k]||0)+1;
+  }
+  const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  document.title='RESULT:'+JSON.stringify(top);
+};
+</script></body>

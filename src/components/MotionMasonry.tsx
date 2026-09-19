@@ -113,7 +113,7 @@ function HoverVideo({ item, onRatio, onError, playAll }: { item: MotionItem; onR
   );
 }
 
-function HoverImage({ item, onRatio, onError, playAll }: { item: MotionItem; onRatio: (width: number, height: number) => void; onError: () => void; playAll: boolean }) {
+function HoverImage({ item, onRatio, onError, playAll, fill }: { item: MotionItem; onRatio: (width: number, height: number) => void; onError: () => void; playAll: boolean; fill?: boolean }) {
   const [mounted, setMounted] = useState(false);
   const [ready, setReady] = useState(false);
   const timerRef = useRef<number | null>(null);
@@ -150,8 +150,8 @@ function HoverImage({ item, onRatio, onError, playAll }: { item: MotionItem; onR
 
   return (
     <div className="motion-hover-image" onPointerEnter={handleEnter} onPointerLeave={handleLeave}>
-      {item.poster ? <img className="motion-hover-poster" src={item.poster} alt="" aria-hidden="true" loading="lazy" decoding="async" onLoad={(event) => onRatio(event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} /> : <span className="motion-hover-poster motion-hover-poster--fallback" aria-hidden="true" />}
-      {mounted ? <MediaProgressLoader type="image" active src={item.animatedSrc || item.src} poster={item.poster} alt={item.alt} className={`motion-hover-image-media${ready ? ' is-ready' : ''}`} onMetadata={onRatio} onReady={() => setReady(true)} onError={() => { setReady(false); }} imgProps={{ loading: 'eager', fetchPriority: 'high', decoding: 'async', draggable: false }} /> : null}
+      {item.poster ? <img className={`motion-hover-poster${fill ? ' motion-hover-poster--fill' : ''}`} src={item.poster} alt="" aria-hidden="true" loading="lazy" decoding="async" onLoad={(event) => onRatio(event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} /> : <span className="motion-hover-poster motion-hover-poster--fallback" aria-hidden="true" />}
+      {mounted ? <MediaProgressLoader type="image" active src={item.animatedSrc || item.src} poster={item.poster} alt={item.alt} className={`motion-hover-image-media${fill ? ' motion-hover-image-media--fill' : ''}${ready ? ' is-ready' : ''}`} onMetadata={onRatio} onReady={() => setReady(true)} onError={() => { setReady(false); }} imgProps={{ loading: 'eager', fetchPriority: 'high', decoding: 'async', draggable: false }} /> : null}
     </div>
   );
 }
@@ -169,11 +169,22 @@ const hashString = (value: string) => {
   }
   return hash >>> 0;
 };
+// Pinned to the front of the wall so the hero media is always visible first:
+// the three archive videos plus the two featured animated tiles.
+const PRIORITY_MOTION_IDS = ['报名界面待机', '方-动态3-1', '镜头1', '方-动态4', '赛事转场动画'];
+// The two featured animated tiles bake black letterbox bars into their frames;
+// this class lets CSS scale/crop them flush to the tile so no bars show.
+const FILL_MOTION_IDS = new Set(['方-动态3-1', '方-动态4']);
 const stableMotionOrder = (source: MotionItem[]) => {
   const unique = Array.from(new Map(source.map((item) => [item.src, item])).values());
-  const videos = unique.filter((item) => item.type === 'video').sort((a, b) => hashString(a.id) - hashString(b.id));
-  const images = unique.filter((item) => item.type !== 'video').sort((a, b) => hashString(a.id) - hashString(b.id));
-  const ordered: MotionItem[] = [];
+  const prioritySet = new Set(PRIORITY_MOTION_IDS);
+  const priority = PRIORITY_MOTION_IDS
+    .map((id) => unique.find((item) => item.id === id))
+    .filter((item): item is MotionItem => Boolean(item));
+  const remaining = unique.filter((item) => !prioritySet.has(item.id));
+  const videos = remaining.filter((item) => item.type === 'video').sort((a, b) => hashString(a.id) - hashString(b.id));
+  const images = remaining.filter((item) => item.type !== 'video').sort((a, b) => hashString(a.id) - hashString(b.id));
+  const ordered: MotionItem[] = [...priority];
   let videoIndex = 0;
   let imageIndex = 0;
   while (imageIndex < images.length || videoIndex < videos.length) {
@@ -229,6 +240,8 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
   const [fullHeight, setFullHeight] = useState(0);
   const [layoutHeight, setLayoutHeight] = useState(900);
   const [cellSize, setCellSize] = useState(160);
+  const [columns, setColumns] = useState(8);
+  const [gap, setGap] = useState(12);
   const [collapsedHeight] = useState(() => Math.min(Math.max(window.innerHeight * 0.95, 900), 1080));
   const [expanded, setExpanded] = useState(false);
   const [activeItem, setActiveItem] = useState<MotionItem | null>(null);
@@ -265,9 +278,11 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
     if (!shell) return;
     const layout = () => {
       const columns = getColumns(shell.clientWidth);
-      const gap = shell.clientWidth >= 1600 ? 10 : shell.clientWidth >= 980 ? 12 : 10;
+      const gap = shell.clientWidth >= 1600 ? 10 : shell.clientWidth >= 980 ? 12 : 14;
       const size = (shell.clientWidth - gap * (columns - 1)) / columns;
       setCellSize(size);
+      setColumns(columns);
+      setGap(gap);
       const rows = Math.max(1, Math.ceil(loadedItems.filter((item) => !failed.has(item.id)).length / columns));
       const measuredHeight = rows * size + Math.max(0, rows - 1) * gap;
       setFullHeight(measuredHeight);
@@ -383,14 +398,14 @@ export default function MotionMasonry({ items }: MotionMasonryProps) {
           {playAll ? 'Stop All' : 'Play All'}
         </button>
       </div>
-      <div ref={shellRef} className={`motion-masonry${activeItem ? ' is-preview-open' : ''}`} style={{ '--motion-cell-size': `${cellSize}px` } as CSSProperties}>
+      <div ref={shellRef} className={`motion-masonry${activeItem ? ' is-preview-open' : ''}`} style={{ '--motion-cell-size': `${cellSize}px`, '--motion-cols': `${columns}`, '--motion-gap': `${gap}px` } as CSSProperties}>
         {renderedItems.map((item, index) => {
           const ratio = ratios[item.id] ?? item.aspectRatio ?? 1;
           const shape = ratio >= 1.35 ? 'landscape' : ratio <= 0.75 ? 'portrait' : 'square';
           const layout = { x: 0, y: 0, width: 0, height: 0 };
           return <article ref={(node) => { if (node) cardsRef.current.set(item.id, node); }} className={`motion-masonry-item motion-item--${shape}`} key={item.id} style={{ left: layout.x, top: layout.y, width: layout.width, height: layout.height }} role="button" tabIndex={0} aria-label={`放大查看 ${item.alt}`} onClick={() => openLightbox(item)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(item); } }}>
             <div className="motion-masonry-media">
-              {item.type === 'video' ? <HoverVideo item={item} playAll={playAll} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : isDeferredImage(item) ? <HoverImage item={item} playAll={playAll} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : <img src={motionDisplaySrc(item.src)} srcSet={motionSrcSet(item.src)} sizes={shape === 'landscape' ? '(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 25vw' : '(max-width: 760px) 50vw, (max-width: 1200px) 25vw, 12.5vw'} alt={item.alt} loading="lazy" decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
+              {item.type === 'video' ? <HoverVideo item={item} playAll={playAll} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : isDeferredImage(item) ? <HoverImage item={item} playAll={playAll} fill={FILL_MOTION_IDS.has(item.id)} onRatio={(width, height) => markRatio(item, width, height)} onError={() => markFailure(item)} /> : <img src={motionDisplaySrc(item.src)} srcSet={motionSrcSet(item.src)} sizes={shape === 'landscape' ? '(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 25vw' : '(max-width: 760px) 50vw, (max-width: 1200px) 25vw, 12.5vw'} alt={item.alt} loading="lazy" decoding="async" draggable={false} onLoad={(event) => markRatio(item, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} onError={() => markFailure(item)} />}
             </div>
           </article>;
         })}

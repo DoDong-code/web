@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, MessageCircle, Phone, Sparkles, Wand2, Layers3, Workflow, BadgeCheck, CircleDot, LayoutGrid, Monitor, Box, Cpu, X, QrCode, Smartphone, Copy, Check } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, MessageCircle, Phone, Sparkles, Wand2, Layers3, Workflow, BadgeCheck, CircleDot, LayoutGrid, Monitor, Box, Cpu, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import React, { useEffect, useRef, useState } from 'react';
 import BorderGlow from './components/BorderGlow';
@@ -11,7 +11,7 @@ import { cdnAsset } from './lib/assetCdn';
 // Responsive variants live in the same folder as their source file (no more
 // mirrored /optimized tree), so the derived path is just a suffix swap.
 // Each module ships exactly one width: project detail boards are unreadable at
-// 640 so they carry 1280 only, while the QR code and project covers are small
+// 640 so they carry 1280 only, while project covers and contact art are small
 // display surfaces that carry 640 only.
 const imageVariantWidth = (src: string) => (src.startsWith('/work/projects/') ? 1280 : 640);
 const optimizedImageSrc = (src: string) => {
@@ -340,9 +340,6 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [wechatOpen, setWechatOpen] = useState(false);
   const [activeContact, setActiveContact] = useState<'email' | 'phone' | 'zcool' | 'wechat' | null>(null);
-  const [qrOpen, setQrOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [qrUrl, setQrUrl] = useState('');
 
   const footerWechatRef = useRef<HTMLDivElement>(null);
   const heroGalleryRef = useRef<HTMLDivElement>(null);
@@ -357,8 +354,6 @@ export default function App() {
     startProjectIndex: -1,
     isScrolling: undefined as boolean | undefined,
   });
-  const qrModalRef = useRef<HTMLDivElement>(null);
-  const qrTriggerRef = useRef<HTMLButtonElement>(null);
 
   const filteredProjects = activeWorkCategory === 'All'
     ? projects
@@ -387,19 +382,6 @@ export default function App() {
     return () => {
       window.removeEventListener('pointermove', movePointerLight);
       if (frame) window.cancelAnimationFrame(frame);
-    };
-  }, []);
-
-  useEffect(() => {
-    setQrUrl(window.location.href);
-    const handleUrlChange = () => {
-      setQrUrl(window.location.href);
-    };
-    window.addEventListener('hashchange', handleUrlChange);
-    window.addEventListener('popstate', handleUrlChange);
-    return () => {
-      window.removeEventListener('hashchange', handleUrlChange);
-      window.removeEventListener('popstate', handleUrlChange);
     };
   }, []);
 
@@ -497,14 +479,6 @@ export default function App() {
         setWechatOpen(false);
         setActiveContact(null);
       }
-      if (
-        qrModalRef.current &&
-        !qrModalRef.current.contains(target) &&
-        qrTriggerRef.current &&
-        !qrTriggerRef.current.contains(target)
-      ) {
-        setQrOpen(false);
-      }
     };
 
     document.addEventListener('pointerdown', handlePointerDown);
@@ -514,13 +488,26 @@ export default function App() {
   useEffect(() => {
     const elements = Array.from(
       document.querySelectorAll<HTMLElement>(
-      '.section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-card, .project-card, .strength-card, .finale-actions > *, .footer-line',
+      '.section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-card, .project-card, .strength-card, .gallery-showcase-head, .hero-gallery, .finale-actions > *, .footer-line',
       ),
     );
 
-    elements.forEach((element, index) => {
+    // Stagger is resolved per reveal group instead of from one document-wide
+    // counter: items are bucketed by parent + offsetTop, so every row starts at
+    // 0 and cascades left-to-right. A global index made the first card of a
+    // section inherit an arbitrary delay from unrelated elements above it.
+    const rowCursors = new Map<Element, Map<number, number>>();
+
+    elements.forEach((element) => {
+      const parent = element.parentElement ?? document.body;
+      const row = element.offsetTop;
+      const cursors = rowCursors.get(parent) ?? new Map<number, number>();
+      rowCursors.set(parent, cursors);
+      const column = cursors.get(row) ?? 0;
+      cursors.set(row, column + 1);
+
       element.classList.add('scroll-reveal');
-      element.style.setProperty('--reveal-index', `${Math.min(index % 8, 7)}`);
+      element.style.setProperty('--reveal-index', `${Math.min(column, 5)}`);
     });
 
     const observer = new IntersectionObserver(
@@ -532,7 +519,11 @@ export default function App() {
           }
         });
       },
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.12 },
+      // threshold lowered from 0.12 to 0: tall blocks (.about-content, .section-head)
+      // could sit partially visible without ever reaching 12% of their own height,
+      // which left them blank until almost fully on screen. The -10% bottom margin
+      // now drives the trigger point for every element regardless of its height.
+      { rootMargin: '0px 0px -10% 0px', threshold: 0 },
     );
 
     elements.forEach((element) => observer.observe(element));
@@ -767,7 +758,7 @@ export default function App() {
                 glowIntensity={1.8}
                 coneSpread={25}
                 animated={true}
-                colors={['#c084fc', '#f472b6', '#38bdf8']}
+                colors={['#9bc8c6', '#2076ff', '#ff501d']}
               >
                 <a className="hero-explore" href="#work">
                   查看精选项目
@@ -1142,92 +1133,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* 手机预览 / QR Code Widget */}
-      <button
-        ref={qrTriggerRef}
-        type="button"
-        className="qr-trigger-float"
-        onClick={() => setQrOpen(!qrOpen)}
-        title="手机扫码预览"
-      >
-        <QrCode size={16} />
-        <span>手机预览</span>
-      </button>
-
-      <div
-        ref={qrModalRef}
-        className={`qr-modal-container${qrOpen ? ' is-open' : ''}`}
-        role="dialog"
-        aria-label="手机扫码预览弹窗"
-      >
-        <div className="qr-header">
-          <div className="qr-header-title">
-            <Smartphone size={16} />
-            <span>手机扫码预览</span>
-          </div>
-          <button
-            type="button"
-            className="qr-close-btn"
-            onClick={() => setQrOpen(false)}
-            aria-label="关闭"
-          >
-            <X size={14} />
-          </button>
-        </div>
-
-        <div className="qr-body">
-          <p className="qr-desc">
-            用手机相机、微信或浏览器扫描下方二维码，即可在手机端实时预览该作品集。
-          </p>
-          
-          <div className="qr-image-wrapper">
-            {qrUrl ? (
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=180&color=ffffff&bgcolor=0a0a0c&data=${encodeURIComponent(qrUrl)}`}
-                alt="手机预览二维码"
-                decoding="async"
-              />
-            ) : (
-              <div className="text-xs text-white/40">加载中...</div>
-            )}
-            <div className="qr-scanner-line" />
-          </div>
-
-          <div className="qr-link-copy-section">
-            <span className="qr-link-display" title={qrUrl}>
-              {qrUrl || '正在获取链接...'}
-            </span>
-            <button
-              type="button"
-              className={`qr-copy-btn${copied ? ' is-copied' : ''}`}
-              onClick={() => {
-                if (!qrUrl) return;
-                navigator.clipboard.writeText(qrUrl).then(() => {
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
-                });
-              }}
-            >
-              {copied ? (
-                <>
-                  <Check size={12} />
-                  <span>已复制</span>
-                </>
-              ) : (
-                <>
-                  <Copy size={12} />
-                  <span>复制链接</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        <div className="qr-footer-tip">
-          <Sparkles size={11} />
-          <span>支持多端流畅同步与手势交互预览</span>
-        </div>
-      </div>
     </main>
   );
 }

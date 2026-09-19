@@ -1,0 +1,105 @@
+{
+  "found": [
+    {
+      "sel": ".nav",
+      "backdropFilter": "none",
+      "webkitBackdropFilter": null,
+      "background": "rgba(0, 0, 0, 0)",
+      "position": "fixed",
+      "zIndex": "30",
+      "isolation": "isolate",
+      "rect": {
+        "x": 36,
+        "y": 0,
+        "width": 764,
+        "height": 80,
+        "top": 0,
+        "right": 800,
+        "bottom": 80,
+        "left": 36
+      }
+    },
+    {
+      "sel": ".nav-links",
+      "backdropFilter": "blur(18px) saturate(1.18)",
+      "webkitBackdropFilter": null,
+      "background": "rgba(8, 15, 22, 0.32)",
+      "position": "absolute",
+      "zIndex": "auto",
+      "isolation": "auto",
+      "rect": {
+        "x": 262,
+        "y": 18,
+        "width": 312,
+        "height": 44,
+        "top": 18,
+        "right": 574,
+        "bottom": 62,
+        "left": 262
+      }
+    },
+    {
+      "sel": "nav",
+      "backdropFilter": "none",
+      "webkitBackdropFilter": null,
+      "background": "rgba(0, 0, 0, 0)",
+      "position": "fixed",
+      "zIndex": "30",
+      "isolation": "isolate",
+      "rect": {
+        "x": 36,
+        "y": 0,
+        "width": 764,
+        "height": 80,
+        "top": 0,
+        "right": 800,
+        "bottom": 80,
+        "left": 36
+      }
+    }
+  ],
+  "elementsCarryingBackdropFilter": 13,
+  "samples": [
+    {
+      "tag": "DIV",
+      "cls": "nav-links",
+      "bf": "blur(18px) saturate(1.18)"
+    },
+    {
+      "tag": "DIV",
+      "cls": "mobile-menu",
+      "bf": "blur(24px)"
+    },
+    {
+      "tag": "SPAN",
+      "cls": "project-hover-label",
+      "bf": "blur(12px)"
+    },
+    {
+      "tag": "SPAN",
+      "cls": "project-hover-label",
+      "bf": "blur(12px)"
+    },
+    {
+      "tag": "SPAN",
+      "cls": "project-hover-label",
+      "bf": "blur(12px)"
+    },
+    {
+      "tag": "SPAN",
+      "cls": "project-hover-label",
+      "bf": "blur(12px)"
+    },
+    {
+      "tag": "SPAN",
+      "cls": "project-hover-label",
+      "bf": "blur(12px)"
+    },
+    {
+      "tag": "SPAN",
+      "cls": "project-hover-label",
+      "bf": "blur(12px)"
+    }
+  ],
+  "scrollHeight": 9055
+}
