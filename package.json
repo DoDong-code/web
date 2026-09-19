@@ -11,10 +11,10 @@
     "clean": "rm -rf dist",
     "lint": "npm run generate:asset-hash && tsc --noEmit",
     "assets:restore": "node scripts/restore-assets-from-cos.mjs",
-    "assets:cache-control": "node scripts/set-cos-cache-control.mjs",
+    "assets:cache-control": "node --env-file-if-exists=.env.cos.local scripts/set-cos-cache-control.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",
     "upload:home-assets": "node scripts/upload-home-assets-to-cos.mjs",
-    "upload:dist": "node scripts/upload-dist-to-cos.mjs"
+    "upload:dist": "node --env-file-if-exists=.env.cos.local scripts/upload-dist-to-cos.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",

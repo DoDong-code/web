@@ -76,7 +76,14 @@ const headMetadata = (key) => new Promise((resolve) => {
   cos.headObject({Bucket: bucket, Region: region, Key: key}, (error, data) => resolve(error ? null : data));
 });
 
-const rewriteMetadata = (key, control) => new Promise((resolve, reject) => {
+const typeOf = (head) => String(
+  head?.ContentType ?? head?.headers?.['content-type'] ?? '',
+).trim();
+
+// MetadataDirective=Replaced rewrites the whole metadata set, so anything we
+// do not restate here falls back to the server default. Re-send the current
+// Content-Type to keep <video>/<img> handling byte-identical after the copy.
+const rewriteMetadata = (key, control, contentType) => new Promise((resolve, reject) => {
   cos.putObjectCopy({
     Bucket: bucket,
     Region: region,
@@ -84,6 +91,7 @@ const rewriteMetadata = (key, control) => new Promise((resolve, reject) => {
     CopySource: `${bucket}.cos.${region}.myqcloud.com/${key.split('/').map(encodeURIComponent).join('/')}`,
     MetadataDirective: 'Replaced',
     CacheControl: control,
+    ...(contentType ? {ContentType: contentType} : {}),
   }, (error, data) => (error ? reject(error) : resolve(data)));
 });
 
@@ -104,7 +112,7 @@ const workers = Array.from({length: Math.max(1, Math.min(concurrency, queue.leng
     const head = await headMetadata(key);
     const current = String(head?.CacheControl ?? head?.headers?.['cache-control'] ?? '').trim();
     if (current === desired) already += 1;
-    else toFix.push({key, current: current || '(none)', desired});
+    else toFix.push({key, current: current || '(none)', desired, contentType: typeOf(head)});
   }
 });
 await Promise.all(workers);
@@ -130,7 +138,7 @@ const writers = Array.from({length: Math.max(1, Math.min(concurrency, writeQueue
     const item = writeQueue.shift();
     if (!item) return;
     try {
-      await rewriteMetadata(item.key, item.desired);
+      await rewriteMetadata(item.key, item.desired, item.contentType);
       fixed += 1;
     } catch (error) {
       failures.push(`${item.key}: ${error.message}`);
