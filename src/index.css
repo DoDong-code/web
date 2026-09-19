@@ -286,10 +286,13 @@ button:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 48px;
+  /* 44px, not 48: this is the border-box height of the .nav-links pill beside it
+     (14px padding x2 + 14px line + 2px border). The two shapes read as one row
+     only when they are the same height. */
+  min-height: 44px;
   padding: 0 20px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 999px;
   background: #fff;
   color: #000;
   font-size: 14px;
@@ -310,7 +313,11 @@ button:focus-visible {
 .nav-contact:hover {
   color: #000;
   background: #fff;
-  transform: scale(1.05);
+  /* Elevation instead of scale(1.05): growing the CTA made it taller than the nav
+     pill it sits next to, so the button read as "too big" exactly while hovered.
+     translateY matches .finale-actions a:hover, the site's other button. */
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.32);
+  transform: translateY(-1px);
 }
 
 .finale-actions a:hover,
@@ -873,7 +880,7 @@ button:focus-visible {
   to { transform: translate3d(3%, 2%, 0) scale(1.08); }
 }
 
-.scroll-reveal {
+[data-reveal] {
   --reveal-x: 0px;
   --reveal-y: 44px;
   --reveal-scale: 0.985;
@@ -895,9 +902,9 @@ button:focus-visible {
 
 /* No scaleY on text blocks: scaling a paragraph/heading re-rasterises every glyph
    on every frame, which is the classic source of a stuttering reveal. */
-.section-head.scroll-reveal,
-.about-content.scroll-reveal,
-.gallery-showcase-head.scroll-reveal {
+.section-head[data-reveal],
+.about-content[data-reveal],
+.gallery-showcase-head[data-reveal] {
   --reveal-y: 76px;
   --reveal-scale: 1;
 }
@@ -905,28 +912,30 @@ button:focus-visible {
 /* Opacity + rise only — deliberately unscaled: the gallery cards are positioned by
    JS from getBoundingClientRect(), and a scaled ancestor shrinks that measured width
    for the whole animation, which would make the arc maths wobble as it fades in. */
-.hero-gallery.scroll-reveal {
+.hero-gallery[data-reveal] {
   --reveal-y: 30px;
   --reveal-scale: 1;
   --reveal-opacity: 0.94;
   --reveal-duration: 760ms;
 }
 
-.project-card.scroll-reveal,
-.strength-card.scroll-reveal,
-.work-filter-card.scroll-reveal,
-.stat-card.scroll-reveal {
+.project-card[data-reveal],
+.strength-card[data-reveal],
+.work-filter-card[data-reveal],
+.stat-card[data-reveal] {
   --reveal-y: 46px;
   --reveal-scale: 0.96;
 }
 
-.timeline-item.scroll-reveal {
+.timeline-item[data-reveal] {
   --reveal-x: -34px;
   --reveal-y: 0px;
   --reveal-scale: 1;
 }
 
-.scroll-reveal.is-visible {
+/* Two attributes, not one value: this keeps the exact specificity relationship
+   the old .scroll-reveal / .scroll-reveal.is-visible pair had. */
+[data-reveal][data-revealed] {
   opacity: var(--reveal-opacity, 1);
   transform: translate3d(0, 0, 0) scale(1);
   animation-name: revealIn;
@@ -940,7 +949,7 @@ button:focus-visible {
 
 /* Masked reveal on media. clip-path duration is listed per property so the entrance
    can be slow while the same element still answers hover in ~320ms. */
-.project-card.scroll-reveal .project-image {
+.project-card[data-reveal] .project-image {
   clip-path: inset(12% 0 0 0 round 16px);
   transition-property: transform, box-shadow, clip-path;
   transition-duration: 320ms, 320ms, var(--reveal-duration, 660ms);
@@ -948,22 +957,22 @@ button:focus-visible {
   transition-delay: 0s, 0s, calc(var(--reveal-index, 0) * var(--reveal-step, 53ms));
 }
 
-.portrait-panel.scroll-reveal,
-.strength-card.scroll-reveal {
+.portrait-panel[data-reveal],
+.strength-card[data-reveal] {
   clip-path: inset(12% 0 0 0 round 16px);
   transition: clip-path var(--reveal-duration, 660ms) cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: calc(var(--reveal-index, 0) * var(--reveal-step, 53ms));
 }
 
-.project-card.scroll-reveal.is-visible .project-image,
-.portrait-panel.scroll-reveal.is-visible,
-.strength-card.scroll-reveal.is-visible {
+.project-card[data-reveal][data-revealed] .project-image,
+.portrait-panel[data-reveal][data-revealed],
+.strength-card[data-reveal][data-revealed] {
   clip-path: inset(0 0 0 0 round 16px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-reveal,
-  .scroll-reveal.is-visible {
+  [data-reveal],
+  [data-reveal][data-revealed] {
     opacity: 1;
     transform: none;
     animation: none;
@@ -986,9 +995,9 @@ button:focus-visible {
     transform: none;
   }
 
-  .project-card.scroll-reveal .project-image,
-  .portrait-panel.scroll-reveal,
-  .strength-card.scroll-reveal {
+  .project-card[data-reveal] .project-image,
+  .portrait-panel[data-reveal],
+  .strength-card[data-reveal] {
     clip-path: none;
     transition: none;
   }
@@ -1138,8 +1147,8 @@ button:focus-visible {
   box-shadow: 0 28px 72px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(244, 242, 237, 0.06);
 }
 
-.portrait-tilt-shell.scroll-reveal,
-.portrait-tilt-shell.scroll-reveal.is-visible {
+.portrait-tilt-shell[data-reveal],
+.portrait-tilt-shell[data-reveal][data-revealed] {
   clip-path: none;
 }
 
@@ -1222,6 +1231,18 @@ button:focus-visible {
 .project-card {
   border: 1px solid rgba(244, 242, 237, 0.12);
   border-radius: 16px;
+}
+
+/* Transparent, not "less opaque" — stats and strengths are pulled off the card
+   system entirely and read as outlined panels on the page backdrop, so the
+   gradient behind them stays continuous. Project cards keep the fill: they sit
+   over thumbnails and need the plate. */
+.stat-card,
+.strength-card {
+  background: transparent;
+}
+
+.project-card {
   background: linear-gradient(145deg, rgba(244, 242, 237, 0.06), rgba(244, 242, 237, 0.04)),
     rgba(8, 9, 12, 0.58);
 }
@@ -1244,8 +1265,6 @@ button:focus-visible {
 
 .stat-card:hover {
   border-color: rgba(244, 242, 237, 0.24);
-  background: linear-gradient(145deg, rgba(244, 242, 237, 0.08), rgba(244, 242, 237, 0.04)),
-    rgba(8, 9, 12, 0.68);
   box-shadow: 0 22px 48px rgba(0, 0, 0, 0.28), 0 0 42px rgba(15, 38, 89, 0.16);
   transform: translateY(-4px);
 }
@@ -1564,14 +1583,23 @@ button:focus-visible {
   letter-spacing: 0.08em;
   cursor: pointer;
   box-shadow: inset 0 1px 0 rgba(244, 242, 237, 0.06);
-  transition: border-color 180ms ease, background 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  /* Leaving the selected state is a de-emphasis, not an event: it resolves in
+     ~110ms so a click reads as ONE change (the tile you picked) instead of two
+     tiles resolving at the same time. `background` is deliberately absent — the
+     gradient -> solid swap below cannot interpolate, so timing it is a no-op.
+     `transform` is absent too: the tile no longer travels, see :hover. */
+  transition: border-color 110ms linear, color 110ms linear, box-shadow 110ms linear;
 }
 
+/* No translateY on hover: on a 6-up grid every tile the pointer crosses bobs in
+   the periphery, and when the pointer leaves the currently selected tile to pick
+   another one, that tile dropped 3px at the same moment the new one lit up — which
+   reads as "the previous tab moved along with the click". Border + label + glow
+   carry the affordance without moving anything. */
 .work-filter-card:hover {
-  border-color: rgba(244, 242, 237, 0.24);
-  color: rgba(244, 242, 237, 0.9);
-  transform: translateY(-3px);
-  box-shadow: 0 18px 50px rgba(32, 118, 255, 0.08);
+  border-color: rgba(244, 242, 237, 0.26);
+  color: rgba(244, 242, 237, 0.92);
+  box-shadow: 0 14px 44px rgba(32, 118, 255, 0.1);
 }
 
 .work-filter-card.is-active {
@@ -1579,6 +1607,10 @@ button:focus-visible {
   background: #f4f2ed;
   color: #050607;
   box-shadow: 0 18px 70px rgba(244, 242, 237, 0.08);
+  /* The tile you just picked is the focal event and gets the full ease. */
+  transition: border-color 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .work-list-meta {
@@ -2239,7 +2271,7 @@ button:focus-visible {
   text-transform: uppercase;
 }
 
-.footer-line.scroll-reveal {
+.footer-line[data-reveal] {
   opacity: 1;
   transform: none;
 }
@@ -2709,7 +2741,7 @@ button:focus-visible {
 
   /* Tighter cascade on phones: fewer items share a row, so a 42ms step still reads
      as a wave while the last item starts sooner. */
-  .scroll-reveal {
+  [data-reveal] {
     --reveal-step: 42ms;
   }
 }

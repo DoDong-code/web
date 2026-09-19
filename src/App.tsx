@@ -499,6 +499,12 @@ export default function App() {
     const rowCursors = new Map<Element, Map<number, number>>();
 
     elements.forEach((element) => {
+      // Already-numbered elements keep their slot: renumbering changes
+      // --reveal-index, which feeds animation-delay, and a larger delay can push a
+      // finished animation back into its pre-delay phase (`backwards` fill), which
+      // paints as a replayed entrance.
+      if (element.hasAttribute('data-reveal')) return;
+
       const parent = element.parentElement ?? document.body;
       const row = element.offsetTop;
       const cursors = rowCursors.get(parent) ?? new Map<number, number>();
@@ -506,7 +512,13 @@ export default function App() {
       const column = cursors.get(row) ?? 0;
       cursors.set(row, column + 1);
 
-      element.classList.add('scroll-reveal');
+      // Reveal state lives on data attributes, never on `class`. React owns the
+      // class attribute of any element whose className is dynamic (the work filter
+      // tiles), and writing it replaces the whole attribute — including classes
+      // added imperatively here. The previously selected tile then lost
+      // .scroll-reveal/.is-visible on every filter change and replayed its full
+      // 46px entrance, so picking a new tab animated the old one as well.
+      element.setAttribute('data-reveal', '');
       element.style.setProperty('--reveal-index', `${Math.min(column, 5)}`);
     });
 
@@ -514,7 +526,7 @@ export default function App() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
+            entry.target.setAttribute('data-revealed', '');
             observer.unobserve(entry.target);
           }
         });
@@ -528,8 +540,13 @@ export default function App() {
 
     elements.forEach((element) => observer.observe(element));
 
+    // Mount-only. This used to re-run on every filter change as a repair pass for
+    // the classes React had wiped; with the state on data attributes nothing is
+    // wiped, and re-scanning the DOM mid-interaction only re-triggered entrances.
+    // Cards mounted later (a new filter result) take their entrance from their own
+    // Motion initial/whileInView, which is the snappier timing a state change wants.
     return () => observer.disconnect();
-  }, [activeWorkCategory]);
+  }, []);
 
   useEffect(() => {
     const track = heroGalleryRef.current;
