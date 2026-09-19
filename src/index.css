@@ -826,7 +826,7 @@ button:focus-visible {
 }
 
 /* Scroll-in entrance. Runs as an animation rather than a transition on purpose:
-   components declared later in this file (.stat-card, .work-filter-card, …) set
+   components declared later in this file (.stat-card, .project-card, …) set
    their own `transition` shorthand to non-opacity properties, which silently
    replaced the reveal transition and made those cards pop in with no fade.
    Animations live in a separate origin, so each component keeps its own fast
@@ -921,7 +921,7 @@ button:focus-visible {
 
 .project-card[data-reveal],
 .strength-card[data-reveal],
-.work-filter-card[data-reveal],
+.work-filter-row[data-reveal],
 .stat-card[data-reveal] {
   --reveal-y: 46px;
   --reveal-scale: 0.96;
@@ -1555,62 +1555,89 @@ button:focus-visible {
   background: rgba(244, 242, 237, 0.08);
 }
 
-.work-filter-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 16px;
-  margin: 58px 0 96px;
+/* Scroll container for the JellyRadio row. The chips are one flex row by design —
+   a neighbour is shoved sideways by translateX, so the row cannot reflow. On narrow
+   viewports it therefore scrolls instead of wrapping: wrapping would push chips out
+   past the right edge of their own row. The scrollbar is hidden and the row is left
+   to bleed, which is the affordance. */
+.work-filter-row {
+  /* This wrapper is a scroll container, so its padding box IS the clip edge — and the
+     negative margin on .work-filter-jelly (below) parks the chips right on that edge.
+     A chip that swells or gets shoved therefore has its outer cap sliced off: the
+     screenshot's flat left edge with a perfectly round right edge is the signature,
+     because overflow to the right is scrollable while overflow to the left is not.
+     Bleeding the wrapper fixes it. `padding-inline` moves the clip edge outwards by
+     --filter-bleed and the equal negative margin pulls the content box straight back
+     onto the section edge, so this is net-zero layout: nothing moves, only where the
+     clipping happens.
+     Size: a neighbour is shoved by maxChipWidth x swell / 2 + barge = 105 x 0.3 / 2 + 6
+     ~= 22px, and the chosen chip's own swell overhangs by chipWidth x swell / 2 ~= 14px.
+     32px clears both and stays inside the 36px desktop gutter; it would still hold up to
+     a 173px-wide chip, so a longer label than today's ~105px cannot resurrect the cut. */
+  --filter-bleed: 32px;
+  padding-inline: var(--filter-bleed);
+  margin: 58px calc(-1 * var(--filter-bleed)) 96px;
+  overflow-x: auto;
+  /* `overflow-y` is deliberately unset, and that is the whole fix.
+     WebKit — iOS Safari, so every iOS browser and the WeChat webview — disables touch
+     panning outright on a horizontal scroller that also clips vertically: the row
+     painted its chips cut off at the screen edge and no swipe would move it.
+     The obvious escape hatch is not available either. `overflow-y: clip` alongside
+     `overflow-x: auto` is rejected by the spec (clip only pairs with visible/clip) and
+     computes to `hidden` — verified in Chrome, the used value comes back hidden — so
+     the bug returns. Left unset it computes to `auto`, the plain `overflow: auto` case
+     WebKit handles fine, and it costs nothing: JellyRadio reserves --jr-pad-y for the
+     swell, so this box has no vertical overflow to scroll and a vertical gesture falls
+     straight through to the page. */
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.work-filter-card {
-  appearance: none;
-  min-height: 136px;
-  padding: 24px 18px;
-  border: 1px solid rgba(244, 242, 237, 0.12);
-  border-radius: 16px;
-  background: linear-gradient(145deg, rgba(244, 242, 237, 0.06), rgba(244, 242, 237, 0.04)),
-    rgba(8, 9, 12, 0.62);
-  color: rgba(244, 242, 237, 0.42);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(244, 242, 237, 0.06);
-  /* Leaving the selected state is a de-emphasis, not an event: it resolves in
-     ~110ms so a click reads as ONE change (the tile you picked) instead of two
-     tiles resolving at the same time. `background` is deliberately absent — the
-     gradient -> solid swap below cannot interpolate, so timing it is a no-op.
-     `transform` is absent too: the tile no longer travels, see :hover. */
-  transition: border-color 110ms linear, color 110ms linear, box-shadow 110ms linear;
+/* Phones use a 20px page gutter (.section -> calc(100% - 40px)), which is the most
+   bleed that fits without pushing the box off-screen, so it is capped here.
+   Six labelled chips measure ~707px against a 390px viewport, so on a phone this row
+   ALWAYS overflows and swiping is the only way to reach the last categories. With the
+   scrollbar hidden by design there was nothing on screen saying so — the row just
+   looked broken, ending mid-chip at the edge. These gutters soften instead: whatever
+   sits at the edge fades out rather than being sliced off. 14px keeps the fade inside
+   the 20px bleed, so it never touches the rounded cap of the last chip once the row is
+   scrolled to its end. Desktop keeps hard edges: there the row rarely overflows, and a
+   permanent fade would imply content that does not exist. */
+@media (max-width: 767px) {
+  .work-filter-row {
+    --filter-bleed: 20px;
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 14px,
+      #000 calc(100% - 14px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 14px,
+      #000 calc(100% - 14px),
+      transparent 100%
+    );
+  }
 }
 
-/* No translateY on hover: on a 6-up grid every tile the pointer crosses bobs in
-   the periphery, and when the pointer leaves the currently selected tile to pick
-   another one, that tile dropped 3px at the same moment the new one lit up — which
-   reads as "the previous tab moved along with the click". Border + label + glow
-   carry the affordance without moving anything. */
-.work-filter-card:hover {
-  border-color: rgba(244, 242, 237, 0.26);
-  color: rgba(244, 242, 237, 0.92);
-  box-shadow: 0 14px 44px rgba(32, 118, 255, 0.1);
+.work-filter-row::-webkit-scrollbar {
+  display: none;
 }
 
-.work-filter-card.is-active {
-  border-color: rgba(244, 242, 237, 0.86);
-  background: #f4f2ed;
-  color: #050607;
-  box-shadow: 0 18px 70px rgba(244, 242, 237, 0.08);
-  /* The tile you just picked is the focal event and gets the full ease. */
-  transition: border-color 240ms cubic-bezier(0.16, 1, 0.3, 1),
-    color 240ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1);
+/* JellyRadio pads itself horizontally by --jr-pad-x so that the chosen chip's swell
+   stays inside its own box. Left as-is that padding would indent the first chip ~29px
+   from the section's left edge, out of line with the eyebrow above and the filter meta
+   below, so it is cancelled here. The component sets the property inline on this same
+   element, so the margin tracks whatever it measured — which also means this element's
+   box starts outboard of its parent's clip edge; .work-filter-row bleeds by the same
+   order of magnitude to give that room back. */
+.jelly-radio.work-filter-jelly {
+  margin-inline: calc(-1 * var(--jr-pad-x));
 }
 
 .work-list-meta {
@@ -2304,11 +2331,6 @@ button:focus-visible {
     min-height: 680px;
   }
 
-  .work-filter-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-  }
-
   .gallery-showcase .hero-gallery-track {
     --gallery-card-width: clamp(320px, 38vw, 560px);
     --gallery-gap: clamp(80px, 9vw, 200px);
@@ -2588,14 +2610,12 @@ button:focus-visible {
     padding-bottom: 20px;
   }
 
-  .work-filter-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .work-filter-card {
-    min-height: 96px;
-    border-radius: 16px;
+  .work-filter-row {
+    /* Roomier vertical rhythm than desktop is wasted here: the row is one chip tall
+       and scrolls sideways, so it needs less breath above the project list. The inline
+       values must repeat the bleed — this shorthand would otherwise reset `margin-inline`
+       to 0 and leave the chips indented by the wrapper's own padding. */
+    margin: 32px calc(-1 * var(--filter-bleed)) 34px;
   }
 
   .work-list-meta {

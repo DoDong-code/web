@@ -6,6 +6,7 @@ import MotionMasonry, { type MotionItem } from './components/MotionMasonry';
 import TiltedPortraitCard from './components/TiltedPortraitCard';
 import Grainient from './components/Grainient';
 import MediaProgressLoader, { HoverPriorityMedia } from './components/MediaProgressLoader';
+import JellyRadio from './components/JellyRadio';
 import { cdnAsset } from './lib/assetCdn';
 
 // Responsive variants live in the same folder as their source file (no more
@@ -328,6 +329,17 @@ const workCategories = [
   { id: 'AI', label: 'AI辅助', icon: Sparkles },
 ] as const;
 
+type WorkCategoryId = (typeof workCategories)[number]['id'];
+
+// JellyRadio takes rendered nodes rather than component types, so the icons are
+// instantiated once at module scope instead of on every render of the filter row.
+// The category list stays the single source of truth for both.
+const workFilterItems = workCategories.map((category) => ({
+  value: category.id as string,
+  label: category.label,
+  icon: <category.icon size={16} strokeWidth={2} />,
+}));
+
 const HERO_GALLERY_BEND = 1;
 const HERO_GALLERY_BORDER_RADIUS = 0.05;
 const HERO_GALLERY_SCROLL_SPEED = 2.6;
@@ -342,6 +354,7 @@ export default function App() {
   const [activeContact, setActiveContact] = useState<'email' | 'phone' | 'zcool' | 'wechat' | null>(null);
 
   const footerWechatRef = useRef<HTMLDivElement>(null);
+  const workFilterRowRef = useRef<HTMLDivElement>(null);
   const heroGalleryRef = useRef<HTMLDivElement>(null);
   const heroGalleryCardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const heroGalleryMotionRef = useRef({ current: 0, target: 0, raf: 0, lastTime: 0 });
@@ -488,7 +501,7 @@ export default function App() {
   useEffect(() => {
     const elements = Array.from(
       document.querySelectorAll<HTMLElement>(
-      '.section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-card, .project-card, .strength-card, .gallery-showcase-head, .hero-gallery, .finale-actions > *, .footer-line',
+      '.section-head, .portrait-panel, .about-content, .stat-card, .timeline-item, .work-filter-row, .project-card, .strength-card, .gallery-showcase-head, .hero-gallery, .finale-actions > *, .footer-line',
       ),
     );
 
@@ -546,6 +559,36 @@ export default function App() {
     // Cards mounted later (a new filter result) take their entrance from their own
     // Motion initial/whileInView, which is the snappier timing a state change wants.
     return () => observer.disconnect();
+  }, []);
+
+  // Fold a vertical wheel into the filter row's horizontal scroll. The row hides its
+  // scrollbar by design, which left it reachable by touch only: with a mouse — desktop,
+  // or a phone-width window — the categories past the fold could not be reached at all,
+  // so the row read as "cut off and it won't move". The gesture is claimed only while
+  // the row can still travel that way, so at either end the page scrolls on as usual
+  // instead of the wheel being trapped.
+  useEffect(() => {
+    const row = workFilterRowRef.current;
+    if (!row) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      // A trackpad's own horizontal gesture already goes where it should; leave it be.
+      if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+
+      const max = row.scrollWidth - row.clientWidth;
+      if (max <= 1) return;
+
+      // Firefox reports lines and pages rather than pixels.
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? row.clientWidth : 1;
+      const next = row.scrollLeft + event.deltaY * unit;
+      if (next < 0 || next > max) return;
+
+      event.preventDefault();
+      row.scrollLeft = next;
+    };
+
+    row.addEventListener('wheel', handleWheel, { passive: false });
+    return () => row.removeEventListener('wheel', handleWheel);
   }, []);
 
   useEffect(() => {
@@ -903,18 +946,35 @@ export default function App() {
 
       <section className="section work-showcase" id="work">
         <p className="eyebrow">精选作品</p>
-        <div className="work-filter-grid" aria-label="作品分类筛选">
-          {workCategories.map((category) => (
-            <button
-              key={category.id}
-              className={`work-filter-card${activeWorkCategory === category.id ? ' is-active' : ''}`}
-              type="button"
-              onClick={() => setActiveWorkCategory(category.id)}
-            >
-              <category.icon size={24} strokeWidth={1.8} />
-              <span>{category.label}</span>
-            </button>
-          ))}
+        {/* JellyRadio owns selection, roving tabindex and arrow keys, so the buttons
+            it renders replace the hand-rolled tiles entirely. Colors are mapped onto
+            the site palette: paper-white chosen chip with a near-black label (what
+            .work-filter-card.is-active used) and the 62% secondary text tone for the
+            rest, which clears AA where the old 42% tiles did not. */}
+        {/* The ref exists for the wheel mapping below: see the effect that folds a
+            vertical wheel into this row's horizontal scroll. */}
+        <div className="work-filter-row" ref={workFilterRowRef}>
+          <JellyRadio
+            ariaLabel="作品分类筛选"
+            className="work-filter-jelly"
+            items={workFilterItems}
+            value={activeWorkCategory}
+            onChange={(next: string) => setActiveWorkCategory(next as WorkCategoryId)}
+            chipColor="rgba(244, 242, 237, 0.05)"
+            activeColor="#f4f2ed"
+            textColor="rgba(244, 242, 237, 0.62)"
+            activeTextColor="#050607"
+            size="lg"
+            gap={12}
+            radius={22}
+            swell={0.3}
+            barge={6}
+            shrink={0.05}
+            jelly={1}
+            bounce={0.3}
+            stagger={26}
+            stiffness={600}
+          />
         </div>
 
         <div className="work-list-meta">
