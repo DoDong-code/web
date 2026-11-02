@@ -576,6 +576,16 @@ button:focus-visible {
   color: var(--label-color);
 }
 
+/* Art Gallery 底部说明：字号/行高/颜色与 .section-head p 的描述文案完全一致。 */
+/* Art Gallery 辅助说明：与 MOTION ARCHIVE 区块头同构（eyebrow 下紧跟描述句），
+   字号/行高/颜色复用 .section-head p 的描述样式，间距沿用 compact 头的 18px 节奏。 */
+.gallery-showcase-note {
+  margin: 18px 0 0;
+  color: rgba(244, 242, 237, 0.62);
+  font-size: clamp(16px, 1vw, 18px);
+  line-height: 1.9;
+}
+
 .gallery-showcase .hero-gallery {
   width: 100%;
   height: min(58vh, 620px);
@@ -707,6 +717,20 @@ button:focus-visible {
   text-shadow: 0 8px 26px rgba(0, 0, 0, 0.55);
 }
 
+/* Art Gallery 常驻动效层：数据源与项目卡 hoverGif 相同（同 URL 共享加载缓存）。
+   进入视口后加载一次，随后 GIF 原生循环播放；pointer-events 全部放行，
+   卡片本身的点击 / 键盘交互不受影响。 */
+.hero-gallery-card .viewport-auto-media {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-gallery-card .viewport-auto-media .media-progress-loader {
+  border: 1px solid rgba(244, 242, 237, 0.16);
+  border-radius: var(--gallery-radius, 24px);
+}
+
 .hero-bottom-copy {
   max-width: 680px;
   transform: translateY(22px);
@@ -722,6 +746,46 @@ button:focus-visible {
   font-size: 16px;
   line-height: 1.9;
   animation: fadeSlideUp 620ms cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
+}
+
+/* Hero headline + EN subtitle + keyword tags: copy-only retrofit that reuses the
+   paragraph's entrance timing so the whole bottom block still settles in ~1s. */
+.hero-bottom-copy .hero-title {
+  margin: 0 0 10px;
+  color: #f4f2ed;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.3;
+  animation: fadeSlideUp 620ms cubic-bezier(0.16, 1, 0.3, 1) 0.22s backwards;
+}
+
+.hero-bottom-copy .hero-subtitle-en {
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  animation: fadeSlideUp 620ms cubic-bezier(0.16, 1, 0.3, 1) 0.24s backwards;
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+  animation: fadeSlideUp 620ms cubic-bezier(0.16, 1, 0.3, 1) 0.34s backwards;
+}
+
+.hero-tags li {
+  padding: 5px 14px;
+  border: 1px solid rgba(244, 242, 237, 0.18);
+  border-radius: 999px;
+  color: rgba(244, 242, 237, 0.62);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .hero-explore {
@@ -987,6 +1051,9 @@ button:focus-visible {
   }
 
   .hero-bottom-copy p,
+  .hero-bottom-copy .hero-title,
+  .hero-bottom-copy .hero-subtitle-en,
+  .hero-tags,
   .hero-explore,
   .hero-explore-glow,
   .mobile-menu.is-open .mobile-menu-inner > * {
@@ -1004,6 +1071,10 @@ button:focus-visible {
 
   .mobile-menu {
     transition: opacity 160ms ease;
+  }
+
+  .hero-gallery-card .viewport-auto-media {
+    display: none;
   }
 
   .pinned-project-story {
@@ -2522,6 +2593,18 @@ button:focus-visible {
     margin-bottom: 18px;
     font-size: 14px;
     line-height: 1.75;
+  }
+
+  .hero-bottom-copy .hero-title {
+    font-size: 22px;
+  }
+
+  .hero-bottom-copy .hero-subtitle-en {
+    letter-spacing: 0.22em;
+  }
+
+  .hero-tags {
+    margin-bottom: 18px;
   }
 
   .hero-explore {

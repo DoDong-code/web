@@ -5,7 +5,7 @@ import BorderGlow from './components/BorderGlow';
 import MotionMasonry, { type MotionItem } from './components/MotionMasonry';
 import TiltedPortraitCard from './components/TiltedPortraitCard';
 import Grainient from './components/Grainient';
-import MediaProgressLoader, { HoverPriorityMedia } from './components/MediaProgressLoader';
+import MediaProgressLoader, { HoverPriorityMedia, ViewportAutoMedia } from './components/MediaProgressLoader';
 import JellyRadio from './components/JellyRadio';
 import { cdnAsset } from './lib/assetCdn';
 
@@ -72,7 +72,7 @@ const stats = [
   { value: '8+', label: '年互联网设计经验' },
   { value: '2017-2026', label: 'MG动画 / 3D / 动效 / UI / AI辅助' },
   { value: '10倍+', label: '直播间流水增长' },
-  { value: 'A', label: '盲盒玩法GMV / 激活暴增' },
+  { value: '3–5 人', label: '团队协作与管理经验' },
 ];
 
 const project1DetailImages = [
@@ -285,6 +285,8 @@ const projects = [
 const heroGalleryItems = projects.map((project, projectIndex) => ({
   image: project.image,
   text: project.title,
+  // Art Gallery 常驻动效与项目卡 hoverGif 同源；同 URL 还共享组件内的加载缓存。
+  hoverGif: 'hoverGif' in project ? project.hoverGif : undefined,
   projectIndex,
 }));
 
@@ -314,10 +316,11 @@ const strengths = [
 const motionItems: MotionItem[] = [];
 
 const experience = [
-  { company: '拼多多-TEMU', role: 'UI 视觉设计', time: '2024.02-2026.05' },
-  { company: '拼多多-多多视频', role: '资深3D动效设计师', time: '2021.04-2024.02' },
-  { company: '喜马拉雅', role: '高级 3D 动效设计师', time: '2020.08-2021.04' },
-  { company: '白兔网络', role: '3D 动效设计师', time: '2018.11-2020.08' },
+  { company: '拼多多', role: 'UI 视觉设计', time: '2024.02–2026.05' },
+  { company: '拼多多', role: '资深 3D 动效设计师', time: '2021.04–2024.02' },
+  { company: '喜马拉雅', role: '高级 3D 动效设计师', time: '2020.08–2021.04' },
+  { company: '白兔网络', role: '3D 动效设计师', time: '2018.11–2020.08' },
+  { company: '清明和暖文化', role: 'MG 动画设计师', time: '2017.06–2018.05' },
 ];
 
 const workCategories = [
@@ -807,7 +810,17 @@ export default function App() {
               </h1>
             </div>
             <div className="hero-bottom-copy">
-              <p>资深动效设计师，具备 UI、动效、3D、视觉与 AI 辅助设计能力。把视觉、动效与 AI 转化为可增长的设计系统。</p>
+              <h2 className="hero-title">资深 UI 动效设计师</h2>
+              <p className="hero-subtitle-en">SENIOR MOTION DESIGNER</p>
+              <p className="hero-intro">
+                8 年互联网设计经验，专注产品动效与 3D 视觉设计。拥有直播礼物、产品体验及增长项目经验，结合 AI 创作与 AI Coding，探索设计与技术的更多可能。
+              </p>
+              <ul className="hero-tags" aria-label="专业方向">
+                <li>产品动效</li>
+                <li>3D 视觉</li>
+                <li>增长设计</li>
+                <li>AI 创作</li>
+              </ul>
               <BorderGlow
                 className="hero-explore-glow"
                 edgeSensitivity={30}
@@ -834,6 +847,7 @@ export default function App() {
         <div className="gallery-showcase-inner">
           <div className="gallery-showcase-head">
             <p className="eyebrow">Art Gallery</p>
+            <p className="gallery-showcase-note">UI动效与直播项目有动态视频展示</p>
           </div>
           <div className="hero-gallery">
             <div
@@ -864,6 +878,27 @@ export default function App() {
                     }}
                   >
                     <img src={optimizedImageSrc(item.image)} srcSet={optimizedImageSrcSet(item.image)} sizes="(max-width: 720px) 100vw, 50vw" alt={item.text} draggable={false} loading="lazy" decoding="async" />
+                    {item.hoverGif ? (
+                      <ViewportAutoMedia
+                        type="image"
+                        src={item.hoverGif}
+                        alt=""
+                        className="hero-gallery-gif"
+                        imgProps={{
+                          decoding: 'async',
+                          draggable: false,
+                          'aria-hidden': true,
+                          style: {
+                            width: '100%',
+                            height: '100%',
+                            display: 'block',
+                            objectFit: 'cover',
+                            objectPosition: 'center',
+                            background: 'transparent',
+                          },
+                        }}
+                      />
+                    ) : null}
                     <span>{item.text}</span>
                   </div>
                 );
@@ -906,9 +941,12 @@ export default function App() {
 
           <div className="about-content">
             <p className="eyebrow">About Experience</p>
-            <h2>拥有 8 年互联网设计经验，擅长把复杂业务拆解成清晰、可执行、可复用的视觉方案。</h2>
+            <h2>8 年互联网设计经验，专注产品动效与 3D 视觉设计。</h2>
             <p className="lead">
-              工作履历从 MG 动画、3D 动态直播礼物、UI 动效，到视觉与增长 UI，覆盖创意、制作、规范、上线和数据回收。曾带领 3-5 人团队推动直播业务营收多倍增长，并在拼多多、喜马拉雅等业务中沉淀了高强度项目协作经验。
+              从 MG 动画、3D 直播礼物到互联网产品动效、UI 视觉与增长设计，具备从创意构思、视觉制作到规范沉淀和项目落地的完整经验。
+            </p>
+            <p className="lead">
+              曾任职拼多多、喜马拉雅，参与直播业务、产品体验及海外增长项目，拥有 3–5 人团队协作与管理经验，推动直播业务营收多倍增长。同时持续探索 AI 创作与 AI Coding，将设计能力延伸至网站和产品实践。
             </p>
 
             <div className="contact-strip">
@@ -1128,7 +1166,7 @@ export default function App() {
       <section className="section motion-wall-section" id="motion-wall">
         <div className="section-head compact">
           <p className="eyebrow">MOTION ARCHIVE</p>
-          <p>收录动态图形、AI 视觉、品牌动效与界面实验。</p>
+          <p>收录动态图形、AI 视觉、品牌动效与界面实验</p>
         </div>
         <MotionMasonry items={motionItems} />
       </section>

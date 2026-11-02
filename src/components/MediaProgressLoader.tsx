@@ -164,3 +164,41 @@ export function HoverPriorityMedia({ delay = 150, ...props }: HoverPriorityMedia
     </div>
   );
 }
+
+/** Loads an animated asset once when the holder first enters the viewport, then
+ *  keeps looping forever (GIFs loop natively). Skips loading entirely when the
+ *  user prefers reduced motion. */
+export function ViewportAutoMedia(props: Omit<MediaProgressLoaderProps, 'active'>) {
+  const holderRef = useRef<HTMLDivElement | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (visible) return undefined;
+    if (typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return undefined;
+    }
+    const node = holderRef.current;
+    if (!node) return undefined;
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '160px' },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [visible]);
+
+  return (
+    <div ref={holderRef} className="viewport-auto-media">
+      <MediaProgressLoader {...props} active={visible} />
+    </div>
+  );
+}
