@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, MessageCircle, Phone, Sparkles, Wand2, Layers3, Workflow, BadgeCheck, CircleDot, LayoutGrid, Monitor, Box, Cpu, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Mail, MapPin, Menu, MessageCircle, Phone, Sparkles, Layers3, Workflow, BadgeCheck, CircleDot, LayoutGrid, Monitor, Box, Cpu, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import React, { useEffect, useRef, useState } from 'react';
 import BorderGlow from './components/BorderGlow';
@@ -292,24 +292,24 @@ const heroGalleryItems = projects.map((project, projectIndex) => ({
 
 const strengths = [
   {
+    icon: LayoutGrid,
+    title: '产品 UI 与体验设计',
+    body: '具备 APP 产品 UI 设计经验，能够梳理业务流程与交互链路，完成界面设计、功能体验优化及组件规范建设，推动设计方案高效落地。',
+  },
+  {
     icon: Sparkles,
-    title: '动效驱动业务',
-    body: '熟悉 UI 动效从策略、参数、制作到开发验收的全链路，让动效服务转化、引导和体验。',
-  },
-  {
-    icon: Wand2,
-    title: 'AI 设计落地',
-    body: '用 AI 参与视觉生成、本地化文案、表达式与脚本插件，把创意探索和机械流程都变得更快。',
-  },
-  {
-    icon: Layers3,
-    title: '全栈视觉能力',
-    body: '能力覆盖 UI、动效、3D、运营视觉、品牌表达，能在复杂业务里快速搭出统一且有效的视觉系统。',
+    title: '产品动效与规范沉淀',
+    body: '熟悉产品基建动效、功能引导及运营活动动效，能够结合交互逻辑制定动效方案，通过组件化与规范化设计提升体验一致性和研发落地效率。',
   },
   {
     icon: Workflow,
-    title: '跨团队协作',
-    body: '理解产品、开发、运营和数据反馈，能把设计规范化、组件化，并推动需求稳定上线。',
+    title: '增长业务与视觉设计',
+    body: '参与多多视频及 TEMU 海外增长项目，熟悉裂变拉新、邀请分享等业务场景，能够结合业务目标完成 UI 视觉、交互流程及动效设计，兼顾用户体验与转化效果。',
+  },
+  {
+    icon: Box,
+    title: '3D 视觉与 AI 创新实践',
+    body: '拥有 5 年 3D 直播礼物动画经验，熟练掌握 C4D、AE 工作流；同时运用 AI 创作与 AI Coding，独立完成网站及小程序设计开发，实现从创意到上线的完整实践。',
   },
 ];
 
@@ -1195,7 +1195,7 @@ export default function App() {
       <section className="contact-finale" id="contact">
         <div className="finale-inner">
           <p className="eyebrow">Contact</p>
-          <h2>期待与你一起，把下一个项目做得更锋利、更清晰。</h2>
+          <h2>期待与你一起，让好的设计创造更多价值！</h2>
           <div className="finale-actions">
             <a
               className={activeContact === 'email' ? 'is-active' : ''}
